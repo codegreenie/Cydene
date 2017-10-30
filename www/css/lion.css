@@ -1,0 +1,27 @@
+body{
+	font-size: 16px;
+}
+.text-center{
+	text-align: center;
+}
+.swiper-container{
+	height: 100%;
+}
+.swiper-wrapper span{
+	text-align:center;
+	display: block;
+	margin: 20px 20px 10px 20px;
+	font-size: 21px;
+	color: #fff;
+}
+.swiper-pagination-bullet-active{
+	background-color: #fff;
+}
+.button{
+	text-transform: none;
+}
+.panel-overlay{
+	/*opacity: -5;*/
+	background-color: transparent;
+}
+
