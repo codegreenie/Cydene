@@ -30,7 +30,7 @@ function onDeviceReady() {
     
     myApp.alert(cordova.platformId);
     if (cordova.platformId == 'android') {
-    StatusBar.backgroundColorByHexString("#2196f3");
+    StatusBar.backgroundColorByName("blue");
 }
     
 }
