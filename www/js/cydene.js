@@ -28,9 +28,9 @@ var mainView = myApp.addView('.view-main', {
 document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     
-    myApp.alert(cordova.platformId);
+    
     if (cordova.platformId == 'android') {
-    StatusBar.backgroundColorByName("blue");
+    StatusBar.backgroundColorByHexString("#2196f3");
 }
     
 }
