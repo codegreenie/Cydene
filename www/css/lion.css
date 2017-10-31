@@ -17,14 +17,8 @@ body{
 .swiper-pagination-bullet-active{
 	background-color: #fff;
 }
-.button{
-	text-transform: none;
-}
 .panel-overlay{
 	/*opacity: -5;*/
 	background-color: transparent;
-}
-.statusbar-overlay{
-	background-color: #2196f3;
 }
 
