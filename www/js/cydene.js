@@ -30,7 +30,7 @@ function onDeviceReady() {
     
     
     if (cordova.platformId == 'android') {
-    StatusBar.backgroundColorByHexString("#2196f3");
+    StatusBar.backgroundColorByHexString("#3f51b5");
 }
     
 }
@@ -52,7 +52,7 @@ function test4connection(){
 		url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/conn_file.php",
 		method : "GET",
 		crossDomain : true,
-		timeout : 5000,
+		timeout : 10000,
 		error : function(xhr, status){
 			myApp.modal({
 				title : 'Cydene Express',
@@ -123,7 +123,7 @@ myApp.onPageInit('getStarted', function(page){
 						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_user.php",
 						method : "POST",
 						crossDomain : true,
-						timeout : 5000,
+						timeout : 10000,
 						data : {
 
 							users_phone : $$("#user_tel").val()
@@ -203,10 +203,10 @@ myApp.onPageInit('getStarted', function(page){
 						
 
 						$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp.php",
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp_new_user.php",
 						method : "POST",
 						crossDomain : true,
-						timeout : 5000,
+						timeout : 10000,
 						data : {
 
 							users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
@@ -235,12 +235,55 @@ myApp.onPageInit('getStarted', function(page){
 
 			});
 
+
+
+
+			$$("#resend_otp_new_user").on("click", function(){
+				myApp.showPreloader(' ');
+
+				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
+				$$.ajax({
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
+						method : "POST",
+						crossDomain : true,
+						timeout : 10000,
+						data : {
+
+							users_phone : theUserPhone
+						},
+						dataType : "text", 
+						error : function(xhr, status){
+						
+							myApp.hidePreloader();
+							myApp.alert(status);
+
+						},
+						success : function(data, status, xhr){
+							myApp.hidePreloader();
+						}
+						
+						});
+
+			});
+
+
 });
 	
 
 
 
 /**********************Apply OTP New User Page *****************/
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -283,13 +326,13 @@ myApp.onPageInit('getStarted', function(page){
 						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp.php",
 						method : "POST",
 						crossDomain : true,
-						timeout : 5000,
+						timeout : 10000,
 						data : {
 
 							users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
 							supplied_otp : $$("#user_otp").val()
 						},
-						dataType : "text", 
+						dataType : "JSON", 
 						error : function(xhr, status){
 						
 							myApp.hidePreloader();
@@ -298,14 +341,51 @@ myApp.onPageInit('getStarted', function(page){
 						},
 						success : function(data, status, xhr){
 							myApp.hidePreloader();
-							if(data === "OTP Right"){
+							if(data === "OTP Wrong"){
 
-								mainView.router.loadPage("dashboard.html");
+								myApp.alert(data);
+								
 							}
 							else{
-								
-									myApp.alert(data);	
+									var myData = JSON.parse(data);
+									window.localStorage.setItem("_cydene_user_first_name", myData.the_user_fn);
+									window.localStorage.setItem("_cydene_user_last_name", myData.the_user_ln);
+									window.localStorage.setItem("_cydene_user_mail", myData.the_user_mail);
+									
+
+									mainView.router.loadPage("dashboard.html");
 							}
+						}
+						
+						});
+
+			});
+
+
+
+
+			$$("#resend_otp").on("click", function(){
+				myApp.showPreloader(' ');
+
+				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
+				$$.ajax({
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
+						method : "POST",
+						crossDomain : true,
+						timeout : 10000,
+						data : {
+
+							users_phone : theUserPhone
+						},
+						dataType : "text", 
+						error : function(xhr, status){
+						
+							myApp.hidePreloader();
+							myApp.alert(status);
+
+						},
+						success : function(data, status, xhr){
+							myApp.hidePreloader();
 						}
 						
 						});
@@ -377,7 +457,7 @@ myApp.onPageInit('getStarted', function(page){
 					  window.localStorage.setItem("_cydene_user_first_name", new_user_first_name);
 					  window.localStorage.setItem("_cydene_user_last_name", new_user_last_name);
 					  window.localStorage.setItem("_cydene_user_mail", new_user_mail);
-					  mainView.router.loadPage("dashboard.html");
+					  mainView.router.loadPage("setexecpin.html");
 					});
 							
 
@@ -396,7 +476,100 @@ myApp.onPageInit('getStarted', function(page){
 
 
 
+
+
+/**********************Set Exec PIN *****************/
+
+myApp.onPageInit('setexecpin', function(page){
+
+	$$(".num_2_password").on("focus", function(){
+
+		$$(this).prop("type", "password");
+	});
+
+	$$("#user_pin_confirm").on("keyup", function(){
+		
+		var userPin = $$("#user_pin").val();
+		var userPinConfirm = $$(this).val();
+
+		if(userPin === userPinConfirm && userPin.length === 4 && userPinConfirm.length === 4){
+
+				$$("#set_pin_arrow").show().css("display", "flex");
+		}
+
+		else{
+
+			$$("#set_pin_arrow").hide();		
+		}
+
+
+	});
+
+
+
+
+
+
+
+	var grabUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
+			$$('#user_pin_phone').val(grabUserPhone);
+			
+
+			$$('#set_pin_arrow').on('click', function(e){
+
+					$$('form#set_pin_form').trigger('submit');
+
+			});
+
+
+				$$('form#set_pin_form').on('form:beforesend', function (e) {
+					  myApp.showPreloader(' ');
+				});
+				
+
+				$$('form#set_pin_form').on('form:error', function (e) {
+					  
+						myApp.hidePreloader();
+						myApp.alert("An error has occured, try again later");
+
+					});
+							
+
+				$$('form#set_pin_form').on('form:success', function (e) {
+					  var xhr = e.detail.xhr; // actual XHR object
+					 
+					  var data = e.detail.data; // Ajax response from action file
+					  	myApp.hidePreloader();
+						mainView.router.loadPage("dashboard.html");
+					
+
+					});
+							
+
+
+
+
+});
+
+/**********************Set Exec PIN *****************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**********************Dashboard*****************/
+
+
 myApp.onPageInit('dashboard', function(page){
 
 	var user_fn = window.localStorage.getItem("_cydene_user_first_name");
@@ -410,10 +583,77 @@ myApp.onPageInit('dashboard', function(page){
 	}
 
 		$$("#sos_btn").on("click", function(){
-		myApp.confirm("Start Emergency Call?", function(){ myApp.alert("Iniitialiting Emergency Call...") });
+		myApp.modal({
+			title : "Cydene Express",
+			text : "Start Emergency Call?", 
+			buttons : [
+				{
+				text : "<a href='#' class='color-orange'>Not Now</a>",
+				bold : true
+			},
+
+			{
+				text : "<a href='#' class='color-indigo'>Yes Please!</a>",
+				bold : true
+			},
+
+
+			]
+		})
 	});
 
 
+	var cydeneUsersPhone = window.localStorage.getItem("_cydene_user_phone_no");
+				$$.ajax({
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_delivery_address.php",
+						method : "POST",
+						crossDomain : true,
+						timeout : 10000,
+						data : {
+
+							cydene_users_phone : cydeneUsersPhone
+						},
+						dataType : "text", 
+						error : function(xhr, status){
+						
+							/*myApp.hidePreloader();
+							myApp.alert(status);*/
+
+						},
+						success : function(data, status, xhr){
+							
+							if(data === "No delivery address"){
+
+								myApp.modal({
+									
+									title : "Cydene Express",
+									text : "No delivery address found. Would you like to set one now?",
+									buttons : [
+
+										{
+											text : "<a href='#' class='color-orange'>Not Now</a>",
+											bold : true
+										},
+										{
+											text : "<a href='#' class='color-indigo'>Let's Go</a>",
+											bold : true
+
+										},
+									]
+
+
+
+								});
+							}
+						}
+						
+						});
+
+		
+
+
+
+	
 
 });
 
