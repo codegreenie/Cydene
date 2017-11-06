@@ -1,3 +1,4 @@
+function RunApp(){
 // your code
 
 /********App Initialization *************/
@@ -7,7 +8,7 @@ var myApp = new Framework7({
     materialRipple : true,
     materialRippleElements : '.ripple',
     modalTitle : 'Cydene Express',
-    swipePanel : 'left'
+    swipePanel : 'both'
   });
 
 // Export selectors engine
@@ -25,15 +26,6 @@ var mainView = myApp.addView('.view-main', {
 
 
 
-document.addEventListener("deviceready", onDeviceReady, false);
-function onDeviceReady() {
-    
-    
-    if (cordova.platformId == 'android') {
-    StatusBar.backgroundColorByHexString("#3f51b5");
-}
-    
-}
 
 
 
@@ -59,10 +51,12 @@ function test4connection(){
 				text : 'Please check Internet connection.',
 				buttons : [
 					{
-						text : '<span class=color-green>Exit</span>'
+						text : '<span class=color-orange>Exit</span>',
+						bold : true
 					},
 					{
-						text : 'Try Again',
+						text : '<span class=color-indigo>Try Again</span>',
+						bold : true,
 						onClick : function(){test4connection()}	
 
 					}
@@ -636,7 +630,11 @@ myApp.onPageInit('dashboard', function(page){
 										},
 										{
 											text : "<a href='#' class='color-indigo'>Let's Go</a>",
-											bold : true
+											bold : true,
+											onClick : function(){
+
+												mainView.router.loadPage("address.html");
+											}
 
 										},
 									]
@@ -659,4 +657,21 @@ myApp.onPageInit('dashboard', function(page){
 
 /**********************Dashboard*****************/
 
+
+} // RunApp function ends here
+
+
+
+
+document.addEventListener("deviceready", onDeviceReady, false);
+function onDeviceReady() {
+
+	RunApp();
+    
+    if (cordova.platformId == 'android') {
+
+    	StatusBar.backgroundColorByHexString("#3f51b5");
+	}
+    
+}
 
