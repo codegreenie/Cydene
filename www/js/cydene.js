@@ -29,11 +29,19 @@ var mainView = myApp.addView('.view-main', {
 
 
 
+
+
+
+
+
 /******** Start Page *************/
 
 myApp.onPageInit('begin', function(page){
 
 	test4connection();
+
+
+	
 
 }).trigger();
 
@@ -625,15 +633,15 @@ myApp.onPageInit('dashboard', function(page){
 									buttons : [
 
 										{
-											text : "<a href='#' class='color-orange'>Not Now</a>",
+											text : "<span class='color-orange'>Not Now</span>",
 											bold : true
 										},
 										{
-											text : "<a href='#' class='color-indigo'>Let's Go</a>",
+											text : "<span class='color-indigo'>Let's Go</span>",
 											bold : true,
 											onClick : function(){
 
-												mainView.router.loadPage("address.html");
+												mainView.router.loadPage("mapexp.html");
 											}
 
 										},
@@ -658,7 +666,46 @@ myApp.onPageInit('dashboard', function(page){
 /**********************Dashboard*****************/
 
 
+
+
+
+
+myApp.onPageInit('mapexp', function(page){
+
+		//myApp.alert("Yoga!");
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 } // RunApp function ends here
+
+
+
+
+
+
+RunApp();
+
+
+
+
 
 
 
@@ -666,12 +713,65 @@ myApp.onPageInit('dashboard', function(page){
 document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
 
-	RunApp();
+	
     
     if (cordova.platformId == 'android') {
 
     	StatusBar.backgroundColorByHexString("#3f51b5");
 	}
     
+
+
+
+
+    var map;
+document.addEventListener("deviceready", function() {
+  var div = document.getElementById("map_canvas");
+
+  // Initialize the map view
+  map = plugin.google.maps.Map.getMap(div);
+
+  // Wait until the map is ready status.
+  map.addEventListener(plugin.google.maps.event.MAP_READY, onMapReady);
+}, false);
+
+function onMapReady() {
+  var button = document.getElementById("button");
+  button.addEventListener("click", onButtonClick);
+}
+
+function onButtonClick() {
+
+  // Move to the position with animation
+  map.animateCamera({
+    target: {lat: 37.422359, lng: -122.084344},
+    zoom: 17,
+    tilt: 60,
+    bearing: 140,
+    duration: 5000
+  }, function() {
+
+    // Add a maker
+    map.addMarker({
+      position: {lat: 37.422359, lng: -122.084344},
+      title: "Welecome to \n" +
+             "Cordova GoogleMaps plugin for iOS and Android",
+      snippet: "This plugin is awesome!",
+      animation: plugin.google.maps.Animation.BOUNCE
+    }, function(marker) {
+
+      // Show the info window
+      marker.showInfoWindow();
+
+      // Catch the click event
+      marker.on(plugin.google.maps.event.INFO_CLICK, function() {
+
+        // To do something...
+        alert("Hello world!");
+
+      });
+    });
+  });
+}
 }
 

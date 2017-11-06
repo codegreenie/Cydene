@@ -13,13 +13,32 @@
     <link rel="stylesheet" href="css/lion.css">
     <link href="http://fonts.googleapis.com/css?family=Roboto:400,300,500,700" rel="stylesheet" type="text/css">
     <link rel="icon" href="img/icon.png">
+ <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map_canvas {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+ 
+   
+   
   </head>
+
   <body>
     
     <div class="panel-overlay"></div>
 
 
      <div class="views">
+
+   
       <div class="view view-main">
         <div class="pages navbar-fixed">
           <div data-page="begin" class="page bg-indigo">
@@ -38,7 +57,7 @@
 
 
 
-
+           
 
             </div><!--Page Content-->
 
@@ -55,6 +74,12 @@
  
 <script src="js/framework7.min.js"></script>
 <script src="cordova.js"></script>
+
 <script src="js/cydene.js"></script>
+
+
+
+
+
 </body>
 </html>
