@@ -673,6 +673,7 @@ myApp.onPageInit('dashboard', function(page){
 myApp.onPageInit('mapexp', function(page){
 
 		var map;
+
   var div = document.getElementById("map_canvas");
 
   // Initialize the map view
@@ -720,7 +721,6 @@ function onButtonClick() {
     });
   });
 }
-}
 
 });
 
@@ -750,11 +750,11 @@ function onButtonClick() {
 
 
 
-RunApp();
 
 
 
 
+//RunApp();
 
 
 
@@ -768,6 +768,9 @@ function onDeviceReady() {
 
     	StatusBar.backgroundColorByHexString("#3f51b5");
 	}
+
+
+	RunApp();
     
 }
 
