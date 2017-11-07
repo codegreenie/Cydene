@@ -703,7 +703,9 @@ myApp.onPageInit('mapexp', function(page){
 					{
 						text : '<span class=color-orange>Not Now</span>',
 						bold : true,
-						onClick : mainView.router.loadPage('dashboard.html')
+						onClick : function(){
+							mainView.router.loadPage('dashboard.html');
+						}
 					},
 					{
 						text : '<span class=color-indigo>Try Again</span>',
@@ -776,7 +778,7 @@ myApp.onPageInit('mapexp', function(page){
 
 
 
-//RunApp();
+//runApp();
 
 
 
