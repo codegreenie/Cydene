@@ -673,19 +673,19 @@ myApp.onPageInit('dashboard', function(page){
 myApp.onPageInit('mapexp', function(page){
 
 
-	var lati, longy;
+	var latitude, longitude;
 
 
 	function getLatLong(){
 
-		navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure);
+		navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure, {enableHighAccuracy : true});
 	}
 
 
 	function geoSuccess(position){
 
-		lati = position.coords.latitude;
-		longy = position.coords.longitude;
+		latitude = position.coords.latitude;
+		longitude = position.coords.longitude;
 
 		pushMap();
 
@@ -718,20 +718,26 @@ myApp.onPageInit('mapexp', function(page){
 
 	function pushMap(){
 
-		 var myLatLng = {lat: lati, lng: longy};
+		 var mapOptions = {
+        center: new google.maps.LatLng(latitude, longitude),
+        zoom: 1,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
 
-        // Create a map object and specify the DOM element for display.
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: myLatLng,
-          zoom: 4
-        });
+    map = new google.maps.Map
+    (document.getElementById("map"), mapOptions);
 
-        // Create a marker and set its position.
-        var marker = new google.maps.Marker({
-          map: map,
-          position: myLatLng,
-          title: 'My Location | Codegreenie'
-        });
+
+    var latLong = new google.maps.LatLng(latitude, longitude);
+
+    var marker = new google.maps.Marker({
+        position: latLong
+    });
+
+    marker.setMap(map);
+    map.setZoom(15);
+    map.setCenter(marker.getPosition());
+
 	}
 
 	getLatLong();
@@ -770,7 +776,7 @@ myApp.onPageInit('mapexp', function(page){
 
 
 
-//RunApp();
+RunApp();
 
 
 
@@ -786,7 +792,7 @@ function onDeviceReady() {
 	}
 
 
-	RunApp();
+	//RunApp();
     
 }
 
