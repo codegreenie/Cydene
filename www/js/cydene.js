@@ -672,57 +672,73 @@ myApp.onPageInit('dashboard', function(page){
 
 myApp.onPageInit('mapexp', function(page){
 
-		var map;
 
-  var div = $$("#map_canvas");
-
-  // Initialize the map view
-  map = plugin.google.maps.Map.getMap(div);
-
-  // Wait until the map is ready status.
-  map.addEventListener(plugin.google.maps.event.MAP_READY, onMapReady);
+	var lati, longy;
 
 
-function onMapReady() {
-  var button = $$("#button");
-  button.addEventListener("click", onButtonClick);
-}
+	function getLatLong(){
 
-function onButtonClick() {
+		navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure);
+	}
 
-  // Move to the position with animation
-  map.animateCamera({
-    target: {lat: 37.422359, lng: -122.084344},
-    zoom: 17,
-    tilt: 60,
-    bearing: 140,
-    duration: 5000
-  }, function() {
 
-    // Add a maker
-    map.addMarker({
-      position: {lat: 37.422359, lng: -122.084344},
-      title: "Welecome to \n" +
-             "Cordova GoogleMaps plugin for iOS and Android",
-      snippet: "This plugin is awesome!",
-      animation: plugin.google.maps.Animation.BOUNCE
-    }, function(marker) {
+	function geoSuccess(position){
 
-      // Show the info window
-      marker.showInfoWindow();
+		lati = position.coords.latitude;
+		longy = position.coords.longitude;
 
-      // Catch the click event
-      marker.on(plugin.google.maps.event.INFO_CLICK, function() {
+		pushMap();
 
-        // To do something...
-        alert("Hello world!");
+	}
 
-      });
-    });
-  });
-}
+
+
+	function geoFailure(error){
+
+			myApp.modal({
+
+				title : 'Cydene Express',
+				text : 'Please turn on your GPS and allow access',
+				buttons : [
+					{
+						text : '<span class=color-orange>Not Now</span>',
+						bold : true,
+						onClick : mainView.router.loadPage('dashboard.html')
+					},
+					{
+						text : '<span class=color-indigo>Try Again</span>',
+						bold : true,
+						onClick : function(){ getLatLong(); }	
+					}
+				]
+
+			});
+	}
+
+
+	function pushMap(){
+
+		 var myLatLng = {lat: lati, lng: longy};
+
+        // Create a map object and specify the DOM element for display.
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: myLatLng,
+          zoom: 4
+        });
+
+        // Create a marker and set its position.
+        var marker = new google.maps.Marker({
+          map: map,
+          position: myLatLng,
+          title: 'My Location | Codegreenie'
+        });
+	}
+
+	getLatLong();
 
 });
+
+
 
 
 
@@ -754,7 +770,7 @@ function onButtonClick() {
 
 
 
-//RunApp();
+RunApp();
 
 
 
@@ -770,7 +786,7 @@ function onDeviceReady() {
 	}
 
 
-	RunApp();
+	//RunApp();
     
 }
 
