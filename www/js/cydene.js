@@ -770,7 +770,7 @@ myApp.onPageInit('mapexp', function(page){
 
 
 
-RunApp();
+//RunApp();
 
 
 
@@ -786,7 +786,7 @@ function onDeviceReady() {
 	}
 
 
-	//RunApp();
+	RunApp();
     
 }
 
