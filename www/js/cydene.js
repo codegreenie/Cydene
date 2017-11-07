@@ -1,4 +1,4 @@
-function RunApp(){
+function runApp(){
 // your code
 
 /********App Initialization *************/
@@ -776,7 +776,7 @@ myApp.onPageInit('mapexp', function(page){
 
 
 
-RunApp();
+//RunApp();
 
 
 
@@ -792,7 +792,7 @@ function onDeviceReady() {
 	}
 
 
-	//RunApp();
+	runApp();
     
 }
 
