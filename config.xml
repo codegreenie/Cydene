@@ -24,8 +24,5 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
-    <plugin name="cordova-plugin-googlemaps" spec="^2.1.1">
-        <variable name="API_KEY_FOR_ANDROID" value="AIzaSyCf71D9sHeTLtSvyqHuWlS8HvltD2tOblA" />
-    </plugin>
     <plugin name="cordova-plugin-geolocation" spec="^2.4.3" />
 </widget>
