@@ -21,4 +21,16 @@ body{
 	/*opacity: -5;*/
 	background-color: transparent;
 }
+ #map {
+        height: 50%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+.pac-container, .pac-item, .pac-item span{
+	z-index: 15000;
+}
 

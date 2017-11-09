@@ -8,7 +8,8 @@ var myApp = new Framework7({
     materialRipple : true,
     materialRippleElements : '.ripple',
     modalTitle : 'Cydene Express',
-    swipePanel : 'both'
+    swipePanel : 'both',
+    fastClicks : false
   });
 
 // Export selectors engine
@@ -28,6 +29,15 @@ var mainView = myApp.addView('.view-main', {
 
 
 
+
+/*$$(document).on('page:beforeinit', '.page[data-page="mapexp"]', function (e) {
+  // Do something here when page with data-page="about" attribute loaded and initialized
+
+  myApp.alert("mapexp");
+
+  	 $$('.pac-container, .pac-item, .pac-item span', this).addClass('needsclick');
+});
+*/
 
 
 
@@ -673,12 +683,14 @@ myApp.onPageInit('dashboard', function(page){
 myApp.onPageInit('mapexp', function(page){
 
 
+
+	
 	var latitude, longitude;
 
 
 	function getLatLong(){
 
-		navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure, {enableHighAccuracy : true});
+		navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure, {enableHighAccuracy : true, timeout : 3000});
 	}
 
 
@@ -687,6 +699,8 @@ myApp.onPageInit('mapexp', function(page){
 		latitude = position.coords.latitude;
 		longitude = position.coords.longitude;
 
+
+		initAutoComplete();
 		pushMap();
 
 	}
@@ -742,7 +756,30 @@ myApp.onPageInit('mapexp', function(page){
 
 	}
 
+	
+
+	function initAutoComplete(){
+	var input = document.getElementById('searchTextField');
+	//var countryLists = ['ng', 'fr', 'gh', 'jp'];
+
+		var options = {
+		  types: ['(cities)'],
+		  componentRestrictions: {country: 'fr'}
+		};
+
+	autocomplete = new google.maps.places.Autocomplete(input, options);
+}
+
+
+	
+
 	getLatLong();
+
+
+	
+
+	
+
 
 });
 
