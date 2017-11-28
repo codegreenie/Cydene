@@ -1,6 +1,3 @@
-function runApp(){
-// your code
-
 /********App Initialization *************/
 var myApp = new Framework7({
 
@@ -29,15 +26,113 @@ var mainView = myApp.addView('.view-main', {
 
 
 
-
-/*$$(document).on('page:beforeinit', '.page[data-page="mapexp"]', function (e) {
+/*
+$$(document).on('page:init', '.page[data-page="mapexp"]', function (e) {
   // Do something here when page with data-page="about" attribute loaded and initialized
 
-  myApp.alert("mapexp");
+  //myApp.alert("mapexp");
 
-  	 $$('.pac-container, .pac-item, .pac-item span', this).addClass('needsclick');
-});
-*/
+  	 $$('.pac-container, .pac-item, .pac-item span', this).addClass('no-fastclick');
+});*/
+
+
+
+
+
+var getLatLong, deviceCoords;
+
+$$(document).on("deviceready", function(){ //Device plugins starts here
+if (cordova.platformId == 'android') {StatusBar.backgroundColorByHexString("#3f51b5");}
+
+	getLatLong = function(){
+			
+			navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure, {enableHighAccuracy : true, timeout : 10000});
+	}
+	
+
+	geoSuccess =  function(position){
+
+		var geolatitude = position.coords.latitude;
+		var geolongitude = position.coords.longitude;
+
+		deviceCoords = {
+
+			"sweetLatty" : geolatitude,
+			"sweetLonggy" : geolongitude
+		};
+	}
+
+
+
+	geoFailure = function(error){
+
+			myApp.modal({
+
+				title : 'Cydene Express',
+				text : 'Please turn on your GPS and allow access',
+				buttons : [
+					{
+						text : '<span class=color-orange>Not Now</span>',
+						bold : true,
+						onClick : function(){
+							mainView.router.loadPage('dashboard.html');
+						}
+					},
+					{
+						text : '<span class=color-indigo>Try Again</span>',
+						bold : true,
+						onClick : function(){ getLatLong(); }	
+					}
+				]
+
+			});
+	}
+
+
+
+
+	
+
+
+
+
+
+	
+}); //Device plugins ends here
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -50,10 +145,8 @@ myApp.onPageInit('begin', function(page){
 
 	test4connection();
 
-
-	
-
 }).trigger();
+
 
 
 function test4connection(){
@@ -132,7 +225,7 @@ myApp.onPageInit('getStarted', function(page){
 						var improved_phone = "+234" + $$("#user_tel").val();
 
 						$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_user.php",
+						url : "http://tmlng.com/Mobile_app_repo/Cydene/php_hub/_Cydene/verify_user.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
@@ -215,7 +308,7 @@ myApp.onPageInit('getStarted', function(page){
 						
 
 						$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp_new_user.php",
+						url : "http://tmlng.com/Mobile_app_repo/Cydene/php_hub/_Cydene/verify_otp_new_user.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
@@ -255,7 +348,7 @@ myApp.onPageInit('getStarted', function(page){
 
 				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
 				$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
+						url : "http://tmlng.com/Mobile_app_repo/Cydene/php_hub/_Cydene/resend_otp.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
@@ -335,7 +428,7 @@ myApp.onPageInit('getStarted', function(page){
 						
 
 						$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp.php",
+						url : "http://tmlng.com/Mobile_app_repo/Cydene/php_hub/_Cydene/verify_otp.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
@@ -381,7 +474,7 @@ myApp.onPageInit('getStarted', function(page){
 
 				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
 				$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
+						url : "http://tmlng.com/Mobile_app_repo/Cydene/php_hub/_Cydene/resend_otp.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
@@ -682,57 +775,14 @@ myApp.onPageInit('dashboard', function(page){
 
 myApp.onPageInit('mapexp', function(page){
 
-
-
+		getLatLong();
+		window.setTimeout(function(){pushMap();}, 3000);	
 	
-	var latitude, longitude;
-
-
-	function getLatLong(){
-
-		navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure, {enableHighAccuracy : true, timeout : 3000});
-	}
-
-
-	function geoSuccess(position){
-
-		latitude = position.coords.latitude;
-		longitude = position.coords.longitude;
-
-
-		initAutoComplete();
-		pushMap();
-
-	}
-
-
-
-	function geoFailure(error){
-
-			myApp.modal({
-
-				title : 'Cydene Express',
-				text : 'Please turn on your GPS and allow access',
-				buttons : [
-					{
-						text : '<span class=color-orange>Not Now</span>',
-						bold : true,
-						onClick : function(){
-							mainView.router.loadPage('dashboard.html');
-						}
-					},
-					{
-						text : '<span class=color-indigo>Try Again</span>',
-						bold : true,
-						onClick : function(){ getLatLong(); }	
-					}
-				]
-
-			});
-	}
-
 
 	function pushMap(){
+
+	var latitude = deviceCoords.sweetLatty;
+	var longitude = deviceCoords.sweetLonggy;
 
 		 var mapOptions = {
         center: new google.maps.LatLng(latitude, longitude),
@@ -754,17 +804,20 @@ myApp.onPageInit('mapexp', function(page){
     map.setZoom(15);
     map.setCenter(marker.getPosition());
 
+    initAutoComplete();
+
 	}
 
 	
 
-	function initAutoComplete(){
-	var input = document.getElementById('searchTextField');
-	//var countryLists = ['ng', 'fr', 'gh', 'jp'];
+	
 
-		var options = {
-		  types: ['(cities)'],
-		  componentRestrictions: {country: 'fr'}
+	function initAutoComplete(){
+
+	var input = document.getElementById('searchTextField');
+	var options = {
+		  types: ['address'],
+		  componentRestrictions: {country: 'ng'},
 		};
 
 	autocomplete = new google.maps.places.Autocomplete(input, options);
@@ -773,10 +826,12 @@ myApp.onPageInit('mapexp', function(page){
 
 	
 
-	getLatLong();
+	
 
 
 	
+
+
 
 	
 
@@ -804,7 +859,6 @@ myApp.onPageInit('mapexp', function(page){
 
 
 
-} // RunApp function ends here
 
 
 
@@ -815,25 +869,17 @@ myApp.onPageInit('mapexp', function(page){
 
 
 
-//runApp();
 
 
 
 
-document.addEventListener("deviceready", onDeviceReady, false);
-function onDeviceReady() {
-
-	
-    
-    if (cordova.platformId == 'android') {
-
-    	StatusBar.backgroundColorByHexString("#3f51b5");
-	}
 
 
-	runApp();
-    
-}
+
+
+
+
+
 
 
 
