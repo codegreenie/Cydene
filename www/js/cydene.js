@@ -225,7 +225,7 @@ myApp.onPageInit('getStarted', function(page){
 						var improved_phone = "+234" + $$("#user_tel").val();
 
 						$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/Cydene/php_hub/_Cydene/verify_user.php",
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_user.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
@@ -308,7 +308,7 @@ myApp.onPageInit('getStarted', function(page){
 						
 
 						$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/Cydene/php_hub/_Cydene/verify_otp_new_user.php",
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp_new_user.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
@@ -348,7 +348,7 @@ myApp.onPageInit('getStarted', function(page){
 
 				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
 				$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/Cydene/php_hub/_Cydene/resend_otp.php",
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
@@ -428,7 +428,7 @@ myApp.onPageInit('getStarted', function(page){
 						
 
 						$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/Cydene/php_hub/_Cydene/verify_otp.php",
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
@@ -474,7 +474,7 @@ myApp.onPageInit('getStarted', function(page){
 
 				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
 				$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/Cydene/php_hub/_Cydene/resend_otp.php",
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
