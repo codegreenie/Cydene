@@ -34,3 +34,6 @@ body{
 	z-index: 15000;
 }
 
+.popover{
+	width:200px;
+}

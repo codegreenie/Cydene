@@ -1,5 +1,5 @@
 <div data-page="dashboard" class="page">
-<a href="#" class="floating-button color-orange" id="sos_btn"><i class="material-icons">local_phone</i></a>
+
 
  <!-- Left Panel with Reveal effect -->
   <div class="panel panel-left panel-cover">
@@ -84,6 +84,13 @@
 
 
                     
+                     <li class="item-content">
+                      <div class="item-media"><i class="material-icons">local_phone</i></div>
+                      <div class="item-inner">
+                        <div class="item-title">Emergency Call</div>
+                        <div class="item-after">&nbsp;</div>
+                      </div>
+                    </li>
 
 
                      <li class="item-content">
@@ -121,6 +128,20 @@
 	<div class="page-content">
     
     <br>
+
+
+
+     <!-- About popover -->
+  <div class="popover popover-about">
+    <div class="popover-angle"></div>
+    <div class="popover-inner">
+      <div class="content-block">
+        <p style="font-size:12px;">What is Scheduled Booking?</p>
+        <p style="font-size:11px;">Scheduled bookings keeps you off the worry of having to manually book whenever you exhaust your gas. we automatically deliver gas to you once your schedule date reaches.</p>
+      </div> 
+    </div>
+  </div>
+
     
                 <div class="card">
               <div class="card-header">Buy Gas&nbsp;<i class="icon material-icons">add_shopping_cart</i></div>
@@ -128,34 +149,65 @@
                   <div class="card-content-inner">
                     
                     <form action="http://127.0.0.1:3000/Mobile_app_repo/php_hub/_Cydene/user_registration.php" method="POST" class="ajax-submit inputs-lists list-block">
-                     <ul>
+                     <ul class="theme-indigo">
         <li>
           <div class="item-content">
-            <div class="item-media"><i class="icon material-icons">weekend</i></div>
+            <div class="item-media"><i class="icon material-icons color-indigo">weekend</i></div>
             <div class="item-inner"> 
               <div class="item-title label">Cylinder Size</div>
               <div class="item-input">
-                <select>
+                <select id="gas-cylinder-size">
                   <option value="3kg">3kg</option>
                   <option value="5kg">5kg</option>
                   <option value="6kg">6kg</option>
                   <option value="10kg">10kg</option>
                   <option value="12kg">12kg</option>
+                  <option value="25kg">25kg</option>
+                  <option value="50kg">50kg</option>
+                  <option value="75kg">75kg</option>
 
                 </select>
               </div>
             </div>
           </div>
         </li>
+
+
         <li>
           <div class="item-content">
-            <div class="item-media"><i class="icon material-icons">layers</i></div>
+            <div class="item-media"><i class="icon material-icons color-indigo">layers</i></div>
             <div class="item-inner"> 
               <div class="item-title label">Quantity</div>
               <div class="item-input">
-                <select id="gas_purchase_qty">
+                <select id="gas-purchase-qty">
                                   
                 </select>
+              </div>
+            </div>
+          </div>
+        </li>
+
+
+
+        <li>
+          <div class="item-content">
+            <div class="item-media"><i class="icon material-icons color-indigo">date_range</i></div>
+            <div class="item-inner"> 
+              <div class="item-title label">Scheduled Booking</div>
+              <div class="item-input">
+
+
+                <label class="label-switch color-indigo">
+                  <input type="checkbox">
+                  <div class="checkbox"></div>
+                </label>
+
+
+                <label>
+                  <a href="#" data-popover=".popover-about" class="open-popover color-indigo">
+                  <i class="material-icons" style="float:right;margin-top:7px;">help_outline</i></label>
+                </a>
+
               </div>
             </div>
           </div>
@@ -169,7 +221,7 @@
                       <div class="item-content">
                         <div class="item-inner">
                           
-                            <a href="#" class="button button-fill color-orange" id="submit_new_user_reg_button">Continue</a>
+                            <a href="#" class="button button-fill color-orange" id="proceed-gas-purchase">PROCEED</a>
                          
                         </div>
                       </div>

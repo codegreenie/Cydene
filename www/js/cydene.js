@@ -2,7 +2,7 @@
 var myApp = new Framework7({
 
     material : true,
-    materialRipple : true,
+    //materialRipple : true,
     materialRippleElements : '.ripple',
     modalTitle : 'Cydene Express',
     swipePanel : 'both',
@@ -26,14 +26,6 @@ var mainView = myApp.addView('.view-main', {
 
 
 
-/*
-$$(document).on('page:init', '.page[data-page="mapexp"]', function (e) {
-  // Do something here when page with data-page="about" attribute loaded and initialized
-
-  //myApp.alert("mapexp");
-
-  	 $$('.pac-container, .pac-item, .pac-item span', this).addClass('no-fastclick');
-});*/
 
 
 
@@ -172,17 +164,23 @@ function test4connection(){
 
 					}
 				]
+				
 			}); 
 
 		},
 		success : function(){
 
 			//check for reg or login status via window localStorage
-				if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("_cydene_user_first_name") && window.localStorage.getItem("_cydene_user_last_name") && window.localStorage.getItem("_cydene_user_mail")){
+				if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("buyerFN") && window.localStorage.getItem("buyerLN") && window.localStorage.getItem("buyerMail")){
 
 						mainView.router.loadPage("dashboard.html");
 				}
+/*
+			else if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("buyerFN") && window.localStorage.getItem("buyerLN") && window.localStorage.getItem("buyerMail")){
 
+						mainView.router.loadPage("dashboard.html");
+				}
+*/
 				else{
 
 					mainView.router.loadPage("theswipe.html");
@@ -243,14 +241,23 @@ myApp.onPageInit('getStarted', function(page){
 						success : function(data, status, xhr){
 							myApp.hidePreloader();
 
-							if(data === "OTP for new user created"){
+							if(data === "OTP Created"){
 
 								window.localStorage.setItem("_cydene_user_phone_no", improved_phone);
-								mainView.router.loadPage("addotpnewuser.html");
-							}
-							else{
-								window.localStorage.setItem("_cydene_user_phone_no", improved_phone);
+								window.localStorage.setItem("_cydene_welcome_msg", "Hi, Welcome to Cydene Express. <br> Please enter the OTP sent to your device.");
 								mainView.router.loadPage("addotp.html");
+							}
+
+							else if(data === "OTP Updated"){
+
+								window.localStorage.setItem("_cydene_user_phone_no", improved_phone);
+								window.localStorage.setItem("_cydene_welcome_msg", "Hello, Welcome back to Cydene Express. <br> Please enter the OTP sent to your device.");
+								mainView.router.loadPage("addotp.html");
+							}
+
+							else{
+
+								myApp.alert("An Error occured. Try again later");
 							}
 						}
 						
@@ -274,132 +281,13 @@ myApp.onPageInit('getStarted', function(page){
 
 
 
-
-
-/**********************Apply OTP New User Page *****************/
-
-	
-	myApp.onPageInit('addotpnewuser', function(page){
-
-
-			$$('#new_user_otp').on('keyup', function(e){
-
-				var otpLength = $$(this).val().length;
-				if(otpLength >= 6){
-
-					$$("#verify_new_user_otp_arrow").show().css('display', 'flex');
-				}
-				else{
-
-					$$("#verify_new_user_otp_arrow").hide();	
-				}
-			});
-
-
-
-
-
-
-
-			$$("#verify_new_user_otp_arrow").on('click', function(e){
-
-						myApp.showPreloader(' ');
-
-						
-
-						$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp_new_user.php",
-						method : "POST",
-						crossDomain : true,
-						timeout : 10000,
-						data : {
-
-							users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
-							supplied_otp : $$("#new_user_otp").val()
-						},
-						dataType : "text", 
-						error : function(xhr, status){
-						
-							myApp.hidePreloader();
-							myApp.alert(xhr.message);
-
-						},
-						success : function(data, status, xhr){
-							myApp.hidePreloader();
-							if(data === "OTP Right"){
-
-								mainView.router.loadPage("signup.html");
-							}
-							else{
-								
-									myApp.alert(data);	
-							}
-						}
-						
-						});
-
-			});
-
-
-
-
-			$$("#resend_otp_new_user").on("click", function(){
-				myApp.showPreloader(' ');
-
-				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
-				$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
-						method : "POST",
-						crossDomain : true,
-						timeout : 10000,
-						data : {
-
-							users_phone : theUserPhone
-						},
-						dataType : "text", 
-						error : function(xhr, status){
-						
-							myApp.hidePreloader();
-							myApp.alert(status);
-
-						},
-						success : function(data, status, xhr){
-							myApp.hidePreloader();
-						}
-						
-						});
-
-			});
-
-
-});
-	
-
-
-
-/**********************Apply OTP New User Page *****************/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**********************Apply OTP existing User Page *****************/
 
 	
 	myApp.onPageInit('addotp', function(page){
+
+			$$("#welcome-msg-update").html(window.localStorage.getItem("_cydene_welcome_msg"));
+
 
 
 			$$('#user_otp').on('keyup', function(e){
@@ -437,7 +325,7 @@ myApp.onPageInit('getStarted', function(page){
 							users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
 							supplied_otp : $$("#user_otp").val()
 						},
-						dataType : "JSON", 
+						dataType : "json", 
 						error : function(xhr, status){
 						
 							myApp.hidePreloader();
@@ -446,29 +334,72 @@ myApp.onPageInit('getStarted', function(page){
 						},
 						success : function(data, status, xhr){
 							myApp.hidePreloader();
-							if(data === "OTP Wrong"){
+							
 
-								myApp.alert(data);
+
+							var blowData = data;
+							console.log(blowData.this_data_type);
+
+							
+							if(blowData.this_data_type == "Buyer"){
+
+							if(blowData.the_buyer_mail != null && blowData.the_buyer_mail != null && blowData.the_buyer_fn != null && blowData.the_buyer_fn != null && blowData.the_buyer_ln != null && blowData.the_buyer_ln != null){
 								
-							}
-							else{
-									var myData = JSON.parse(data);
-									window.localStorage.setItem("_cydene_user_first_name", myData.the_user_fn);
-									window.localStorage.setItem("_cydene_user_last_name", myData.the_user_ln);
-									window.localStorage.setItem("_cydene_user_mail", myData.the_user_mail);
-									
+								window.localStorage.setItem("buyerFN", blowData.the_buyer_fn);
+								window.localStorage.setItem("buyerLN", blowData.the_buyer_ln);
+								window.localStorage.setItem("buyerMail", blowData.the_buyer_mail);
 
-									mainView.router.loadPage("dashboard.html");
+								mainView.router.loadPage("dashboard.html");
+							}
+
+							else{
+
+								mainView.router.loadPage("signup.html");
+							}
+
+							
+						}
+
+
+						else if(blowData.this_data_type == "Seller"){
+
+								if(blowData.the_seller_name != null && blowData.the_seller_name != null && blowData.the_seller_mail != null && blowData.the_seller_mail != null && blowData.the_seller_address != null && blowData.the_seller_address != null){
+								
+								window.localStorage.setItem("sellerName", blowData.the_seller_name);
+								window.localStorage.setItem("sellerMail", blowData.the_seller_mail);
+								window.localStorage.setItem("sellerAddress", blowData.the_seller_address);
+
+								mainView.router.loadPage("sellerdashboard.html");
+							}
+							
+							else{
+
+								mainView.router.loadPage("sellersignup.html");
 							}
 						}
+
+
+						else if(blowData.this_data_type == "Wrong OTP"){
+
+							myApp.alert("Wrong OTP");
+
+						}
+
+						else{
+
+								mainView.router.loadPage("signup.html");
+
+						}
+
 						
-						});
+						}
+							
 
 			});
 
 
 
-
+});
 			$$("#resend_otp").on("click", function(){
 				myApp.showPreloader(' ');
 
@@ -496,6 +427,14 @@ myApp.onPageInit('getStarted', function(page){
 						});
 
 			});
+
+
+
+
+
+
+
+
 
 });
 	
@@ -545,6 +484,7 @@ myApp.onPageInit('getStarted', function(page){
 				$$('form.ajax-submit').on('form:error', function (e) {
 					  
 						myApp.hidePreloader();
+						var xcode = e.detail.data;
 						myApp.alert("An error has occured, try again later");
 
 					});
@@ -555,14 +495,23 @@ myApp.onPageInit('getStarted', function(page){
 					 
 					  var data = e.detail.data; // Ajax response from action file
 					  myApp.hidePreloader();
+					  
+					  if(data == "Registration Successful"){
 					  var new_user_first_name = $$("#new_user_first_name").val();
 					  var new_user_last_name = $$("#new_user_last_name").val();
 					  var new_user_mail = $$("#new_user_mail").val();
 
-					  window.localStorage.setItem("_cydene_user_first_name", new_user_first_name);
-					  window.localStorage.setItem("_cydene_user_last_name", new_user_last_name);
-					  window.localStorage.setItem("_cydene_user_mail", new_user_mail);
+					  window.localStorage.setItem("buyerFN", new_user_first_name);
+					  window.localStorage.setItem("buyerLN", new_user_last_name);
+					  window.localStorage.setItem("buyerMail", new_user_mail);
 					  mainView.router.loadPage("setexecpin.html");
+					}
+
+					else{
+
+						myApp.alert(data);
+					}
+
 					});
 							
 
@@ -677,14 +626,14 @@ myApp.onPageInit('setexecpin', function(page){
 
 myApp.onPageInit('dashboard', function(page){
 
-	var user_fn = window.localStorage.getItem("_cydene_user_first_name");
-	var user_ln = window.localStorage.getItem("_cydene_user_last_name");
+	var user_fn = window.localStorage.getItem("buyerFN");
+	var user_ln = window.localStorage.getItem("buyerLN");
 	$$("#profile_display_name").html(user_fn + " " + user_ln);
 
 
 	for (var i = 1; i <=100; i++) {
 		
-		$$("#gas_purchase_qty").append("<option value= " + i + ">" + i + "</option>");	
+		$$("#gas-purchase-qty").append("<option value= " + i + ">" + i + "</option>");	
 	}
 
 		$$("#sos_btn").on("click", function(){
@@ -761,6 +710,25 @@ myApp.onPageInit('dashboard', function(page){
 		
 
 
+		$$("#proceed-gas-purchase").on("click", function(){
+
+			var gasSize = $$("#gas-cylinder-size").val();
+			var gasQty = $$("#gas-purchase-qty").val();
+
+
+
+			var uniqPurchase = {
+
+				"gasSize" : gasSize,
+				"gasQty" : gasQty
+			}
+
+			window.localStorage.setItem("uniqPurchase", JSON.stringify(uniqPurchase));
+			mainView.router.loadPage("sellers.html");
+		});
+
+
+
 
 	
 
@@ -772,6 +740,82 @@ myApp.onPageInit('dashboard', function(page){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+/**********************Sellers*****************/
+
+	myApp.onPageInit('sellers', function(page){
+
+		$$.ajax({
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php",
+						method : "GET",
+						crossDomain : true,
+						timeout : 10000,
+						dataType : "html", 
+						error : function(xhr, status){
+						
+							
+							myApp.alert(status);
+
+						},
+
+						success : function(data){
+
+							$$(".populate-all-sellers").removeClass('text-center').html(data);
+
+						}
+
+
+					})
+
+
+	});
+
+
+/**********************Sellers*****************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*********************MapExp********************/
 
 myApp.onPageInit('mapexp', function(page){
 
@@ -828,7 +872,47 @@ myApp.onPageInit('mapexp', function(page){
 
 	
 
+	$$("#save-address-btn").on("click", function(){
 
+		myApp.showPreloader(' ');
+
+		$$.ajax({
+						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/save_delivery_address.php",
+						method : "POST",
+						crossDomain : true,
+						timeout : 10000,
+						data : {
+
+							the_users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
+							the_address_name : $$("#the-address-name").val(),
+							the_delivery_address : $$(".delivery-address").val()
+						},
+						dataType : "html", 
+						error : function(xhr, status){
+						
+							myApp.hidePreloader();
+							myApp.alert("Network Error, Try again later");
+
+						},
+						success : function(data, status, xhr){
+							myApp.hidePreloader();
+							myApp.alert(data);
+							if(data == "Save Successful"){
+
+								myApp.hidePreloader();
+								mainView.router.loadPage("dashboard.html");
+							}
+							else{
+
+								myApp.alert(data.length);
+
+							}
+							
+						}
+						
+						});
+
+	});
 	
 
 
