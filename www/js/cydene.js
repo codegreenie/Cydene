@@ -131,6 +131,10 @@ if (cordova.platformId == 'android') {StatusBar.backgroundColorByHexString("#3f5
 
 
 
+
+
+
+
 /******** Start Page *************/
 
 myApp.onPageInit('begin', function(page){
@@ -626,6 +630,16 @@ myApp.onPageInit('setexecpin', function(page){
 
 myApp.onPageInit('dashboard', function(page){
 
+
+$$(".go-to-order").click(function(){
+
+
+		myApp.alert("Yello!");
+	});
+
+
+
+
 	var user_fn = window.localStorage.getItem("buyerFN");
 	var user_ln = window.localStorage.getItem("buyerLN");
 	$$("#profile_display_name").html(user_fn + " " + user_ln);
@@ -729,12 +743,47 @@ myApp.onPageInit('dashboard', function(page){
 
 
 
+		$$("#schedule-switch").change(function(){		
 
-	
+					if($$(this).prop("checked") == true){
+			               
+$$("<li id='recurring-date-select'><div class='item-content'><div class='item-media'><i class='icon material-icons color-indigo'>date_range</i></div><div class='item-inner theme-indigo'><div class='item-title label color-indigo'>Recurring Dates.</div><div class='item-input'><input type='text' name='schedule_recurr_date' required id='recurring-date-select-text'></div></div></div></li>").insertAfter($$("#schedule-switch-panel"));
+	           
+	$$("#recurring-date-select-text").click(function(){
 
+		var qqs = myApp.calendar({
+
+			input : "#recurring-date-select-text",
+			yearPicker : false,
+			monthPicker : false,
+			cssClass : "theme-indigo",
+			dateFormat: "Every day - dd, of the month"
+
+		});
+
+	});
+
+	            }
+
+
+	            else{
+
+	            	$$("#recurring-date-select").remove();
+	            }
+
+        	
+
+
+
+
+        
+        });
+
+
+			
 });
 
-/**********************Dashboard*****************/
+/**********************Dashboard****************
 
 
 
@@ -753,30 +802,52 @@ myApp.onPageInit('dashboard', function(page){
 
 
 /**********************Sellers*****************/
-
+var buyFromThisSeller;
 	myApp.onPageInit('sellers', function(page){
 
-		$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php",
-						method : "GET",
-						crossDomain : true,
-						timeout : 10000,
-						dataType : "html", 
-						error : function(xhr, status){
+	var selectedPurchases = JSON.parse(window.localStorage.getItem("uniqPurchase"));
+	var postedCylinderSize = selectedPurchases.gasSize;
+
+	
+
+
+
+		$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php", {"posted_cylinder_size" : postedCylinderSize}, function(data){
+
+			$$(".populate-all-sellers").removeClass('text-center').html(data);
+
+		}, function(){
+
+				myApp.alert("Error occured, try again later");
+		});
 						
-							
-							myApp.alert(status);
+					
 
-						},
+		buyFromThisSeller = function(theSellerID, theCylinderSize){
 
-						success : function(data){
+			$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_seller_details.php", {"seller_id" : theSellerID, "cylinder_size" : theCylinderSize}, function(data){
 
-							$$(".populate-all-sellers").removeClass('text-center').html(data);
+					console.log(data);
+					var stringData = JSON.stringify(data);
+					window.localStorage.setItem("full_seller_details", stringData);
+					mainView.router.loadPage("sellerdetails.html");
 
-						}
+				}, function(xhr, data){
+
+						console.log(xhr.response);
+						myApp.alert("Error occured, try again later");
+				});
 
 
-					})
+			}
+
+		
+
+
+
+
+
+
 
 
 	});
@@ -796,8 +867,239 @@ myApp.onPageInit('dashboard', function(page){
 
 
 
+/**********************Seller Details*****************/
+
+myApp.onPageInit('sellerdetails', function(page){
 
 
+	var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
+
+	var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
+	
+	
+		
+
+
+		$$(".populate-sellers-name").html(splitSellerDetails.seller_details_name);
+		$$(".populate-sellers-logo").attr("src", "http://tmlng.com/Mobile_app_repo/cydene_express/www/docs/imgs/" + splitSellerDetails.seller_details_logo);
+		$$(".populate-sellers-address").html(splitSellerDetails.seller_details_address);
+		$$(".quote-size").html(splitBuyDetails.gasSize + " (<strike>N</strike>" + splitSellerDetails.cylinder_size_price + ")" );
+		$$(".quote-qty").html(splitBuyDetails.gasQty);
+
+		var totalPrice = splitSellerDetails.cylinder_size_price * splitBuyDetails.gasQty;
+
+		$$(".quote-total-price").html("<strike>N</strike>" + totalPrice);
+
+
+		//populate buyers addresses
+		$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/address_fetcher.php", 
+			{
+				"users_phone" : window.localStorage.getItem("_cydene_user_phone_no")
+			}, 
+
+		function(data){
+
+			$$(".populate-addresses").append(data);
+
+		}, 
+
+		function(data){
+
+			myApp.alert("Unable to fetch addresses. Try again later.");
+
+		});
+
+
+
+
+
+		$$("#payment-btn").html("Pay <strike>N</strike>" + totalPrice).click(function(){
+
+				myApp.showPreloader('Processsing...');
+				var paymentMethod = $$("input[name='payment_method']:checked").val();
+				
+				if(paymentMethod == "COD"){
+
+					$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
+
+					{
+
+						"tnx_cylinder_size" : splitBuyDetails.gasSize,
+						"tnx_quantity" : splitBuyDetails.gasQty,
+						"tnx_total_price" : totalPrice,
+						"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
+						"tnx_seller" : splitSellerDetails.seller_details_id,
+						"tnx_payment_method" : "COD"
+					}, 
+
+					function(data){
+
+						myApp.hidePreloader();
+
+						if(data == "Successful"){
+							
+							mainView.router.loadPage("ordersuccess.html");
+
+						}
+
+					}, function(){
+
+						myApp.alert("An error has occured");
+					});
+				}
+
+
+
+
+				else{
+
+					myApp.hidePreloader();
+					var pushFields = {
+						
+						"tnx_cylinder_size" : splitBuyDetails.gasSize,
+						"tnx_quantity" : splitBuyDetails.gasQty,
+						"tnx_total_price" : totalPrice,
+						"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
+						"tnx_seller" : splitSellerDetails.seller_details_id,
+						"tnx_payment_method" : "COD"
+					}
+
+					window.localStorage.setItem("tnx_fields", JSON.stringify(pushFields));
+					mainView.router.loadPage("pinexec.html");
+
+				}
+
+		});
+
+
+
+
+
+
+
+
+
+
+});
+
+/**********************Sellers Details*****************/
+
+
+
+
+
+
+
+
+
+
+/**********************PIN exec*****************/
+
+myApp.onPageInit('pinexec', function(page){
+
+
+
+		var splitTnxFields = JSON.parse(window.localStorage.getItem("tnx_fields"));
+		
+
+		$$("#show-amount").html("<strike>N</strike>" + splitTnxFields.tnx_total_price);
+
+
+		
+		$$("#exec-pin").on("keyup", function(){
+				
+				var pinLength = $$(this).val().length;
+				if(pinLength == 4){
+
+					$$("#exec-arrow").css("display", "flex");
+				}
+
+			});
+
+
+		$$("#exec-arrow").click(function(){
+			
+			myApp.showPreloader('Validating PIN...');
+			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/validate_exec_pin.php", 
+				{
+					"exec_pin" : $$("#exec-pin").val(),
+					"user_phone" :  window.localStorage.getItem("_cydene_user_phone_no")
+				},
+
+			 function(data){
+					if(data === "PIN Match"){
+
+					 	
+								var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
+					 			var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
+					 			var tranxFields = window.localStorage.getItem("tnx_fields");
+					 			var totalPrice = splitSellerDetails.cylinder_size_price * splitBuyDetails.gasQty;
+					 			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
+
+							{
+
+								"tnx_cylinder_size" : splitBuyDetails.gasSize,
+								"tnx_quantity" : splitBuyDetails.gasQty,
+								"tnx_total_price" : totalPrice,
+								"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
+								"tnx_seller" : splitSellerDetails.seller_details_id,
+								"tnx_payment_method" : "Wallet"
+							}, 
+
+							function(data){
+										myApp.hidePreloader();
+										if(data == "Successful"){
+
+											myApp.hidePreloader();
+								 			mainView.router.loadPage("ordersuccess.html");
+
+									 		}
+
+									 		else{
+
+									 				myApp.hidePreloader();
+										 			myApp.alert("Connection Error, Try again.");
+									 		}
+
+									 	},
+
+						 	function(){
+									
+									myApp.alert("An error has occured. Please try again later");
+					 		}
+
+							);
+
+						}
+
+
+
+					
+					else{
+						myApp.hidePreloader();
+						myApp.alert("Wrong PIN");
+					}
+
+			}, function(data){
+
+				myApp.hidePreloader();
+			 	myApp.alert(data);
+
+			});// End of validate PIN script
+
+
+		
+
+		}); // end of onclick event.
+
+
+
+
+
+
+});
+
+/**********************PIN exec*****************/
 
 
 
@@ -896,7 +1198,8 @@ myApp.onPageInit('mapexp', function(page){
 						},
 						success : function(data, status, xhr){
 							myApp.hidePreloader();
-							myApp.alert(data);
+							console.log(data);
+							
 							if(data == "Save Successful"){
 
 								myApp.hidePreloader();
@@ -904,7 +1207,7 @@ myApp.onPageInit('mapexp', function(page){
 							}
 							else{
 
-								myApp.alert(data.length);
+								myApp.alert("Error saving address, try again later.");
 
 							}
 							

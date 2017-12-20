@@ -37,3 +37,7 @@ body{
 .popover{
 	width:200px;
 }
+.toolbar a.link{
+
+	color: #3f51b5;
+}
