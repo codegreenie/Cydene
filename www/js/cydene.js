@@ -881,7 +881,7 @@ myApp.onPageInit('sellerdetails', function(page){
 
 
 		$$(".populate-sellers-name").html(splitSellerDetails.seller_details_name);
-		$$(".populate-sellers-logo").attr("src", "http://tmlng.com/Mobile_app_repo/cydene_express/www/docs/imgs/" + splitSellerDetails.seller_details_logo);
+		$$(".populate-sellers-logo").attr("src", "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + splitSellerDetails.seller_details_logo);
 		$$(".populate-sellers-address").html(splitSellerDetails.seller_details_address);
 		$$(".quote-size").html(splitBuyDetails.gasSize + " (<strike>N</strike>" + splitSellerDetails.cylinder_size_price + ")" );
 		$$(".quote-qty").html(splitBuyDetails.gasQty);
