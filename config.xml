@@ -12,11 +12,11 @@
     <preference name="android-minSdkVersion" value="14" />
 
     <platform name="android">
-       <icon src="icon.jpg" />
+       <icon src="icon.jpeg" />
     </platform>
 
     <platform name="ios">
-       <icon src="icon.jpg" />
+       <icon src="icon.jpeg" />
     </platform>
 
 
