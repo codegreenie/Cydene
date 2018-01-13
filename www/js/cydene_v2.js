@@ -636,12 +636,7 @@ myApp.onPageInit('about', function(page){ //About page
 	console.log("About page is here.");
 	/*window.open("https://facebook.com");*/
 
-	$$("#toast-btn").on("click", function(){
-
-		showTheToast();
-
-	});
-
+	
 	
 
 
