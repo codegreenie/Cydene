@@ -2,7 +2,7 @@
 var myApp = new Framework7({
 
     material : true,
-    //materialRipple : true,
+    materialRipple : true,
     materialRippleElements : '.ripple',
     modalTitle : 'Cydene Express',
     swipePanel : 'both',
@@ -31,7 +31,7 @@ var mainView = myApp.addView('.view-main', {
 
 
 
-var getLatLong, deviceCoords, showTheToast;
+var getLatLong, deviceCoords;
 
 $$(document).on("deviceready", function(){ //Device plugins starts here
 if (cordova.platformId == 'android') {StatusBar.backgroundColorByHexString("#3f51b5");}
@@ -85,24 +85,7 @@ if (cordova.platformId == 'android') {StatusBar.backgroundColorByHexString("#3f5
 
 	
 
-	showTheToast = function(){
 
-	window.plugins.toast.showWithOptions({
-
-		message : 'Hello there!', 
-		duration: 'long',
-		position:  'center'
-	},
-		function(a){
-			console.log('toast success: ' + a);
-		}, 
-
-		function(b){
-			alert('toast error: ' + b);
-		});
-
-
-}
 
 
 
