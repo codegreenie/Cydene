@@ -1,122 +1,7 @@
 <div data-page="orderhistory" class="page">
 
 
- <!-- Left Panel with Reveal effect -->
-  <div class="panel panel-left panel-cover">
-  <div class="page-content" style="padding-top: 0px;">
-
-              <div class="content-block bg-indigo" style="margin-top:0px; padding:10px 16px;">
-                
-
-                  <div class="list-block media-list">
-                        <ul class="color-white">
-                          <li>
-                            <div class="item-content">
-                              <div class="item-media"><img src="docs/imgs/pyaar.jpg" width="40" style="border-radius:220%;"></div>
-                              <div class="item-inner">
-                                <div class="item-title-row">
-                                  <div class="item-title" id="profile_display_name">
-                                    &nbsp;
-                                  </div>
-                                </div>
-                                <div class="item-subtitle">My Profile</div>
-                              </div>
-                            </div>
-                          </li>
-                         </ul>
-                      </div>
-
-
-              </div>
-
-
-                   <div class="list-block">
-                  <ul>
-                    <li class="item-content">
-                      <div class="item-media"><i class="material-icons">home</i></div>
-                      <div class="item-inner">
-                        <div class="item-title">Home</div>
-                        <div class="item-after">&nbsp;</div>
-                      </div>
-                    </li>
-
-
-                    <li class="item-content">
-                      <div class="item-media"><i class="material-icons">account_balance_wallet</i></div>
-                      <div class="item-inner">
-                        <div class="item-title">Wallet</div>
-                        <div class="item-after">&nbsp;</div>
-                      </div>
-                    </li>
-
-
-
-                    <li class="item-content">
-                      <div class="item-media"><i class="material-icons">alarm_on</i></div>
-                      <div class="item-inner">
-                        <div class="item-title">Order History</div>
-                        <div class="item-after">&nbsp;</div>
-                      </div>
-                    </li>
-
-
-                    <li class="item-content">
-                      <div class="item-media"><i class="material-icons">room_service</i></div>
-                      <div class="item-inner">
-                        <div class="item-title">Offers</div>
-                        <div class="item-after">&nbsp;</div>
-                      </div>
-                    </li>
-
-
-                          
-
-                   
-
-
-                    <li class="item-content">
-                      <div class="item-media"><i class="material-icons">settings</i></div>
-                      <div class="item-inner">
-                        <div class="item-title">Settings</div>
-                        <div class="item-after">&nbsp;</div>
-                      </div>
-                    </li>
-
-
-                    
-
-                    <li class="item-content">
-                      <div class="item-media"><i class="material-icons">local_phone</i></div>
-                      <div class="item-inner">
-                        <div class="item-title">Emergency Call</div>
-                        <div class="item-after">&nbsp;</div>
-                      </div>
-                    </li>
-
-
-                     <li class="item-content">
-                      <div class="item-media"><i class="material-icons">help_outline</i></div>
-                      <div class="item-inner">
-                        <div class="item-title">Support Center</div>
-                        <div class="item-after">&nbsp;</div>
-                      </div>
-                    </li>
-
-
-                  
-
-
-                  </ul>
-                </div>
-
-
-      </div>
-  </div>
-
-
-
-
-
+ 
 
   <div class="navbar theme-indigo">
     <div class="navbar-inner">
@@ -131,8 +16,8 @@
 
  <div class="toolbar tabbar tabbar-scrollable theme-indigo">
     <div class="toolbar-inner">
-      <a href="#tab1" class="tab-link active text-center">Pending</a>
-      <a href="#tab2" class="tab-link text-center">Completed</a>
+      <a href="#tab1" class="tab-link active text-center">Regular</a>
+      <a href="#tab2" class="tab-link text-center">Scheduled</a>
     </div>
   </div>
 
@@ -146,35 +31,41 @@
   <div class="tabs"><!--tabs wrapper-->
 
 
-    <div id="tab1" class="tab active populate-all-sellers text-center">
+    <div id="tab1" class="tab active populate-regular-history">
 
           <span class="preloader preloader-indigo" id="sellers-preloader" style="margin-top: 50px;"></span>
   </div>
          
 
 
-    <div id="tab2" class="tab">
-        <div class="card">
-            <div class="card-header">Hazmat</div>
-            <div class="card-content">
-                <div class="card-content-inner text-center">
-                  <i class="material-icons color-indigo" style="font-size:44px;">weekend</i>
-                  <p>Help is around the corner</p>
-                  
-                </div>
-            </div>
-            <div class="card-footer">View Support</div>
-          </div> 
+    <div id="tab2" class="tab populate-scheduled-history">
+        
+        <span class="preloader preloader-indigo" id="sellers-preloader" style="margin-top: 50px;"></span>
+
     </div>
 
 
 
     </div><!--tabs wrapper-->
 
-
+    <div class="content-block-title">&nbsp;</div>
 		
 </div>
 
+
+
+
+<!-- Toolbar has additional "toolbar-bottom" class -->
+  <div class="toolbar toolbar-bottom bg-white">
+    <div class="toolbar-inner">
+      
+      <a href="offers.html" class="link color-indigo"><i class="material-icons">room_service</i></a>
+      <a href="orderhistory.html" class="link color-indigo"><i class="material-icons">history</i></a>
+      <a href="dashboard.html" class="link color-indigo"><i class="material-icons">home</i></a>
+      <a href="helpsection.html" class="link color-indigo"><i class="material-icons">help_outline</i></a>
+      <a href="settings.html" class="link color-indigo"><i class="material-icons">person_outline</i></a>
+  </div>
+  </div>
 
 
 </div>

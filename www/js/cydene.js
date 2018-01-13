@@ -31,7 +31,7 @@ var mainView = myApp.addView('.view-main', {
 
 
 
-var getLatLong, deviceCoords;
+var getLatLong, deviceCoords, showTheToast;
 
 $$(document).on("deviceready", function(){ //Device plugins starts here
 if (cordova.platformId == 'android') {StatusBar.backgroundColorByHexString("#3f51b5");}
@@ -85,7 +85,24 @@ if (cordova.platformId == 'android') {StatusBar.backgroundColorByHexString("#3f5
 
 	
 
+	showTheToast = function(){
 
+	window.plugins.toast.showWithOptions({
+
+		message : 'Hello there!', 
+		duration: 'long',
+		position:  'center'
+	},
+		function(a){
+			console.log('toast success: ' + a);
+		}, 
+
+		function(b){
+			alert('toast error: ' + b);
+		});
+
+
+}
 
 
 
@@ -244,6 +261,7 @@ myApp.onPageInit('getStarted', function(page){
 						},
 						success : function(data, status, xhr){
 							myApp.hidePreloader();
+							
 
 							if(data === "OTP Created"){
 
@@ -724,22 +742,72 @@ $$(".go-to-order").click(function(){
 		
 
 
-		$$("#proceed-gas-purchase").on("click", function(){
 
+
+
+		$$("#proceed-gas-purchase").on("click", function(){
 			var gasSize = $$("#gas-cylinder-size").val();
 			var gasQty = $$("#gas-purchase-qty").val();
+					
+					var uniqPurchase = {
+						"gasSize" : gasSize,
+						"gasQty" : gasQty
+					}
+
+
+		if($$("#schedule-switch").prop("checked") != true){
+
+					window.localStorage.setItem("uniqPurchase", JSON.stringify(uniqPurchase));
+					mainView.router.loadPage("sellers.html");
+
+				}
+
+
+				else{
+
+
+					var theRecurrDate = $$("#recurring-date-select-text").val();
+					var splitDay = theRecurrDate.substring(6,8);
+					var theBuyer = window.localStorage.getItem("_cydene_user_phone_no");
+
+
+					
+						$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/schedule_transaction_recorder.php", 
+							
+							{
+								"the_cylinder_size" : gasSize,
+								"the_quantity" : gasQty,
+								"the_recurr_date" : splitDay,
+								"the_buyer" : theBuyer,
+							},
+
+							function(data){
+								if(data == "Successful"){
+								mainView.router.loadPage("orderhistory.html");
+							}
+							else{
+
+								myApp.alert(data);
+							}
+
+							}, function(){
+
+								myApp.alert("Unable to connect to Cydene Servers. Please try later");
+
+							});
+
+
+						
+
+
+				}
 
 
 
-			var uniqPurchase = {
-
-				"gasSize" : gasSize,
-				"gasQty" : gasQty
-			}
-
-			window.localStorage.setItem("uniqPurchase", JSON.stringify(uniqPurchase));
-			mainView.router.loadPage("sellers.html");
 		});
+
+
+
 
 
 
@@ -747,7 +815,7 @@ $$(".go-to-order").click(function(){
 
 					if($$(this).prop("checked") == true){
 			               
-$$("<li id='recurring-date-select'><div class='item-content'><div class='item-media'><i class='icon material-icons color-indigo'>date_range</i></div><div class='item-inner theme-indigo'><div class='item-title label color-indigo'>Recurring Dates.</div><div class='item-input'><input type='text' name='schedule_recurr_date' required id='recurring-date-select-text'></div></div></div></li>").insertAfter($$("#schedule-switch-panel"));
+$$("<li id='recurring-date-select'><div class='item-content'><div class='item-media'><i class='icon material-icons color-indigo'>date_range</i></div><div class='item-inner theme-indigo'><div class='item-title label color-indigo'>Recurring Dates.</div><div class='item-input'><input type='text' required id='recurring-date-select-text'></div></div></div></li>").insertAfter($$("#schedule-switch-panel"));
 	           
 	$$("#recurring-date-select-text").click(function(){
 
@@ -757,7 +825,7 @@ $$("<li id='recurring-date-select'><div class='item-content'><div class='item-me
 			yearPicker : false,
 			monthPicker : false,
 			cssClass : "theme-indigo",
-			dateFormat: "Every day - dd, of the month"
+			dateFormat: "Day - dd, of every month"
 
 		});
 
@@ -917,6 +985,16 @@ myApp.onPageInit('sellerdetails', function(page){
 
 				myApp.showPreloader('Processsing...');
 				var paymentMethod = $$("input[name='payment_method']:checked").val();
+				var deliver2Address =  $$(".address-pointer").filter(
+
+							function(){
+
+								return $$(this).prop("checked");
+							}
+							).val();
+
+			
+
 				
 				if(paymentMethod == "COD"){
 
@@ -929,18 +1007,20 @@ myApp.onPageInit('sellerdetails', function(page){
 						"tnx_total_price" : totalPrice,
 						"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
 						"tnx_seller" : splitSellerDetails.seller_details_id,
-						"tnx_payment_method" : "COD"
+						"tnx_payment_method" : "COD",
+						"tnx_delivery_address" : deliver2Address
 					}, 
 
 					function(data){
 
 						myApp.hidePreloader();
+						myApp.alert(data);
 
-						if(data == "Successful"){
+						//if(data == "Successful"){
 							
-							mainView.router.loadPage("ordersuccess.html");
+							//mainView.router.loadPage("ordersuccess.html");
 
-						}
+						//}
 
 					}, function(){
 
@@ -954,18 +1034,10 @@ myApp.onPageInit('sellerdetails', function(page){
 				else{
 
 					myApp.hidePreloader();
-					var pushFields = {
 						
-						"tnx_cylinder_size" : splitBuyDetails.gasSize,
-						"tnx_quantity" : splitBuyDetails.gasQty,
-						"tnx_total_price" : totalPrice,
-						"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
-						"tnx_seller" : splitSellerDetails.seller_details_id,
-						"tnx_payment_method" : "COD"
-					}
-
-					window.localStorage.setItem("tnx_fields", JSON.stringify(pushFields));
-					mainView.router.loadPage("pinexec.html");
+						
+						window.localStorage.setItem("tnx_delivery_address", deliver2Address);
+						mainView.router.loadPage("pinexec.html");
 
 				}
 
@@ -1043,7 +1115,8 @@ myApp.onPageInit('pinexec', function(page){
 								"tnx_total_price" : totalPrice,
 								"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
 								"tnx_seller" : splitSellerDetails.seller_details_id,
-								"tnx_payment_method" : "Wallet"
+								"tnx_payment_method" : "Wallet",
+								"tnx_delivery_address" : window.localStorage.getItem("tnx_delivery_address")
 							}, 
 
 							function(data){
@@ -1058,7 +1131,7 @@ myApp.onPageInit('pinexec', function(page){
 									 		else{
 
 									 				myApp.hidePreloader();
-										 			myApp.alert("Connection Error, Try again.");
+										 			myApp.alert(data);
 									 		}
 
 									 	},
