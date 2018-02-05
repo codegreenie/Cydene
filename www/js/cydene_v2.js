@@ -45,7 +45,7 @@ myApp.onPageInit('orderhistory', function(page){
 
 	cancelScheduleOrder = function(tranxSN){
 
-	myApp.showPreloader(' ');	
+	myApp.showPreloader('Deleting Order...');	
 	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/cancel_scheduled_order.php", 
 	{
 		"order_sn" : tranxSN
@@ -80,39 +80,72 @@ myApp.onPageInit('orderhistory', function(page){
 
 cancelOrder = function(tranxSN){
 
-	myApp.showPreloader(' ');	
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/cancel_order.php", 
-	{
-		"order_sn" : tranxSN
-	},
-	 function(data){
+	myApp.modal({
 
-	 	myApp.hidePreloader();
-	 	
-	 	if(data == "delete success"){
+				title : 'Cydene Express',
+				text : 'A cancellation fee of NGN250 will take effect?',
+				buttons : [
+					{
+						text : '<span class=color-orange>No</span>',
+						bold : true,
+						
+					},
+					{
+						text : '<span class=color-indigo>Continue</span>',
+						bold : true,
+						onClick : function(){ 
+							
+							cancelMyOrder(tranxSN);
+						}	
+					}
+				]
 
-	 		mainView.router.reloadPage("orderhistory.html");
-	 	}
-	 	else{
+			});
 
-	 		myApp.alert("Error cancelling order, try later");
-	 	}
-	},
 
-	function(xhr, status, error){
+	function cancelMyOrder(tranxSN){
 
-		myApp.hidePreloader();
-        myApp.alert("Cannot reach Cydene Express servers, try again later");
 
-	});
 
+			myApp.showPreloader('Canceling...');
+			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/cancel_order.php", 
+			{
+				"order_sn" : tranxSN,
+				"tnx_owner" : window.localStorage.getItem("_cydene_user_phone_no")
+			},
+			 function(data){
+
+			 	myApp.hidePreloader();
+			 	if(data == "cancel success"){
+
+			 		mainView.router.reloadPage("orderhistory.html");
+			 	}
+			 	else{
+
+			 		myApp.alert("Error cancelling order, try later");
+			 	}
+			},
+
+			function(xhr, status, error){
+
+				myApp.hidePreloader();
+		        myApp.alert("Cannot reach Cydene Express servers, try again later");
+
+			});
+
+
+
+
+}
 }
 
 
 
 
 
-});
+}); //orderhistry page
+
+
 
 
 
@@ -634,12 +667,18 @@ myApp.onPageInit('about', function(page){ //About page
 
 
 	console.log("About page is here.");
-	/*window.open("https://facebook.com");*/
 
+	$$("#open-cydene-website").on("click", function(){
+
+		window.open("http://cydene.com");
+	});
 	
+
+		$$("#open-cydene-facebook").on("click", function(){
+
+			window.open("http://facebook.com/cydene");
+	});
 	
-
-
 
 }); //About Page
 
@@ -664,4 +703,198 @@ myApp.onPageInit('offers', function(page){ //Offers page
 
 
 }); //Offers Page
+
+
+
+
+
+
+
+
+
+
+
+myApp.onPageInit('walletstatement', function(page){ //Offers page
+
+	var users_phone = window.localStorage.getItem("_cydene_user_phone_no");
+
+	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_statement.php",
+	{
+		"the_buyer" : users_phone
+	}
+	,
+	 function(data){
+
+	 	$$(".populate-wallet-statement").html(data);
+
+	 }, function(){
+
+	 		myApp.alert("Could not connect to Cydene servers. Try again later");
+	 });
+
+
+
+
+}); //Offers Page
+
+
+
+
+
+
+
+
+myApp.onPageInit('sellerdashboard', function(page){ //Offers page
+
+	$$("#seller-name-space").html(window.localStorage.getItem("sellerName"));
+	var sellerLogo = window.localStorage.getItem("sellerLogo");
+	$$("#seller-logo-space").attr("src", "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + sellerLogo);
+
+	
+}); //Sellers Dashboard
+
+
+
+
+
+var acceptOrder, pushSaleDetails;
+myApp.onPageInit('sellerbookings', function(page){ //Offers page
+
+	
+	$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/seller_pull_pending_orders.php", 
+	{
+		"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
+	},
+	 function(data){
+
+	 	$$(".populate-regular-orders").html(data);
+	},
+
+	function(xhr, status, error){
+
+        myApp.alert(status);
+
+	});
+
+
+
+
+	$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/seller_pull_active_orders.php", 
+	{
+		"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
+	},
+	 function(data){
+
+	 	$$(".populate-active-orders").html(data);
+	},
+
+	function(xhr, status, error){
+
+        myApp.alert(status);
+
+	});
+
+
+
+	acceptOrder = function(tranxSN){
+
+	myApp.showPreloader('Accepting Order...');	
+	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_order.php", 
+	{
+		"order_sn" : tranxSN
+	},
+	 function(data){
+
+	 	myApp.hidePreloader();
+	 	if(data == "Accept success"){
+
+	 		mainView.router.reloadPage("customerdeliveryroute.html");
+	 	}
+	 	else{
+
+	 		myApp.alert("Error accepting order, try later");
+	 	}
+
+	 	
+	},
+
+	function(xhr, status, error){
+
+		myApp.hidePreloader();
+        myApp.alert("Cannot reach Cydene Express servers, try again later");
+
+	});
+
+}
+
+
+	pushSaleDetails = function(theBuyer, tranxID, tranxSN){
+		myApp.showPreloader('Processing...');
+
+		var saleDetails = {
+
+			"theBuyer" : theBuyer,
+			"tranxID" : tranxID,
+			"tranxSN" : tranxSN
+		}
+
+		window.localStorage.setItem("saleDetails", JSON.stringify(saleDetails));
+		myApp.hidePreloader();
+		mainView.router.loadPage('customerdeliveryroute.html');
+	}
+	
+
+
+
+
+}); //Sellers Bookings
+
+
+
+
+
+
+
+
+//Customer Route Page
+myApp.onPageInit('customerdeliveryroute', function(page){ //Offers page
+
+	var theSaleDetails = window.localStorage.getItem("saleDetails");
+	theSaleDetails = JSON.parse(theSaleDetails);
+
+
+		$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/pull_sale_details.php", 
+		{
+			"the_buyer" : theSaleDetails.theBuyer,
+			"tranx_SN" : theSaleDetails.tranxSN
+
+		},
+			 function(data){
+
+			 	/*myApp.hidePreloader();
+			 	if(data == "Accept success"){
+
+			 		mainView.router.reloadPage("customerdeliveryroute.html");
+			 	}
+			 	else{
+
+			 		myApp.alert("Error accepting order, try later");
+			 	}*/
+
+			 	console.log(data);
+	
+			},
+
+			function(xhr, status, error){
+
+				myApp.hidePreloader();
+		        myApp.alert("Cannot reach Cydene Express servers, try again later");
+
+			});
+	
+	
+
+}); //Customer Route Page
+
+
 

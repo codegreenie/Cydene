@@ -5,9 +5,10 @@ var myApp = new Framework7({
     materialRipple : true,
     materialRippleElements : '.ripple',
     modalTitle : 'Cydene Express',
-    swipePanel : 'both',
-    fastClicks : false
-  });
+    fastClicks : false,
+    sortable : false,
+    swipeout : false
+   });
 
 // Export selectors engine
 var $$ = Dom7;
@@ -28,12 +29,14 @@ var mainView = myApp.addView('.view-main', {
 
 
 
-
-
-
 var getLatLong, deviceCoords;
 
 $$(document).on("deviceready", function(){ //Device plugins starts here
+	deviceIsReady();
+});
+
+function deviceIsReady(){
+
 if (cordova.platformId == 'android') {StatusBar.backgroundColorByHexString("#3f51b5");}
 
 	getLatLong = function(){
@@ -81,21 +84,69 @@ if (cordova.platformId == 'android') {StatusBar.backgroundColorByHexString("#3f5
 	}
 
 
+	
+
+	$$(document).on("backbutton", function(x){ //Device plugins starts here
+
+			trapBackButton();
+
+	});
+
+} //Device is ready
+
+
 
 
 	
 
 
+	function trapBackButton(){
+		
+		var cpage = mainView.activePage;
+		var cpageName = cpage.name;
 
+		//Re-route to Dashboard
+		if(cpageName == "mapexp" || cpageName == "settings" || cpageName == "helpsection" || cpageName == "orderhistory" || cpageName == "offers" || cpageName == "sellers"){
 
+				mainView.router.loadPage("dashboard.html");
+		}
 
-	
-}); //Device plugins ends here
+		//Re-route to Settings
+		else if(cpageName == "wallet" || cpageName == "editprofile" || cpageName == "setnewpin" || cpageName == "addresseslist" ||  cpageName == "about"){
 
+			mainView.router.loadPage("settings.html");
+		}
 
+		//Re-route to Sellers Page
+		else if(cpageName == "sellerdetails"){
 
+			mainView.router.loadPage("sellers.html");
+		}
 
+		//Re-route to Seller Details Page
+		else if(cpageName == "pinexec"){
 
+			mainView.router.loadPage("sellersdetails.html");
+		}
+
+		//Re-route to Addresses list Page
+		else if(cpageName == "editaddress"){
+
+			mainView.router.loadPage("addresseslist.html");
+		}
+
+		//Re-route to dashboard
+		else if(cpageName == "dashboard"){
+
+			navigator.app.exitApp();
+		}
+
+		else{
+
+			mainView.router.back();
+		}
+
+}
 
 
 
@@ -179,12 +230,13 @@ function test4connection(){
 
 						mainView.router.loadPage("dashboard.html");
 				}
-/*
-			else if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("buyerFN") && window.localStorage.getItem("buyerLN") && window.localStorage.getItem("buyerMail")){
 
-						mainView.router.loadPage("dashboard.html");
+			else if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("sellerName") && window.localStorage.getItem("sellerMail") && window.localStorage.getItem("sellerAddress")){
+
+						mainView.router.loadPage("sellerdashboard.html");
+						console.log("Sellers Dashboard");
 				}
-*/
+
 				else{
 
 					mainView.router.loadPage("theswipe.html");
@@ -195,6 +247,8 @@ function test4connection(){
 }
 /******** Start Page *************/
 	
+
+
 
 
 
@@ -316,51 +370,42 @@ myApp.onPageInit('getStarted', function(page){
 
 			$$("#verify_existing_reg_arrow").on('click', function(e){
 
-						myApp.showPreloader(' ');
+						myApp.showPreloader('Verifying OTP...');
 
 						
 
-						$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp.php",
-						method : "POST",
-						crossDomain : true,
-						timeout : 10000,
-						data : {
-
+						$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp.php",
+						{
 							users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
 							supplied_otp : $$("#user_otp").val()
 						},
-						dataType : "json", 
-						error : function(xhr, status){
-						
-							myApp.hidePreloader();
-							myApp.alert(xhr.message);
+						function(data){
 
-						},
-						success : function(data, status, xhr){
 							myApp.hidePreloader();
+							console.log(data);
 							
 
-
+							
 							var blowData = data;
+							console.log(blowData);
 							console.log(blowData.this_data_type);
 
 							
 							if(blowData.this_data_type == "Buyer"){
 
-							if(blowData.the_buyer_mail != null && blowData.the_buyer_mail != null && blowData.the_buyer_fn != null && blowData.the_buyer_fn != null && blowData.the_buyer_ln != null && blowData.the_buyer_ln != null){
-								
-								window.localStorage.setItem("buyerFN", blowData.the_buyer_fn);
-								window.localStorage.setItem("buyerLN", blowData.the_buyer_ln);
-								window.localStorage.setItem("buyerMail", blowData.the_buyer_mail);
+								if(blowData.the_buyer_mail != null && blowData.the_buyer_mail != null && blowData.the_buyer_fn != null && blowData.the_buyer_fn != null && blowData.the_buyer_ln != null && blowData.the_buyer_ln != null){
+									
+									window.localStorage.setItem("buyerFN", blowData.the_buyer_fn);
+									window.localStorage.setItem("buyerLN", blowData.the_buyer_ln);
+									window.localStorage.setItem("buyerMail", blowData.the_buyer_mail);
 
-								mainView.router.loadPage("dashboard.html");
-							}
+									mainView.router.loadPage("dashboard.html");
+								}
 
-							else{
+								else{
 
-								mainView.router.loadPage("signup.html");
-							}
+									mainView.router.loadPage("signup.html");
+								}
 
 							
 						}
@@ -373,6 +418,7 @@ myApp.onPageInit('getStarted', function(page){
 								window.localStorage.setItem("sellerName", blowData.the_seller_name);
 								window.localStorage.setItem("sellerMail", blowData.the_seller_mail);
 								window.localStorage.setItem("sellerAddress", blowData.the_seller_address);
+								window.localStorage.setItem("sellerLogo", blowData.the_seller_logo);
 
 								mainView.router.loadPage("sellerdashboard.html");
 							}
@@ -396,39 +442,39 @@ myApp.onPageInit('getStarted', function(page){
 
 						}
 
-						
-						}
-							
+					
+
+			},
+
+			function(){
+
+					myApp.alert("Unable to connect to Cydene Servers");
 
 			});
 
 
 
 });
+			
+
+
+
 			$$("#resend_otp").on("click", function(){
 				myApp.showPreloader(' ');
 
 				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
-				$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
-						method : "POST",
-						crossDomain : true,
-						timeout : 10000,
-						data : {
+				$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
+						{
 
 							users_phone : theUserPhone
 						},
-						dataType : "text", 
-						error : function(xhr, status){
-						
-							myApp.hidePreloader();
-							myApp.alert(status);
-
-						},
-						success : function(data, status, xhr){
+						function(data, status, xhr){
 							myApp.hidePreloader();
 						}
-						
+						,
+						function(){
+
+							myApp.alert("Unable to connect to Cydene Servers. Try again later");
 						});
 
 			});
@@ -537,6 +583,8 @@ myApp.onPageInit('getStarted', function(page){
 
 
 
+
+
 /**********************Set Exec PIN *****************/
 
 myApp.onPageInit('setexecpin', function(page){
@@ -632,64 +680,19 @@ myApp.onPageInit('setexecpin', function(page){
 myApp.onPageInit('dashboard', function(page){
 
 
-$$(".go-to-order").click(function(){
-
-
-		myApp.alert("Yello!");
-	});
-
-
-
-
-	var user_fn = window.localStorage.getItem("buyerFN");
-	var user_ln = window.localStorage.getItem("buyerLN");
-	$$("#profile_display_name").html(user_fn + " " + user_ln);
-
-
 	for (var i = 1; i <=100; i++) {
 		
 		$$("#gas-purchase-qty").append("<option value= " + i + ">" + i + "</option>");	
 	}
 
-		$$("#sos_btn").on("click", function(){
-		myApp.modal({
-			title : "Cydene Express",
-			text : "Start Emergency Call?", 
-			buttons : [
-				{
-				text : "<a href='#' class='color-orange'>Not Now</a>",
-				bold : true
-			},
-
-			{
-				text : "<a href='#' class='color-indigo'>Yes Please!</a>",
-				bold : true
-			},
-
-
-			]
-		})
-	});
-
-
+		
 	var cydeneUsersPhone = window.localStorage.getItem("_cydene_user_phone_no");
-				$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_delivery_address.php",
-						method : "POST",
-						crossDomain : true,
-						timeout : 10000,
-						data : {
+				$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_delivery_address.php",
+						 {
 
 							cydene_users_phone : cydeneUsersPhone
 						},
-						dataType : "text", 
-						error : function(xhr, status){
-						
-							/*myApp.hidePreloader();
-							myApp.alert(status);*/
-
-						},
-						success : function(data, status, xhr){
+						function(data, status, xhr){
 							
 							if(data === "No delivery address"){
 
@@ -713,13 +716,14 @@ $$(".go-to-order").click(function(){
 
 										},
 									]
-
-
-
 								});
 							}
 						}
+						, function(xhr, status){
 						
+							myApp.hidePreloader();
+							myApp.alert("Cannot connect to Cydene Servers");
+
 						});
 
 		
@@ -729,66 +733,119 @@ $$(".go-to-order").click(function(){
 
 
 		$$("#proceed-gas-purchase").on("click", function(){
+
+			myApp.showPreloader('Listing Addresses...');
+		
+		//populate buyers addresses
+		$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/address_fetcher_2.php", 
+			{"users_phone" : window.localStorage.getItem("_cydene_user_phone_no")}, 
+		
+		function(data){
+			myApp.hidePreloader();
+			var django = data;
+			var addrPack = "";
+			for(b in django){
+
+				addrPack += "<input type='radio' name='address_selected' class='address-pointer' value='" + django[b] + "'> " + django[b] + "<br>";
+			}
+
+			myApp.hidePreloader();
+			myApp.modal({
+				title : "Pick delivery Address",
+				text : addrPack,
+				buttons : [
+					{ text : "<span class='color-orange'>Cancel</span>", bold : true },
+					{ text : "<span class='color-indigo'>Continue</span>", bold : true,
+						onClick : function(){
+							addressPicker();
+						}
+					}]
+		});
+
+		}, 
+
+		function(data){
+
+			myApp.alert("Unable to connect to Cydene Servers. Try again later.");
+
+		});
+
+	}); // End of proceed gas purchase button function.
+
+
+
+
+		function addressPicker(){
+			myApp.showPreloader('Processsing...');
+
 			var gasSize = $$("#gas-cylinder-size").val();
 			var gasQty = $$("#gas-purchase-qty").val();
-					
+			var delivery_address = $$(".address-pointer").filter(function(){return $$(this).prop("checked");}).val();
+			
 					var uniqPurchase = {
 						"gasSize" : gasSize,
-						"gasQty" : gasQty
+						"gasQty" : gasQty,
+						"delivery_address" : delivery_address 
 					}
+			window.localStorage.setItem("uniqPurchase", JSON.stringify(uniqPurchase));
+
+			if($$("#schedule-switch").prop("checked") == true)
+			{
+
+				runScheduledTransaction();
+			}
+			else{
+
+				myApp.hidePreloader();
+				mainView.router.loadPage("sellers.html");
+			}
 
 
-		if($$("#schedule-switch").prop("checked") != true){
-
-					window.localStorage.setItem("uniqPurchase", JSON.stringify(uniqPurchase));
-					mainView.router.loadPage("sellers.html");
-
-				}
+		}
 
 
-				else{
 
 
-					var theRecurrDate = $$("#recurring-date-select-text").val();
-					var splitDay = theRecurrDate.substring(6,8);
-					var theBuyer = window.localStorage.getItem("_cydene_user_phone_no");
 
 
-					
-						$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/schedule_transaction_recorder.php", 
+
+
+		function runScheduledTransaction(){
+
+			var theRecurrDate = $$("#recurring-date-select-text").val();
+			var splitDay = theRecurrDate.substring(6,8);
+			var theBuyer = window.localStorage.getItem("_cydene_user_phone_no");
+			var scheduleDeliveryAddress = $$(".address-pointer").filter(function(){return $$(this).prop("checked");}).val();
+			var theUniqPurchase = JSON.parse(window.localStorage.getItem("uniqPurchase"));
+				var theGasSize = theUniqPurchase.gasSize;
+				var theGasQty = theUniqPurchase.gasQty;
+
+			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/schedule_transaction_recorder.php", 
 							
-							{
-								"the_cylinder_size" : gasSize,
-								"the_quantity" : gasQty,
-								"the_recurr_date" : splitDay,
-								"the_buyer" : theBuyer,
-							},
+					{
+						"the_cylinder_size" : theGasSize,
+						"the_quantity" : theGasQty,
+						"the_recurr_date" : splitDay,
+						"the_buyer" : theBuyer,
+						"the_delivery_address" : scheduleDeliveryAddress
+					},
 
 							function(data){
+								myApp.hidePreloader();
 								if(data == "Successful"){
-								mainView.router.loadPage("orderhistory.html");
-							}
-							else{
+										mainView.router.loadPage("orderhistory.html");
+									}
+										else{
 
-								myApp.alert(data);
-							}
+											myApp.alert(data);
+										}
 
 							}, function(){
 
 								myApp.alert("Unable to connect to Cydene Servers. Please try later");
 
 							});
-
-
-						
-
-
-				}
-
-
-
-		});
-
+			}
 
 
 
@@ -798,40 +855,69 @@ $$(".go-to-order").click(function(){
 
 					if($$(this).prop("checked") == true){
 			               
-$$("<li id='recurring-date-select'><div class='item-content'><div class='item-media'><i class='icon material-icons color-indigo'>date_range</i></div><div class='item-inner theme-indigo'><div class='item-title label color-indigo'>Recurring Dates.</div><div class='item-input'><input type='text' required id='recurring-date-select-text'></div></div></div></li>").insertAfter($$("#schedule-switch-panel"));
-	           
-	$$("#recurring-date-select-text").click(function(){
+				$$("<li id='recurring-date-select'><div class='item-content'><div class='item-media'><i class='icon material-icons color-indigo'>date_range</i></div><div class='item-inner theme-indigo'><div class='item-title label color-indigo'>Recurring Dates.</div><div class='item-input'><input type='text' required id='recurring-date-select-text'></div></div></div></li>").insertAfter($$("#schedule-switch-panel"));
+					           
+					$$("#recurring-date-select-text").click(function(){
 
-		var qqs = myApp.calendar({
+						var qqs = myApp.calendar({
 
-			input : "#recurring-date-select-text",
-			yearPicker : false,
-			monthPicker : false,
-			cssClass : "theme-indigo",
-			dateFormat: "Day - dd, of every month"
+							input : "#recurring-date-select-text",
+							yearPicker : false,
+							monthPicker : false,
+							cssClass : "theme-indigo",
+							dateFormat: "Day - dd, of every month"
+
+						});
+
+					});
+				}
+				    else{
+
+				    	$$("#recurring-date-select").remove();
+					  }
+			});
+
+
+
+		if(!window.localStorage.getItem("version_control")){
+
+
+			window.localStorage.setItem("version_control", "1.0.4");
+		}
+		
+
+		var mycurrentVersion = window.localStorage.getItem("version_control");
+
+		//code to check for update version of the app
+		$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/version_control.php", function(datax){
+
+				if(datax !== mycurrentVersion){
+
+					myApp.modal({
+					title : 'Cydene Express',
+					text : 'A new update is available for Cydene Express.<br> v' + datax,
+					buttons : [
+						{
+							text : '<span class=color-orange>Not Now</span>',
+							bold : true
+						},
+						{
+							text : '<span class=color-indigo>Update App</span>',
+							bold : true,
+							onClick : function(){test4connection()}	
+
+						}
+					]
+					
+					}); 
+
+				}
 
 		});
 
-	});
-
-	            }
-
-
-	            else{
-
-	            	$$("#recurring-date-select").remove();
-	            }
-
-        	
 
 
 
-
-        
-        });
-
-
-			
 });
 
 /**********************Dashboard****************
@@ -853,11 +939,12 @@ $$("<li id='recurring-date-select'><div class='item-content'><div class='item-me
 
 
 /**********************Sellers*****************/
-var buyFromThisSeller;
+var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceLists = [];
 	myApp.onPageInit('sellers', function(page){
 
 	var selectedPurchases = JSON.parse(window.localStorage.getItem("uniqPurchase"));
 	var postedCylinderSize = selectedPurchases.gasSize;
+	var theBuyerDeliveryAddress = selectedPurchases.delivery_address;
 
 	
 
@@ -895,8 +982,126 @@ var buyFromThisSeller;
 		
 
 
+			
+			$$(".nearby-sellers").on("click", function(){
+				myApp.showPreloader("Loading Nearby Sellers...");
+
+				//Grab a list of all sellers
+				$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/list_all_sellers.php", function(data){
+						
+						theAddresses = data;
+						console.log(data);
+						
+					}, function(){
+					myApp.hidePreloader();
+					myApp.alert("error in getting addresses");
+				});
 
 
+
+				//Get address details from addressname
+				$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/get_address_details_from_name.php", 
+				{
+					"the_address_name" : theBuyerDeliveryAddress,
+					"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
+				},
+					function(data){
+						
+						//myApp.alert(data);
+						theAddressDetails = data;
+						
+					}, function(){
+					myApp.hidePreloader();
+					myApp.alert("Could not connect to Cydene Servers. Try later");
+				});
+
+
+
+
+				//Giant For
+				talkTogGoogle = function(){
+					distanceLists = [];
+
+					for(h in theAddresses){
+
+				var originA = theAddressDetails;
+				var destinationA = theAddresses[h];
+				var service = new google.maps.DistanceMatrixService();
+				service.getDistanceMatrix(
+				  {
+				    origins: [originA],
+				    destinations: [destinationA],
+				    travelMode: 'DRIVING',
+				    avoidHighways: false,
+				    avoidTolls: false,
+				  }, callback);
+
+				function callback(response, status) {
+					if (status == 'OK') {
+
+						console.log(response);
+
+				    var origins = response.originAddresses;
+				    var destinations = response.destinationAddresses;
+
+				    
+				    for (var i = 0; i < origins.length; i++) {
+
+				      var results = response.rows[i].elements;
+				      for (var j = 0; j < results.length; j++) {
+				        var element = results[j];
+				        var distance = element.distance.text;
+
+				        var splitDistance = distance.split(" ");
+				        var clearDistance = splitDistance[0];
+				        
+				        /*var duration = element.duration.text;*/
+				        var from = origins[i];
+				        var to = destinations[j];
+				        if(parseInt(clearDistance) <= 1000){
+
+				        	//distanceLists.push(destinationA);
+				        	myApp.alert(to);
+				        }
+				      }
+				    }
+
+
+				  }
+				  else{
+				  		myApp.hidePreloader();
+				  		myApp.alert("Sorry, i'm having issues talking to Google Maps. Network Error");
+				  }
+				}
+			
+			}
+
+			//console.log(distanceLists);
+			window.setTimeout(function(){listNearbyAddresses()}, 3000);
+		}
+
+
+			window.setTimeout(function(){talkTogGoogle()}, 5000);
+
+			function listNearbyAddresses(){
+
+					$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/list_nearby_sellers.php",
+					 {nearby_list : distanceLists},
+					function(data){
+							myApp.hidePreloader();
+							$$(".populate-nearby-sellers").removeClass('text-center').html(data);
+							//console.log(data);
+					},
+					function(){
+							myApp.hidePreloader();
+							myApp.alert("Cannot connect to Cydene Servers");
+					});
+			}
+
+
+
+
+			}); // End of Click Function
 
 
 
@@ -923,6 +1128,7 @@ var buyFromThisSeller;
 myApp.onPageInit('sellerdetails', function(page){
 
 
+
 	var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
 
 	var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
@@ -942,40 +1148,14 @@ myApp.onPageInit('sellerdetails', function(page){
 		$$(".quote-total-price").html("<strike>N</strike>" + totalPrice);
 
 
-		//populate buyers addresses
-		$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/address_fetcher.php", 
-			{
-				"users_phone" : window.localStorage.getItem("_cydene_user_phone_no")
-			}, 
-
-		function(data){
-
-			$$(".populate-addresses").append(data);
-
-		}, 
-
-		function(data){
-
-			myApp.alert("Unable to fetch addresses. Try again later.");
-
-		});
-
-
-
 
 
 		$$("#payment-btn").html("Pay <strike>N</strike>" + totalPrice).click(function(){
 
 				myApp.showPreloader('Processsing...');
 				var paymentMethod = $$("input[name='payment_method']:checked").val();
-				var deliver2Address =  $$(".address-pointer").filter(
-
-							function(){
-
-								return $$(this).prop("checked");
-							}
-							).val();
-
+				var deliver2Address =  splitBuyDetails.delivery_address;
+				
 			
 
 				
@@ -991,23 +1171,27 @@ myApp.onPageInit('sellerdetails', function(page){
 						"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
 						"tnx_seller" : splitSellerDetails.seller_details_id,
 						"tnx_payment_method" : "COD",
-						"tnx_delivery_address" : deliver2Address
+						"tnx_delivery_address" : deliver2Address,
+						"tnx_coupon_sn" : 0,
+						"tnx_cashback" : 0
 					}, 
 
 					function(data){
-
-						myApp.hidePreloader();
-						myApp.alert(data);
-
-						//if(data == "Successful"){
+					if(data == "Successful"){
 							
-							//mainView.router.loadPage("ordersuccess.html");
+							myApp.hidePreloader();
+							mainView.router.loadPage("ordersuccess.html");
 
-						//}
+						}
+						else{
 
+							myApp.hidePreloader();
+							myApp.alert("Could not place order try again later.");
+						}
+						
 					}, function(){
 
-						myApp.alert("An error has occured");
+						myApp.alert("An error has occured. Network Error");
 					});
 				}
 
@@ -1015,12 +1199,64 @@ myApp.onPageInit('sellerdetails', function(page){
 
 
 				else{
+					window.localStorage.setItem("tnx_delivery_address", deliver2Address);
 
 					myApp.hidePreloader();
+					myApp.prompt('Have a coupon code? Apply it now for discounts!!!', 'Coupons!!!', function (value) {
+       					 
+       					 myApp.showPreloader('Checking coupon code...');
+       					 $$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
+								 {
+								 	coupon_user : window.localStorage.getItem('_cydene_user_phone_no'),
+								 	coupon_code : value
+								 },
+								function(data){
+										myApp.hidePreloader();
+
+
+										if(data.status == "Coupon Code Invalid or Expired" || data.status == "You have made use of this coupon code once"){
+
+											myApp.alert(data.status);
+										}
+										else{
+											window.localStorage.setItem("original_total_price", totalPrice);
+											var originalPrice = window.localStorage.getItem("original_total_price");
+
+											discountedPrice = originalPrice - ((data.coupon_value / 100) * originalPrice);
+											window.localStorage.setItem("discounted_price", discountedPrice);
+
+											//Setup coupon details
+											var couponDetails = {
+
+												"coupon_sn" : data.coupon_sn,
+												"coupon_value" : data.coupon_value
+											}
+
+											window.localStorage.setItem("coupon_details", JSON.stringify(couponDetails));
+
+											mainView.router.loadPage("pinexec.html");
+											
+										}
+
+								},
+								function(){
+										
+										myApp.hidePreloader();
+										myApp.alert("Unable to check coupon code!");
+								});
+										
+
+    				},
+
+    				function(){
+    					
+    					myApp.hidePreloader();
+    					window.localStorage.removeItem("discounted_price");
+    					mainView.router.loadPage("pinexec.html");
+
+    				});
+					
 						
-						
-						window.localStorage.setItem("tnx_delivery_address", deliver2Address);
-						mainView.router.loadPage("pinexec.html");
 
 				}
 
@@ -1052,12 +1288,29 @@ myApp.onPageInit('sellerdetails', function(page){
 
 myApp.onPageInit('pinexec', function(page){
 
+		var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
+		var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
+		var parsedCouponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
+		
+		var totalPrice, initialPrice;
+		if(window.localStorage.getItem("discounted_price")){
 
+			totalPrice = window.localStorage.getItem("discounted_price");
+			initialPrice = window.localStorage.getItem("original_total_price");
 
-		var splitTnxFields = JSON.parse(window.localStorage.getItem("tnx_fields"));
+			var discountValue = parsedCouponDetails.coupon_value;
+
+			$$("#discount-highlighter").html("<b><i>" + discountValue + "% Discount Applied!</i></b>").show();
+			cashback = initialPrice - totalPrice;
+		}
+		else{
+
+			totalPrice = window.localStorage.getItem("original_total_price");
+			cashback = 0;
+		}
 		
 
-		$$("#show-amount").html("<strike>N</strike>" + splitTnxFields.tnx_total_price);
+		$$("#show-amount").html("<strike>N</strike>" + totalPrice);
 
 
 		
@@ -1085,11 +1338,10 @@ myApp.onPageInit('pinexec', function(page){
 					if(data === "PIN Match"){
 
 					 	
-								var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
-					 			var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
-					 			var tranxFields = window.localStorage.getItem("tnx_fields");
-					 			var totalPrice = splitSellerDetails.cylinder_size_price * splitBuyDetails.gasQty;
-					 			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
+							var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
+				 			var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
+				 			var tranxFields = window.localStorage.getItem("tnx_fields");
+					 		$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
 
 							{
 
@@ -1099,11 +1351,14 @@ myApp.onPageInit('pinexec', function(page){
 								"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
 								"tnx_seller" : splitSellerDetails.seller_details_id,
 								"tnx_payment_method" : "Wallet",
-								"tnx_delivery_address" : window.localStorage.getItem("tnx_delivery_address")
+								"tnx_delivery_address" : window.localStorage.getItem("tnx_delivery_address"),
+								"tnx_coupon_sn" : parsedCouponDetails.coupon_sn,
+								"tnx_cashback" : cashback
 							}, 
 
 							function(data){
 										myApp.hidePreloader();
+										
 										if(data == "Successful"){
 
 											myApp.hidePreloader();
@@ -1232,34 +1487,36 @@ myApp.onPageInit('mapexp', function(page){
 
 	$$("#save-address-btn").on("click", function(){
 
-		myApp.showPreloader(' ');
+		myApp.showPreloader('Saving Address...');
 
-		$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/save_delivery_address.php",
-						method : "POST",
-						crossDomain : true,
-						timeout : 10000,
-						data : {
+		var theDeliveryAddress =  $$(".delivery-address").val();
 
+		  var geocoder = new google.maps.Geocoder();
+		    geocoder.geocode( { 'address': theDeliveryAddress}, function(results, status) {
+		      if (status == 'OK') {
+		        
+		         myApp.hidePreloader();
+		        theAddressLatLng = results[0].geometry.location;
+
+		        console.log(theAddressLatLng);
+		       
+		       
+
+		/*$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/save_delivery_address.php",
+						{
 							the_users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
 							the_address_name : $$("#the-address-name").val(),
-							the_delivery_address : $$(".delivery-address").val()
+							the_delivery_address : theDeliveryAddress,
+							the_address_LatLng : theAddressLatLng
 						},
-						dataType : "html", 
-						error : function(xhr, status){
-						
-							myApp.hidePreloader();
-							myApp.alert("Network Error, Try again later");
-
-						},
-						success : function(data, status, xhr){
+						function(data){
 							myApp.hidePreloader();
 							console.log(data);
 							
 							if(data == "Save Successful"){
 
 								myApp.hidePreloader();
-								mainView.router.loadPage("dashboard.html");
+								/*mainView.router.loadPage("dashboard.html");
 							}
 							else{
 
@@ -1267,9 +1524,19 @@ myApp.onPageInit('mapexp', function(page){
 
 							}
 							
-						}
-						
-						});
+						}, function(){
+
+							myApp.alert("Unable to connect to Cydene Servers. Try again later");
+
+						});*/
+
+				} else {
+
+				        myApp.alert('Geocode was not successful for the following reason: ' + status);
+				  }
+
+
+		    });
 
 	});
 	
@@ -1279,7 +1546,7 @@ myApp.onPageInit('mapexp', function(page){
 	
 
 
-});
+}); // Map Exp Page
 
 
 
