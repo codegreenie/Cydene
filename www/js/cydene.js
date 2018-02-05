@@ -31,9 +31,8 @@ var mainView = myApp.addView('.view-main', {
 
 var getLatLong, deviceCoords;
 
-$$(document).on("deviceready", function(){ //Device plugins starts here
-	deviceIsReady();
-});
+document.addEventListener("deviceready", deviceIsReady, false);
+
 
 function deviceIsReady(){
 
@@ -86,11 +85,7 @@ if (cordova.platformId == 'android') {StatusBar.backgroundColorByHexString("#3f5
 
 	
 
-	$$(document).on("backbutton", function(x){ //Device plugins starts here
-
-			trapBackButton();
-
-	});
+	document.addEventListener("backbutton", trapBackButton, false);
 
 } //Device is ready
 
