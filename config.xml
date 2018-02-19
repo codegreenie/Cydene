@@ -12,10 +12,10 @@
     <preference name="android-minSdkVersion" value="14" />
     <preference name="StatusBarBackgroundColor" value="#3f51b5" />
     <platform name="android">
-        <icon src="icon.png" />
+        <icon src="icon.jpeg" />
     </platform>
     <platform name="ios">
-        <icon src="icon.png" />
+        <icon src="icon.jpeg" />
     </platform>
     <access origin="*" />
     <allow-intent href="http://*/*" />
