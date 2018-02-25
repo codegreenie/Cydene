@@ -102,7 +102,7 @@ if (cordova.platformId == 'android') {
 		
 
 			 destinationTyper = Camera.DestinationType.FILE_URI;
-    		pictureSource = Camera.PictureSourceType.CAMERA;
+    		pictureSource = Camera.PictureSourceType.PHOTOLIBRARY;
 			    
 			    navigator.camera.getPicture(cameraGood, cameraBad, 
 			    {
