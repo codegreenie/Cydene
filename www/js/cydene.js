@@ -42,7 +42,7 @@ if (cordova.platformId == 'android') {
 
 	/*window.plugins.PushbotsPlugin.initialize("5a6153c6a5d1030b9c4e444c", {"android":{"sender_id":"106429099464"}});*/
 
-
+	navigator.splashscreen.hide();
 	getLatLong = function(){
 			
 			navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure, {enableHighAccuracy : true, timeout : 10000});
