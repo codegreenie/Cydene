@@ -117,7 +117,7 @@ if (cordova.platformId == 'android') {
 				  console.log(imageURI);
 				    
 				    var image = document.getElementById('myImage');
-				    image.src = "data:image/jpeg;base64," + imageURI;
+				    image.src = imageURI;
 				}
 
 	function cameraBad(message) {
