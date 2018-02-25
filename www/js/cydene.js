@@ -40,7 +40,7 @@ if (cordova.platformId == 'android') {
 	StatusBar.backgroundColorByHexString("#3f51b5");
 }
 
-	/*window.plugins.PushbotsPlugin.initialize("5a6153c6a5d1030b9c4e444c", {"android":{"sender_id":"106429099464"}});*/
+	window.plugins.PushbotsPlugin.initialize("5a6153c6a5d1030b9c4e444c", {"android":{"sender_id":"106429099464"}});
 
 	navigator.splashscreen.hide();
 	getLatLong = function(){
