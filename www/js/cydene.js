@@ -102,7 +102,7 @@ if (cordova.platformId == 'android') {
 		
 
 			 destinationTyper = Camera.DestinationType.FILE_URI;
-    		pictureSource = Camera.PictureSourceType.PHOTOLIBRARY;
+    		pictureSource = Camera.PictureSourceType.CAMERA;
 			    
 			    navigator.camera.getPicture(cameraGood, cameraBad, 
 			    {
@@ -115,10 +115,50 @@ if (cordova.platformId == 'android') {
 
 	function cameraGood(imageURI) {
 				  console.log(imageURI);
+
+				  myApp.showPreloader('uploading image...');
 				    
-				    var image = document.getElementById('myImage');
+				    var image = document.getElementById('seller-logo-space');
 				    image.src = imageURI;
+
+
+
+			    var win = function (r) {
+
+				    console.log("Code = " + r.responseCode);
+				    console.log("Response = " + r.response);
+				    console.log("Sent = " + r.bytesSent);
+
+				    myApp.hidePreloader();
+				    myApp.alert("Upload Successful");
 				}
+
+				var fail = function (error) {
+					myApp.hidePreloader();
+				    myApp.alert("An error has occurred: Code = " + error.code);
+				    console.log("upload error source " + error.source);
+				    console.log("upload error target " + error.target);
+				}
+
+				var options = new FileUploadOptions();
+				options.fileKey = "file";
+				options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+				options.mimeType = "image/jpeg";
+				options.chunkedMode = false;
+
+				var params = {};
+				params.value1 = "test";
+				params.value2 = "param";
+
+				options.params = params;
+
+				var ft = new FileTransfer();
+				ft.upload(imageURI, encodeURI("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/upload_seller_logo.php"), win, fail, options);
+
+
+		}
+
+
 
 	function cameraBad(message) {
 	    alert('Failed because: ' + message);
@@ -127,22 +167,7 @@ if (cordova.platformId == 'android') {
 
 
 
-	/*getImg4rmGallery = function(selection) {
-
-    var srcType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
-    var options = setOptions(srcType);
-    var func = createNewFileEntry;
-
-    navigator.camera.getPicture(function cameraSuccess(imageUri) {
-
-        // Do something
-
-    }, function cameraError(error) {
-        console.debug("Unable to obtain picture: " + error, "app");
-
-    }, options);
-}*/
-
+	
 } //Device is ready
 
 
@@ -492,7 +517,7 @@ myApp.onPageInit('getStarted', function(page){
 
 						else{
 
-								mainView.router.loadPage("signup.html");
+								mainView.router.loadPage("selectaccount.html");
 
 						}
 
@@ -2492,6 +2517,44 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 	var sellerLogo = window.localStorage.getItem("sellerLogo");
 	$$("#seller-logo-space").attr("src", "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + sellerLogo);
 
+
+
+
+	var mycurrentVersion = window.localStorage.getItem("version_control");
+
+		//code to check for update version of the app
+		$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/version_control.php", function(datax){
+
+				if(datax !== mycurrentVersion){
+
+					myApp.modal({
+					title : 'Cydene Express',
+					text : 'A new update is available for Cydene Express.<br> v' + datax,
+					buttons : [
+						{
+							text : '<span class=color-orange>Not Now</span>',
+							bold : true,
+							onClick : () => {
+								exitMyApp();
+							}
+						},
+						{
+							text : '<span class=color-indigo>Update App</span>',
+							bold : true,
+							onClick : () => {
+
+								/* OPEN PLAY STORE */
+							}	
+
+						}
+					]
+					
+					}); 
+
+				}
+
+		});
+
 	
 }); //Sellers Dashboard
 
@@ -2934,6 +2997,15 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 
 
 
+
+		$$("#seller-change-logo").click(() => {
+
+			getImg4rmGallery();
+
+		});
+
+
+
 }); //Sellers Settings
 
 
@@ -2955,7 +3027,7 @@ myApp.onPageInit('sellersignup', function(page){ //Sellers Signup
 }
 
 	
-	setTimeout(() => { initAutoCompleteAddr(); }, 2000);
+	setTimeout(() => { initAutoCompleteAddr(); }, 1000);
 
 
 
@@ -2993,14 +3065,16 @@ myApp.onPageInit('sellersignup', function(page){ //Sellers Signup
 				 		myApp.hidePreloader();
 				 		  
 						  if(data == "Registration Successful"){
-						  /*var new_user_first_name = $$("#new_user_first_name").val();
-						  var new_user_last_name = $$("#new_user_last_name").val();
-						  var new_user_mail = $$("#new_user_mail").val();
+							  var theSellerAddress = $$("#searchTextFieldAddr").val();
+							  var theSellerName = $$("#new_company_name").val();
+							  var theSellerMail = $$("#new_company_mail").val();
+							  var theSellerLogo = "cylinder.png";
 
-						  window.localStorage.setItem("buyerFN", new_user_first_name);
-						  window.localStorage.setItem("buyerLN", new_user_last_name);
-						  window.localStorage.setItem("buyerMail", new_user_mail);*/
-						  mainView.router.loadPage("selleruploadlogo.html");
+							  window.localStorage.setItem("sellerName", theSellerName);
+							  window.localStorage.setItem("sellerAddress", theSellerAddress);
+							  window.localStorage.setItem("sellerMail", theSellerMail);
+							  window.localStorage.setItem("sellerLogo", theSellerLogo);
+							  mainView.router.loadPage("sellersignuppricelist.html");
 						}
 
 						else{
@@ -3042,23 +3116,146 @@ myApp.onPageInit('sellersignup', function(page){ //Sellers Signup
 
 
 
+myApp.onPageInit('sellersignuppricelist', function(page){ //Sellers Set price list
+
+	console.log("seller set price list...");
+
+	var userPhone = window.localStorage.getItem("_cydene_user_phone_no");
+	$$("#seller-phone").val(userPhone);
+
+	$$("#submit-price-list").on('click', function(e){
+
+					$$('#price-list').trigger('submit');
+
+			});
 
 
+				$$('#price-list').on('form:beforesend', function (e) {
+					  myApp.showPreloader('Saving Price List...');
+				});
+				
 
-myApp.onPageInit('selleruploadlogo', function(page){ //Sellers Signup
+				$$('#price-list').on('form:error', function (e) {
+					  
+						myApp.hidePreloader();
+						var xcode = e.detail.data;
+						myApp.alert("Unable to connect to Cydene Servers. Try again later");
 
+					});
+							
 
+				$$('#price-list').on('form:success', function (e) {
+					  var xhr = e.detail.xhr; // actual XHR object
+					 
+					  var data = e.detail.data; // Ajax response from action file
+					  myApp.hidePreloader();
+					  
+					  if(data == "Update Successful"){
+					  
+					  	mainView.router.loadPage("sellerdashboard.html");
+					
+					  }
+
+					  else{
+
+					  	myApp.alert("An error occured. Please try again later.");
+					  }
+					});
 	
-	$$("#seller-upload-logo").click(() => {
 
-			getImg4rmGallery();
-			
-		});		
+});//Sellers Set price list
 
+
+
+
+
+
+myApp.onPageInit("updatepricelist", function(page){
+
+	myApp.showPreloader("Fetching prices...");
+
+	var userPhone = window.localStorage.getItem("_cydene_user_phone_no");
+	$$("#seller-phone").val(userPhone);
+
+
+	//First Fetch pricelist
+	$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_current_pricelist.php",
+		{
+			"user_phone_data" : userPhone
+		},
+		 (data) => {
+		 		console.log(data);
+		 		myApp.hidePreloader();
+		 		if(data == "No Pricelist found!"){
+		 			myApp.alert(data);
+		 		}
+		 		else{
+		 			
+		 			var sizesArray = [];
+		 			for(hq in data){
+		 				
+		 				sizesArray.push(data[hq]);
+					}
+		 			
+		 			 $$('#threekg-price').val(sizesArray[0]);
+		 			  $$('#fivekg-price').val(sizesArray[1]);
+		 			   $$('#sixkg-price').val(sizesArray[2]);
+		 			    $$('#twelvepointfivekg-price').val(sizesArray[3]);
+		 			     $$('#twentyfivekg-price').val(sizesArray[4]);
+		 			     $$('#fiftykg-price').val(sizesArray[5]);
+		 			
+		 		}
+		 	
+		 }, () => {
+
+		 		myApp.hidePreloader();
+		 		myApp.alert("Unable to connect to Cydene servers");
+		 });
+
+
+
+
+	$$("#submit-price-list-update").on('click', function(e){
+
+					$$('#price-list-update').trigger('submit');
+
+	});
+
+
+				$$('#price-list-update').on('form:beforesend', function (e) {
+					  myApp.showPreloader('Updating Price List...');
+				});
+				
+
+				$$('#price-list-update').on('form:error', function (e) {
+					  
+						myApp.hidePreloader();
+						var xcode = e.detail.data;
+						myApp.alert("Unable to connect to Cydene Servers. Try again later");
+
+					});
+							
+
+				$$('#price-list-update').on('form:success', function (e) {
+					  var xhr = e.detail.xhr; // actual XHR object
+					 
+					  var data = e.detail.data; // Ajax response from action file
+					  myApp.hidePreloader();
+					  
+					  if(data == "Update Successful"){
+					  
+					  	mainView.router.loadPage("sellerdashboard.html");
+					
+					  }
+
+					  else{
+
+					  	myApp.alert("An error occured. Please try again later.");
+					  }
+					});
+	
 
 });
-
-
 
 
 
