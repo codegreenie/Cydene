@@ -2359,7 +2359,7 @@ $$("#edit-address-id").val(patchAddrSN);
 			}
 			else{
 
-				myApp.alert("Error saving address, try again later.");
+				myApp.alert(data);
 
 			}
 			
@@ -2902,6 +2902,7 @@ myApp.onPageInit('customerdeliveryroute', function(page){ //Offers page
 	  };
 	  
 	  directionsService.route(request, function(response, status) {
+
 	    if (status == 'OK') {
 	      
 	      directionsDisplay.setDirections(response);
