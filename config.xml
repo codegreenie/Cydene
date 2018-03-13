@@ -51,5 +51,5 @@
     <plugin name="cordova-plugin-file-transfer" spec="~1.5.0" />
     
     <plugin name="cordova-plugin-inappbrowser" spec="^2.0.2" />
-    <plugin name="cordova-plugin-paystack" spec="^3.1.0" />
+    <gap:plugin name="cordova-plugin-paystack" source="npm" />
 </widget>
