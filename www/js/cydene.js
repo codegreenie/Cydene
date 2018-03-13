@@ -42,11 +42,11 @@ function deviceIsReady(){
 		window.PaystackPlugin.chargeCard(
 	      function(resp) {
 	        // charge successful, grab transaction reference - do your thang!
-	        console.log('charge successful: ', resp);
+	        myApp.alert('charge successful: ' + resp);
 	      },
 	      function(resp) {
 	        // Something went wrong, oops - perhaps an invalid card.
-	        console.log('charge failed: ', resp);
+	        myApp.alert('charge failed: ' + resp);
 	      },
 	      {
 	        cardNumber: '4123450131001381', 
