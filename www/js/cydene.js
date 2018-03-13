@@ -28,12 +28,41 @@ var mainView = myApp.addView('.view-main', {
 
 
 
-var getLatLong, deviceCoords, exitMyApp, getImg4rmGallery;
+
+
+var getLatLong, deviceCoords, exitMyApp, getImg4rmGallery, loginWithFB, driveCard;
 
 document.addEventListener("deviceready", deviceIsReady, false);
 
 
 function deviceIsReady(){
+
+	driveCard = function(){
+
+		window.PaystackPlugin.chargeCard(
+	      function(resp) {
+	        // charge successful, grab transaction reference - do your thang!
+	        console.log('charge successful: ', resp);
+	      },
+	      function(resp) {
+	        // Something went wrong, oops - perhaps an invalid card.
+	        console.log('charge failed: ', resp);
+	      },
+	      {
+	        cardNumber: '4123450131001381', 
+	        expiryMonth: '10', 
+	        expiryYear: '17', 
+	        cvc: '883',
+	        email: 'chargeIOS@master.dev',
+	        amountInKobo: 150000,
+	        subAccount: 'ACCT_pz61jjjsslnx1d9'
+	});
+
+
+	}
+
+
+
 
 if (cordova.platformId == 'android') {
 	StatusBar.backgroundColorByHexString("#3f51b5");
@@ -203,6 +232,74 @@ if (cordova.platformId == 'android') {
 
 
 	
+		loginWithFB = function(){
+
+	facebookConnectPlugin.login(["public_profile", "email"], function(result){
+		//auth success
+		console.log(JSON.stringify(result));
+
+
+		//calling api
+		facebookConnectPlugin.api("/me?fields=email,name,picture", ["public_profile","email"], function(userData){
+
+			//success callback
+			var stringifyData = JSON.stringify(userData);
+			var signupEmail = stringifyData.email;
+			var signUpName = stringifyData.name;
+			var splitName = signUpName.split(" ");
+
+
+			signupFirstName = splitName[0];
+			signupLastName = splitName[1];
+
+
+
+
+			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/buyer_registration.php",{
+
+				new_user_first_name : signupFirstName,
+				new_user_last_name : signupLastName,
+				new_user_mail : signupEmail,
+				new_user_phone : window.localStorage.getItem("_cydene_user_phone_no")
+			},
+			function(data){
+
+				if(data == "Registration Successful"){
+
+					window.localStorage.setItem("buyerFN", signupFirstName);
+					window.localStorage.setItem("buyerLN", signupLastName);
+					window.localStorage.setItem("buyerMail", signupEmail);
+					mainView.router.loadPage("setexecpin.html");
+				}
+				else{
+
+					myApp.alert(data);
+				}
+
+			},
+			function(error){
+
+				myApp.alert("Unable to connect to Cydene Servers. Try again later.");
+			});
+
+
+
+		}, function(error){
+
+			//error callback
+			myApp.alert(JSON.stringify(error));
+		});
+
+
+	},
+
+	function(error){
+
+		myApp.alert(JSON.stringify(userData));
+
+	});
+
+}
 
 
 	
@@ -628,8 +725,18 @@ myApp.onPageInit('getStarted', function(page){
 
 /**********************Signup Page *****************/
 
-	
+
+
 	myApp.onPageInit('signup', function(page){
+
+
+
+
+
+	$$("#fb-signup").on("click", function(){
+
+		loginWithFB();
+	})
 
 			var newUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
 			$$("#new_user_phone").val(newUserPhone);
@@ -2417,6 +2524,12 @@ myApp.onPageInit('wallet', function(page){ // Wallet page
 	 });
 
 
+	$$("#add-money-2-wallet").on("click", function(){
+
+		driveCard();
+	});
+
+
 }); // Wallet page
 
 
@@ -2553,6 +2666,9 @@ myApp.onPageInit('walletstatement', function(page){ //Offers page
 
 	 		myApp.alert("Could not connect to Cydene servers. Try again later");
 	 });
+
+
+
 
 
 
@@ -2877,8 +2993,14 @@ myApp.onPageInit('customerdeliveryroute', function(page){ //Offers page
 	var splitSaleDetails = window.localStorage.getItem("theSaleDetails");
 	splitSaleDetails = JSON.parse(splitSaleDetails);
 
-	$$("#customer-phone-number-space").html(splitSaleDetails.the_buyer_phone);
 
+	$$("#buyer-name-space").html(splitSaleDetails.the_buyer_fn + " " + splitSaleDetails.the_buyer_ln);
+	$$("#cylinder-size-name-space").html(splitSaleDetails.the_cylinder_size);
+	$$("#cylinder-qty-name-space").html(splitSaleDetails.the_cylinder_qty);
+	$$("#total-price-name-space").html("<b><strike>N</strike>" + splitSaleDetails.total_price + "</b>");
+	$$("#sale-payment-method").html(splitSaleDetails.the_payment_method);
+	$$("#tnx-date").html(splitSaleDetails.the_tnx_date);
+	$$("#tnx-id").html("<b>" + splitSaleDetails.the_tnx_ID + "</b>");
 
 	console.log("customer delivery route.");
 
