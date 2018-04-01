@@ -42,8 +42,84 @@ body{
 }
 .toolbar a.link{
 
-	color: #3f51b5;
+	color: #00A0E3;
 }
 .toolbar-bottom{
-	border-top:solid 1.5px #3f51b5;
+	border-top:solid 1.5px #00A0E3;
 }
+
+
+
+
+
+/******Override theme colors to Cydene's****/
+
+.bg-indigo, a.bg-indigo, .list-block .swipeout-actions-left a.bg-indigo, .list-block .swipeout-actions-right a.bg-indigo {
+    background-color: #00A0E3;
+}
+.list-block .item-link.list-button.color-indigo, .list-button.color-indigo, .list-block .item-link.color-indigo, .tabbar a.active.color-indigo, a.color-indigo {
+    color: #00A0E3;
+}
+.color-indigo {
+    color: #00A0E3;
+}
+.theme-indigo .navbar, .navbar.theme-indigo, .theme-indigo .toolbar, .toolbar.theme-indigo, .theme-indigo .subnavbar, .subnavbar.theme-indigo, .theme-indigo .searchbar, .searchbar.theme-indigo {
+    background-color: #00A0E3;
+}
+.color-indigo i.icon, i.icon.color-indigo {
+    color: #00A0E3;
+}
+.theme-indigo .item-input-field.focus-state:after, .theme-indigo .input-field.focus-state:after, .theme-indigo .item-input-field.not-empty-state:after, .theme-indigo .input-field.not-empty-state:after {
+    background: #00A0E3;
+}
+.theme-indigo .picker-header {
+    background-color: #00A0E3;
+}
+.picker-modal .picker-header {
+    background: #00A0E3;
+}
+.theme-indigo .picker-calendar-day.picker-calendar-day-today span {
+    color: #00A0E3;
+}
+.theme-indigo .picker-calendar-day.picker-calendar-day-selected span {
+    background: #00A0E3;
+}
+.theme-indigo .button:not(.button-fill) {
+    color: #00A0E3;
+}
+.label-switch input[type="checkbox"]:checked + .checkbox.color-indigo, .label-switch.color-indigo input[type="checkbox"]:checked + .checkbox {
+     background-color: #00A0E3; 
+}
+.theme-indigo .label-switch input[type="checkbox"]:checked + .checkbox:after, .label-switch.theme-indigo input[type="checkbox"]:checked + .checkbox:after {
+    background-color: #00A0E3;
+}
+.button.button-fill.bg-indigo, .button.button-fill.color-indigo {
+    background: #00A0E3 !important;
+    /* color: #fff; */
+}
+.floating-button.color-indigo, .speed-dial-buttons a.color-indigo, .floating-button.bg-indigo, .speed-dial-buttons a.bg-indigo {
+     background: #00A0E3;
+}
+.theme-indigo label.label-radio input[type="checkbox"]:checked + .item-media i.icon-form-radio, label.label-radio.theme-indigo input[type="checkbox"]:checked + .item-media i.icon-form-radio, .theme-indigo label.label-radio input[type="radio"]:checked + .item-media i.icon-form-radio, label.label-radio.theme-indigo input[type="radio"]:checked + .item-media i.icon-form-radio, .theme-indigo label.label-radio input[type="checkbox"]:checked ~ .item-after i.icon-form-radio, label.label-radio.theme-indigo input[type="checkbox"]:checked ~ .item-after i.icon-form-radio, .theme-indigo label.label-radio input[type="radio"]:checked ~ .item-after i.icon-form-radio, label.label-radio.theme-indigo input[type="radio"]:checked ~ .item-after i.icon-form-radio, .theme-indigo label.label-radio input[type="checkbox"]:checked ~ .item-inner i.icon-form-radio, label.label-radio.theme-indigo input[type="checkbox"]:checked ~ .item-inner i.icon-form-radio, .theme-indigo label.label-radio input[type="radio"]:checked ~ .item-inner i.icon-form-radio, label.label-radio.theme-indigo input[type="radio"]:checked ~ .item-inner i.icon-form-radio {
+    border-color: #00A0E3;
+}
+.theme-indigo label.label-radio input[type="checkbox"]:checked + .item-media i.icon-form-radio:after, label.label-radio.theme-indigo input[type="checkbox"]:checked + .item-media i.icon-form-radio:after, .theme-indigo label.label-radio input[type="radio"]:checked + .item-media i.icon-form-radio:after, label.label-radio.theme-indigo input[type="radio"]:checked + .item-media i.icon-form-radio:after, .theme-indigo label.label-radio input[type="checkbox"]:checked ~ .item-after i.icon-form-radio:after, label.label-radio.theme-indigo input[type="checkbox"]:checked ~ .item-after i.icon-form-radio:after, .theme-indigo label.label-radio input[type="radio"]:checked ~ .item-after i.icon-form-radio:after, label.label-radio.theme-indigo input[type="radio"]:checked ~ .item-after i.icon-form-radio:after, .theme-indigo label.label-radio input[type="checkbox"]:checked ~ .item-inner i.icon-form-radio:after, label.label-radio.theme-indigo input[type="checkbox"]:checked ~ .item-inner i.icon-form-radio:after, .theme-indigo label.label-radio input[type="radio"]:checked ~ .item-inner i.icon-form-radio:after, label.label-radio.theme-indigo input[type="radio"]:checked ~ .item-inner i.icon-form-radio:after {
+    background-color: #00A0E3;
+}
+
+
+
+
+.button.button-fill.bg-orange, .button.button-fill.color-orange {
+    background: #EF7F1A !important;
+    color: #fff;
+}
+
+.floating-button.color-orange, .speed-dial-buttons a.color-orange, .floating-button.bg-orange, .speed-dial-buttons a.bg-orange {
+    color: #fff;
+    background: #EF7F1A;
+}
+.color-orange {
+    color: #EF7F1A;
+}
+/******Override theme colors to Cydene's****/

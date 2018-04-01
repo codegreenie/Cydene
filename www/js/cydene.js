@@ -30,42 +30,17 @@ var mainView = myApp.addView('.view-main', {
 
 
 
-var getLatLong, deviceCoords, exitMyApp, getImg4rmGallery, loginWithFB, driveCard;
+var getLatLong, deviceCoords, exitMyApp, getImg4rmGallery, loginWithFB, driveCard, fireUpPayments, loginWithFB;
 
 document.addEventListener("deviceready", deviceIsReady, false);
 
 
 function deviceIsReady(){
 
-	driveCard = function(){
-
-		window.PaystackPlugin.chargeCard(
-	      function(resp) {
-	        // charge successful, grab transaction reference - do your thang!
-	        myApp.alert('charge successful: ' + resp);
-	      },
-	      function(resp) {
-	        // Something went wrong, oops - perhaps an invalid card.
-	        myApp.alert('charge failed: ' + resp);
-	      },
-	      {
-	        cardNumber: '4123450131001381', 
-	        expiryMonth: '10', 
-	        expiryYear: '17', 
-	        cvc: '883',
-	        email: 'chargeIOS@master.dev',
-	        amountInKobo: 150000,
-	        subAccount: 'ACCT_pz61jjjsslnx1d9'
-	});
-
-
-	}
-
-
-
+window.open = cordova.InAppBrowser.open;
 
 if (cordova.platformId == 'android') {
-	StatusBar.backgroundColorByHexString("#3f51b5");
+	StatusBar.backgroundColorByHexString("#00A0E3");
 }
 
 	/*window.plugins.PushbotsPlugin.initialize("5a6153c6a5d1030b9c4e444c", {"android":{"sender_id":"106429099464"}});*/
@@ -176,7 +151,7 @@ if (cordova.platformId == 'android') {
 
 
 
-				    $$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/finish_seller_logo_upload.php",
+				    $$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/finish_seller_logo_upload.php",
 						{
 
 							"the_uploaded_image" : r.response,
@@ -224,7 +199,7 @@ if (cordova.platformId == 'android') {
 				options.params = params;
 
 				var ft = new FileTransfer();
-				ft.upload(theImage, encodeURI("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/upload_seller_logo.php"), win, fail, options);
+				ft.upload(theImage, encodeURI("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/upload_seller_logo.php"), win, fail, options);
 
 
 		}
@@ -232,76 +207,26 @@ if (cordova.platformId == 'android') {
 
 
 	
+	
+
+	fireUpPayments = function(thePaymentUrl, tnxRef){
+
+		var ref = cordova.InAppBrowser.open(thePaymentUrl, '_blank', 'location=yes');
+		ref.addEventListener('exit', exitInappBrowser);
+	}
+
+	function exitInappBrowser(){
+		
+   		mainView.router.loadPage("wallet.html");
+	}
+
+	
+
+
 		loginWithFB = function(){
 
-	facebookConnectPlugin.login(["public_profile", "email"], function(result){
-		//auth success
-		console.log(JSON.stringify(result));
-
-
-		//calling api
-		facebookConnectPlugin.api("/me?fields=email,name,picture", ["public_profile","email"], function(userData){
-
-			//success callback
-			var stringifyData = JSON.stringify(userData);
-			var signupEmail = stringifyData.email;
-			var signUpName = stringifyData.name;
-			var splitName = signUpName.split(" ");
-
-
-			signupFirstName = splitName[0];
-			signupLastName = splitName[1];
-
-
-
-
-			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/buyer_registration.php",{
-
-				new_user_first_name : signupFirstName,
-				new_user_last_name : signupLastName,
-				new_user_mail : signupEmail,
-				new_user_phone : window.localStorage.getItem("_cydene_user_phone_no")
-			},
-			function(data){
-
-				if(data == "Registration Successful"){
-
-					window.localStorage.setItem("buyerFN", signupFirstName);
-					window.localStorage.setItem("buyerLN", signupLastName);
-					window.localStorage.setItem("buyerMail", signupEmail);
-					mainView.router.loadPage("setexecpin.html");
-				}
-				else{
-
-					myApp.alert(data);
-				}
-
-			},
-			function(error){
-
-				myApp.alert("Unable to connect to Cydene Servers. Try again later.");
-			});
-
-
-
-		}, function(error){
-
-			//error callback
-			myApp.alert(JSON.stringify(error));
-		});
-
-
-	},
-
-	function(error){
-
-		myApp.alert(JSON.stringify(userData));
-
-	});
-
+	
 }
-
-
 	
 } //Device is ready
 
@@ -410,7 +335,7 @@ myApp.onPageInit('begin', function(page){
 function test4connection(){
 
 	$$.ajax({
-		url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/conn_file.php",
+		url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/conn_file.php",
 		method : "GET",
 		crossDomain : true,
 		timeout : 10000,
@@ -495,7 +420,7 @@ myApp.onPageInit('getStarted', function(page){
 						var improved_phone = "+234" + $$("#user_tel").val();
 
 						$$.ajax({
-						url : "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_user.php",
+						url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/verify_user.php",
 						method : "POST",
 						crossDomain : true,
 						timeout : 10000,
@@ -588,7 +513,7 @@ myApp.onPageInit('getStarted', function(page){
 
 						
 
-						$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_otp.php",
+						$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/verify_otp.php",
 						{
 							users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
 							supplied_otp : $$("#user_otp").val()
@@ -677,7 +602,7 @@ myApp.onPageInit('getStarted', function(page){
 				myApp.showPreloader('Resending OTP...');
 
 				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
-				$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
+				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
 						{
 
 							users_phone : theUserPhone
@@ -728,14 +653,35 @@ myApp.onPageInit('getStarted', function(page){
 
 
 	myApp.onPageInit('signup', function(page){
+	loginWithFB = function(){
 
+
+		FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
+    		function (response) {
+
+    			console.log(response);
+    		});
+	}
+
+
+
+	function fbLogin() {
+    FB.login(function (response) {
+        if (response.authResponse) {
+            // Get and display the user profile data
+            loginWithFB();
+        } else {
+            console.log("i am not sure what happened");
+        }
+    }, {scope: 'email'});
+	}
 
 
 
 
 	$$("#fb-signup").on("click", function(){
 
-		loginWithFB();
+		fbLogin();
 	})
 
 			var newUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
@@ -898,6 +844,7 @@ myApp.onPageInit('setexecpin', function(page){
 
 myApp.onPageInit('dashboard', function(page){
 
+$$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 
 	for (var i = 1; i <=100; i++) {
 		
@@ -906,7 +853,7 @@ myApp.onPageInit('dashboard', function(page){
 
 		
 	var cydeneUsersPhone = window.localStorage.getItem("_cydene_user_phone_no");
-				$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/verify_delivery_address.php",
+				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/verify_delivery_address.php",
 						 {
 
 							cydene_users_phone : cydeneUsersPhone
@@ -961,7 +908,7 @@ myApp.onPageInit('dashboard', function(page){
 			myApp.showPreloader('Listing Addresses...');
 		
 		//populate buyers addresses
-		$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/address_fetcher_2.php", 
+		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/address_fetcher_2.php", 
 			{"users_phone" : window.localStorage.getItem("_cydene_user_phone_no")}, 
 		
 		function(data){
@@ -1043,7 +990,7 @@ myApp.onPageInit('dashboard', function(page){
 				var theGasSize = theUniqPurchase.gasSize;
 				var theGasQty = theUniqPurchase.gasQty;
 
-			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/schedule_transaction_recorder.php", 
+			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/schedule_transaction_recorder.php", 
 							
 					{
 						"the_cylinder_size" : theGasSize,
@@ -1079,7 +1026,7 @@ myApp.onPageInit('dashboard', function(page){
 
 					if($$(this).prop("checked") == true){
 			               
-				$$("<li id='recurring-date-select'><div class='item-content'><div class='item-media'><i class='icon material-icons color-indigo'>date_range</i></div><div class='item-inner theme-indigo'><div class='item-title label color-indigo'>Schedule Date.</div><div class='item-input'><input type='text' required id='recurring-date-select-text'></div></div></div></li>").insertAfter($$("#schedule-switch-panel"));
+				$$("<li id='recurring-date-select'><div class='item-content'><div class='item-media'></div><div class='item-inner theme-indigo'><div class='item-title label color-indigo'>Schedule Date.</div><div class='item-input'><input type='text' required id='recurring-date-select-text'></div></div></div></li>").insertAfter($$("#schedule-switch-panel"));
 					           
 					$$("#recurring-date-select-text").click(function(){
 
@@ -1113,7 +1060,7 @@ myApp.onPageInit('dashboard', function(page){
 		var mycurrentVersion = window.localStorage.getItem("version_control");
 
 		//code to check for update version of the app
-		$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/version_control.php", function(datax){
+		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/version_control.php", function(datax){
 
 				if(datax !== mycurrentVersion){
 
@@ -1180,7 +1127,7 @@ var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceL
 
 
 
-		$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php", {"posted_cylinder_size" : postedCylinderSize}, function(data){
+		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php", {"posted_cylinder_size" : postedCylinderSize}, function(data){
 
 			$$(".populate-all-sellers").removeClass('text-center').html(data);
 
@@ -1194,7 +1141,7 @@ var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceL
 		buyFromThisSeller = function(theSellerID, theCylinderSize){
 			myApp.showPreloader("Processsing...");
 
-			$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_seller_details.php", {"seller_id" : theSellerID, "cylinder_size" : theCylinderSize}, function(data){
+			$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_seller_details.php", {"seller_id" : theSellerID, "cylinder_size" : theCylinderSize}, function(data){
 
 					console.log(data);
 					var stringData = JSON.stringify(data);
@@ -1219,7 +1166,7 @@ var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceL
 				myApp.showPreloader("Loading Nearby Sellers...");
 
 				//Grab a list of all sellers
-				$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/list_all_sellers.php", function(data){
+				$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/list_all_sellers.php", function(data){
 						
 
 						theAddresses = data;
@@ -1232,7 +1179,7 @@ var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceL
 
 
 				//Get address details from addressname
-				$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/get_address_details_from_name.php", 
+				$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/get_address_details_from_name.php", 
 				{
 					"the_address_name" : theBuyerDeliveryAddress,
 					"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
@@ -1322,7 +1269,7 @@ var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceL
 
 			function listNearbyAddresses(){
 
-					$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/list_nearby_sellers.php",
+					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/list_nearby_sellers.php",
 					 {
 					 	"nearby_list" : distanceLists,
 					 	"posted_cylinder_size" : postedCylinderSize
@@ -1376,7 +1323,7 @@ myApp.onPageInit('sellerdetails', function(page){
 
 
 		$$(".populate-sellers-name").html(splitSellerDetails.seller_details_name);
-		$$(".populate-sellers-logo").attr("src", "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + splitSellerDetails.seller_details_logo);
+		$$(".populate-sellers-logo").attr("src", "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + splitSellerDetails.seller_details_logo);
 		$$(".populate-sellers-address").html(splitSellerDetails.seller_details_address);
 		$$(".quote-size").html(splitBuyDetails.gasSize + " (<strike>N</strike>" + splitSellerDetails.cylinder_size_price + ")" );
 		$$(".quote-qty").html(splitBuyDetails.gasQty);
@@ -1388,11 +1335,11 @@ myApp.onPageInit('sellerdetails', function(page){
 
 
 
-
 		$$("#payment-btn").html("Pay <strike>N</strike>" + totalPricePlusCharge).click(function(){
-
+			var paymentMethod = $$("input[name='payment_method']:checked").val();
+			
 				myApp.showPreloader('Processsing...');
-				var paymentMethod = $$("input[name='payment_method']:checked").val();
+				
 				var deliver2Address =  splitBuyDetails.delivery_address;
 				
 			
@@ -1400,7 +1347,7 @@ myApp.onPageInit('sellerdetails', function(page){
 				
 				if(paymentMethod == "COD"){
 
-					$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
+					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
 
 					{
 
@@ -1435,16 +1382,13 @@ myApp.onPageInit('sellerdetails', function(page){
 				}
 
 
+				else if(paymentMethod == "Card"){
 
-
-				else{
-					window.localStorage.setItem("tnx_delivery_address", deliver2Address);
-
-					myApp.hidePreloader();
-					myApp.prompt('Have a coupon code? Apply it now for discounts!!!', 'Coupons!!!', function (value) {
+						myApp.hidePreloader();
+						myApp.prompt('Have a coupon code? Apply it now for discounts!!!', 'Coupons!!!', function (value) {
        					 
        					 myApp.showPreloader('Checking coupon code...');
-       					 $$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
+       					 $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
 								 {
 								 	coupon_user : window.localStorage.getItem('_cydene_user_phone_no'),
 								 	coupon_code : value
@@ -1462,6 +1406,74 @@ myApp.onPageInit('sellerdetails', function(page){
 											
 
 											discountedPrice = totalPricePlusCharge - ((data.coupon_value / 100) * totalPricePlusCharge);
+											discountedPrice = parseInt(discountedPrice);
+											window.localStorage.setItem("discounted_price", discountedPrice);
+
+											//Setup coupon details
+											var couponDetails = {
+
+												"coupon_sn" : data.coupon_sn,
+												"coupon_value" : data.coupon_value
+											}
+
+											window.localStorage.setItem("coupon_details", JSON.stringify(couponDetails));
+
+											setTimeout(function(){
+											mainView.router.loadPage("cardpayment.html");
+											}, 1500);
+											
+										}
+
+								},
+								function(){
+										
+										myApp.hidePreloader();
+										myApp.alert("Unable to check coupon code!");
+								});
+										
+
+    				},
+
+    				function(){
+    					
+    					myApp.hidePreloader();
+    					window.localStorage.removeItem("discounted_price");
+    					window.localStorage.setItem("original_total_price", totalPricePlusCharge);
+
+    					setTimeout(function(){
+    					mainView.router.loadPage("cardpayment.html");
+    					}, 1500);
+
+    				});
+
+				}
+
+				else{
+					window.localStorage.setItem("tnx_delivery_address", deliver2Address);
+
+					myApp.hidePreloader();
+					myApp.prompt('Have a coupon code? Apply it now for discounts!!!', 'Coupons!!!', function (value) {
+       					 
+       					 myApp.showPreloader('Checking coupon code...');
+       					 $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
+								 {
+								 	coupon_user : window.localStorage.getItem('_cydene_user_phone_no'),
+								 	coupon_code : value
+								 },
+								function(data){
+										myApp.hidePreloader();
+
+
+										if(data.status == "Coupon Code Invalid or Expired" || data.status == "You have made use of this coupon code once"){
+
+											myApp.alert(data.status);
+										}
+										else{
+											window.localStorage.setItem("original_total_price", totalPricePlusCharge);
+											
+
+											discountedPrice = totalPricePlusCharge - ((data.coupon_value / 100) * totalPricePlusCharge);
+											discountedPrice = parseInt(discountedPrice);
 											window.localStorage.setItem("discounted_price", discountedPrice);
 
 											//Setup coupon details
@@ -1506,7 +1518,6 @@ myApp.onPageInit('sellerdetails', function(page){
 				}
 
 		});
-
 
 
 
@@ -1575,7 +1586,7 @@ myApp.onPageInit('pinexec', function(page){
 		$$("#exec-arrow").click(function(){
 			
 			myApp.showPreloader('Validating PIN...');
-			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/validate_exec_pin.php", 
+			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/validate_exec_pin.php", 
 				{
 					"exec_pin" : $$("#exec-pin").val(),
 					"user_phone" :  window.localStorage.getItem("_cydene_user_phone_no")
@@ -1588,7 +1599,7 @@ myApp.onPageInit('pinexec', function(page){
 							var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
 				 			var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
 				 			var tranxFields = window.localStorage.getItem("tnx_fields");
-					 		$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
+					 		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
 
 							{
 
@@ -1752,7 +1763,7 @@ myApp.onPageInit('mapexp', function(page){
 		       
 		       
 
-		$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/save_delivery_address.php",
+		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/save_delivery_address.php",
 						{
 							the_users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
 							the_address_name : $$("#the-address-name").val(),
@@ -1816,7 +1827,7 @@ myApp.onPageInit('orderhistory', function(page){
     
     
 
-	$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/pull_order_history.php", 
+	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_order_history.php", 
 	{
 		"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -1834,7 +1845,7 @@ myApp.onPageInit('orderhistory', function(page){
 
 
 
-	$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/pull_scheduled_order_history.php", 
+	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_scheduled_order_history.php", 
 	{
 		"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -1852,7 +1863,7 @@ myApp.onPageInit('orderhistory', function(page){
 
 
 
-	$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/pull_active_orders.php", 
+	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_active_orders.php", 
 	{
 		"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -1876,7 +1887,7 @@ myApp.onPageInit('orderhistory', function(page){
 
 	myApp.showPreloader('Completing Order...');	
 
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
 	{
 		"tranx_id" : tranxID
 	},
@@ -1911,7 +1922,7 @@ myApp.onPageInit('orderhistory', function(page){
 	cancelScheduleOrder = function(tranxSN){
 
 	myApp.showPreloader('Canceling Order...');	
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/cancel_scheduled_order.php", 
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/cancel_scheduled_order.php", 
 	{
 		"order_sn" : tranxSN
 	},
@@ -1980,7 +1991,7 @@ else{
 
 
 			myApp.showPreloader('Canceling...');
-			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/cancel_order.php", 
+			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/cancel_order.php", 
 			{
 				"order_sn" : tranxSN,
 				"tnx_owner" : window.localStorage.getItem("_cydene_user_phone_no"),
@@ -2042,7 +2053,7 @@ myApp.onPageInit('settings', function(page){
 	var user_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
 	$$("#phonespace").html(user_phone_data);
 
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
 	{
 		"user_phone_data" : user_phone_data
 	},
@@ -2273,7 +2284,7 @@ myApp.onPageInit('addresseslist', function(page){ // Address List
 	var users_phone = window.localStorage.getItem("_cydene_user_phone_no");
 	
 
-		$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/list_addresses.php", 
+		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/list_addresses.php", 
 		{
 
 			"users_phone" : users_phone
@@ -2297,7 +2308,7 @@ myApp.onPageInit('addresseslist', function(page){ // Address List
 	deleteAddr = function(addrSN){
 
 	myApp.showPreloader(' ');	
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/delete_address.php", 
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/delete_address.php", 
 	{
 		"address_sn" : addrSN
 	},
@@ -2446,7 +2457,7 @@ $$("#edit-address-id").val(patchAddrSN);
 		        var theAddressLng = theAddressLatLng.lng();
 		      
 
-				 $$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/update_delivery_address.php",
+				 $$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/update_delivery_address.php",
 				{
 							the_address_sn : $$("#edit-address-id").val(),
 							the_address_name : $$("#the-address-name-edit").val(),
@@ -2510,7 +2521,7 @@ myApp.onPageInit('wallet', function(page){ // Wallet page
 
 	var user_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
 
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
 	{
 		"user_phone_data" : user_phone_data
 	},
@@ -2528,6 +2539,76 @@ myApp.onPageInit('wallet', function(page){ // Wallet page
 
 		driveCard();
 	});
+
+
+}); // Wallet page
+
+
+
+
+
+
+
+myApp.onPageInit('sellerwallet', function(page){ // Wallet page
+
+
+	var user_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
+
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_seller_wallet_balance.php",
+	{
+		"user_phone_data" : user_phone_data
+	},
+	 function(data){
+
+	 	$$(".wallet-balance").html("<strike>N</strike>" + data);
+
+	 }, function(){
+
+	 		myApp.alert("Could not connect to Cydene servers");
+	 });
+
+
+
+
+
+
+	$$("#request-payout-btn").on("click", function(){
+		var thePayoutAmount = $$("#payout-amount").val();
+
+			myApp.showPreloader("Processing...");
+
+			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/request_seller_payout.php",
+					{
+						"user_phone_data" : user_phone_data,
+						"payout_amount" : thePayoutAmount
+					},
+					 function(data){
+					 	if(data == "Payout Updated"){
+					 		
+					 		myApp.hidePreloader();
+					 		mainView.router.loadPage("payoutsuccess.html");
+
+					 	}
+
+					 	else{
+
+					 			myApp.hidePreloader();
+					 			myApp.alert(data);
+					 	}
+					 	
+
+
+					 }, function(){
+					 		myApp.hidePreloader();
+					 		myApp.alert("Could not connect to Cydene servers");
+					 });
+							
+
+
+	});
+
+
+	
 
 
 }); // Wallet page
@@ -2559,7 +2640,7 @@ myApp.onPageInit('editprofile', function(page){ // Edit Profile page
 
 			x.preventDefault();
 			myApp.showPreloader(' ');
-			$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/user_profile_update.php", 
+			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/user_profile_update.php", 
 			{
 
 				"user_phone_number" : users_phone,
@@ -2625,7 +2706,7 @@ myApp.onPageInit('about', function(page){ //About page
 myApp.onPageInit('offers', function(page){ //Offers page
 
 
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_offers.php",
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_offers.php",
 	 function(data){
 
 	 	$$(".populate-offers").html(data);
@@ -2653,7 +2734,7 @@ myApp.onPageInit('walletstatement', function(page){ //Offers page
 
 	var users_phone = window.localStorage.getItem("_cydene_user_phone_no");
 
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_statement.php",
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_statement.php",
 	{
 		"the_buyer" : users_phone
 	}
@@ -2700,7 +2781,7 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 
 	$$("#seller-name-space").html(window.localStorage.getItem("sellerName"));
 	var sellerLogo = window.localStorage.getItem("sellerLogo");
-	$$("#seller-logo-space").attr("src", "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + sellerLogo);
+	$$("#seller-logo-space").attr("src", "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + sellerLogo);
 
 	if(!window.localStorage.getItem("version_control")){
 
@@ -2712,7 +2793,7 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 	var mycurrentVersion = window.localStorage.getItem("version_control");
 
 		//code to check for update version of the app
-		$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/version_control.php", function(datax){
+		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/version_control.php", function(datax){
 
 				if(datax !== mycurrentVersion){
 
@@ -2744,6 +2825,40 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 
 		});
 
+
+
+
+		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_get_verification_status.php", 
+		{
+			"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
+		},
+		 function(data){
+
+		 	if(data == "Account is Pending"){
+
+		 		$$("#account-status-block").show();
+
+		 	}
+		 	else{
+
+		 		$$("#account-status-block").hide();
+		 	}
+		},
+
+		function(xhr, status, error){
+
+	        myApp.alert(status);
+
+		});
+
+
+
+		$$("#account-status-block").on("click", function(){
+
+		 			mainView.router.loadPage("explainverification.html");
+		 });
+
+
 	
 }); //Sellers Dashboard
 
@@ -2751,11 +2866,13 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 
 
 
-var acceptOrder, pushSaleDetails;
+var acceptOrder, declineOrder, acceptSchOrder, declineSchOrder, orderComplete, schOrderComplete, pushSaleDetails;
 myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 	
-	$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/seller_pull_pending_orders.php", 
+
+
+	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_pull_pending_orders.php", 
 	{
 		"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -2773,7 +2890,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 
 
-	$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/seller_pull_active_orders.php", 
+	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_pull_active_orders.php", 
 	{
 		"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -2793,14 +2910,14 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 	acceptOrder = function(tranxSN){
 
 	myApp.showPreloader('Accepting Order...');	
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_order.php", 
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_order.php", 
 	{
 		"order_sn" : tranxSN
 	},
 	 function(data){
 
 	 	myApp.hidePreloader();
-	 	if(data == "Accept success"){
+	 	/*if(data == "Accept success"){
 
 	 		myApp.hidePreloader();
 	 		mainView.router.reloadPage("sellerbookings.html");
@@ -2809,8 +2926,10 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 	 		myApp.hidePreloader();
 	 		myApp.alert("Error accepting order, try later");
-	 	}
+	 	}*/
 
+	 	myApp.hidePreloader();
+	 	myApp.alert(data);
 	 	
 	},
 
@@ -2824,10 +2943,163 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 }
 
 
+
+	declineOrder = function(tranxSN){
+
+	var declineSheet = [
+			{text : "<h4 class='color-indigo'>Reason to Decline Order:</h4>", label : true, disabled : true},
+			{
+				text : "Out of Gas Supply",
+				bold : true,
+				onClick : function(){
+					var declineReason = "Out of Gas Supply";
+					letsDeclinOrder(tranxSN, declineReason);
+				}
+			},
+			{
+				text : "We do not deliver to your address",
+				bold : true,
+				onClick : function(){
+					var declineReason = "We do not deliver to your address";
+					letsDeclinOrder(tranxSN, declineReason);
+				}
+			},
+			{
+				text : "We are closed for the day",
+				bold : true,
+				onClick : function(){
+					var declineReason = "We are closed for the day";
+					letsDeclinOrder(tranxSN, declineReason);
+				}
+			}
+
+		];
+		myApp.actions(declineSheet);
+
+
+			function letsDeclinOrder(theTranxSN, theDeclineReason){
+
+				myApp.showPreloader('Declining Order...');	
+				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_decline_order.php", 
+				{
+					"order_sn" : tranxSN,
+					"decline_reason" : theDeclineReason
+				},
+				 function(data){
+
+				 	myApp.hidePreloader();
+				 	if(data == "Decline success"){
+
+				 		myApp.hidePreloader();
+				 		mainView.router.reloadPage("sellerbookings.html");
+				 	}
+				 	else{
+
+				 		myApp.hidePreloader();
+				 		myApp.alert("Error declining order, try later");
+				 	}
+					
+					
+				 	
+				},
+
+				function(xhr, status, error){
+
+					myApp.hidePreloader();
+			        myApp.alert("Unable to reach Cydene Express servers, try again later");
+
+				});
+			}
+
+
+	}
+
+
+
+
+
+	declineSchOrder = function(tranxSN){
+
+	var declineSheet = [
+			{text : "<h4 class='color-indigo'>Reason to Decline Schedule Booking:</h4>", label : true, disabled : true},
+			{
+				text : "Out of Gas Supply",
+				bold : true,
+				onClick : function(){
+					var declineReason = "Out of Gas Supply";
+					letsDeclinSchOrder(tranxSN, declineReason);
+				}
+			},
+			{
+				text : "We do not deliver to your address",
+				bold : true,
+				onClick : function(){
+					var declineReason = "We do not deliver to your address";
+					letsDeclinSchOrder(tranxSN, declineReason);
+				}
+			},
+			{
+				text : "We are closed for the day",
+				bold : true,
+				onClick : function(){
+					var declineReason = "We are closed for the day";
+					letsDeclinSchOrder(tranxSN, declineReason);
+				}
+			}
+
+		];
+		myApp.actions(declineSheet);
+
+
+			function letsDeclinSchOrder(theTranxSN, theDeclineReason){
+
+				myApp.showPreloader('Declining Order...');	
+				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_decline_schedule_order.php", 
+				{
+					"order_sn" : tranxSN,
+					"decline_reason" : theDeclineReason
+				},
+				 function(data){
+
+				 	myApp.hidePreloader();
+				 	/*if(data == "Decline success"){
+
+				 		myApp.hidePreloader();
+				 		mainView.router.reloadPage("sellerbookings.html");
+				 	}
+				 	else{
+
+				 		myApp.hidePreloader();
+				 		myApp.alert("Error declining order, try later");
+				 	}*/
+
+				 	myApp.alert(data);
+					
+					
+				 	
+				},
+
+				function(xhr, status, error){
+
+					myApp.hidePreloader();
+			        myApp.alert("Unable to reach Cydene Express servers, try again later");
+
+				});
+			}
+
+
+	}
+
+
+
+
+
+
+
 	pushSaleDetails = function(theBuyer, tranxID, tranxSN){
 		myApp.showPreloader('Processing...');
 
-		$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/pull_sale_details.php", 
+		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_sale_details.php", 
 		{
 			"the_buyer" :  theBuyer,
 			"tranx_ID" :  tranxID,
@@ -2871,7 +3143,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 	acceptSchOrder = function(tranxSN){
 
 	myApp.showPreloader('Accepting Order...');	
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_schedule_order.php", 
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_schedule_order.php", 
 	{
 		"order_sn" : tranxSN
 	},
@@ -2910,7 +3182,7 @@ orderComplete = function(tranxID){
 
 	myApp.showPreloader('Completing Order...');	
 
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
 	{
 		"tranx_id" : tranxID
 	},
@@ -2943,7 +3215,7 @@ schOrderComplete = (tranxID) => {
 
 	myApp.showPreloader('Completing Order...');	
 
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/sellers_schedule_transaction_complete.php", 
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/sellers_schedule_transaction_complete.php", 
 	{
 		"tranx_id" : tranxID
 	},
@@ -2997,9 +3269,10 @@ myApp.onPageInit('customerdeliveryroute', function(page){ //Offers page
 	$$("#buyer-name-space").html(splitSaleDetails.the_buyer_fn + " " + splitSaleDetails.the_buyer_ln);
 	$$("#cylinder-size-name-space").html(splitSaleDetails.the_cylinder_size);
 	$$("#cylinder-qty-name-space").html(splitSaleDetails.the_cylinder_qty);
-	$$("#total-price-name-space").html("<b><strike>N</strike>" + splitSaleDetails.total_price + "</b>");
+	$$("#total-price-name-space").html("<b><strike>N</strike>" + (splitSaleDetails.total_price - 150) + "</b>");
 	$$("#sale-payment-method").html(splitSaleDetails.the_payment_method);
 	$$("#tnx-date").html(splitSaleDetails.the_tnx_date);
+	$$("#the-buyer-address").html("<b>" + splitSaleDetails.address_string + "</b>");
 	$$("#tnx-id").html("<b>" + splitSaleDetails.the_tnx_ID + "</b>");
 
 	console.log("customer delivery route.");
@@ -3010,8 +3283,8 @@ myApp.onPageInit('customerdeliveryroute', function(page){ //Offers page
 	  var sellerOrigin = new google.maps.LatLng(splitSaleDetails.sellers_lat_lng.sellers_lat, splitSaleDetails.sellers_lat_lng.sellers_lng);
 	  var buyerDestination = new google.maps.LatLng(splitSaleDetails.the_buyer_addr.lat, splitSaleDetails.the_buyer_addr.lng);
 	  var mapOptions = {
-	    zoom: 204,
-	    center: sellerOrigin
+	   	center: sellerOrigin,
+	    zoom: 204
 	  }
 	  var map = new google.maps.Map(document.getElementById('route-map'), mapOptions);
 	  
@@ -3038,7 +3311,7 @@ myApp.onPageInit('customerdeliveryroute', function(page){ //Offers page
 
 	}
 
-	window.setTimeout(function() {calcRoute()}, 1000);
+	window.setTimeout(function() {calcRoute()}, 2500);
 
 
 
@@ -3060,7 +3333,7 @@ myApp.onPageInit('customerdeliveryroute', function(page){ //Offers page
 myApp.onPageInit('sellerorderhistory', function(page){ //Sellers Order History
 
 
-	$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/pull_sellers_order_history.php", 
+	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_sellers_order_history.php", 
 	{
 		"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -3078,7 +3351,7 @@ myApp.onPageInit('sellerorderhistory', function(page){ //Sellers Order History
 
 
 
-	$$.get("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/pull_sellers_scheduled_order_history.php", 
+	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_sellers_scheduled_order_history.php", 
 	{
 		"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -3112,13 +3385,13 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 
 	$$("#the-seller-name-space").html(window.localStorage.getItem("sellerName"));
 	var theSellerLogo = window.localStorage.getItem("sellerLogo");
-	$$("#the-seller-logo-space").attr("src", "http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + theSellerLogo);
+	$$("#the-seller-logo-space").attr("src", "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + theSellerLogo);
 
 
 
 
 	var users_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_wallet_balance.php",
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_wallet_balance.php",
 	{
 		"user_phone_data" : users_phone_data
 	},
@@ -3134,7 +3407,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 
 
 
-	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_availability.php",
+	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_availability.php",
 	{
 		"user_phone_data" : users_phone_data
 	},
@@ -3168,7 +3441,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 				color : "indigo",
 				onClick : function(){
 					$$(".sellers-availability-check").html("<span class='preloader preloader-indigo'></span>");
-					$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/sellers_set_availability.php",
+					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/sellers_set_availability.php",
 						{
 							"user_phone_data" : users_phone_data,
 							"availability" : "available"
@@ -3191,7 +3464,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 				onClick : function(){
 
 					$$(".sellers-availability-check").html("<span class='preloader preloader-indigo'></span>");
-					$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/sellers_set_availability.php",
+					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/sellers_set_availability.php",
 						{
 							"user_phone_data" : users_phone_data,
 							"availability" : "not-available"
@@ -3296,7 +3569,7 @@ myApp.onPageInit('sellersignup', function(page){ //Sellers Signup
 		        $$("#new_company_lng").val(theAddressLng);
 
 		        
-		       $$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/seller_registration.php",
+		       $$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_registration.php",
 				{
 					"new_company_name" : $$("#new_company_name").val(),
 					"new_company_address" : $$("#searchTextFieldAddr").val(),
@@ -3425,7 +3698,7 @@ myApp.onPageInit("updatepricelist", function(page){
 
 
 	//First Fetch pricelist
-	$$.getJSON("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_current_pricelist.php",
+	$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_current_pricelist.php",
 		{
 			"user_phone_data" : userPhone
 		},
@@ -3533,7 +3806,7 @@ myApp.onPageInit("selleraddbankaccount", function(page){
 
         	myApp.showPreloader("Loading...");
 
-        	$$.post("http://tmlng.com/Mobile_app_repo/php_hub/_Cydene/seller_add_bank_account.php",
+        	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_add_bank_account.php",
 				{
 					"seller_phone" : userPhone,
 					"seller_bank_name" : $$("#seller-add-bank-name-container").val(),
@@ -3569,9 +3842,281 @@ myApp.onPageInit("selleraddbankaccount", function(page){
 
 
 
+var deleteCardForever;
+myApp.onPageInit('paymentmethods', function(page){ //Payment Methods Page
+
+	var users_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
+
+	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_buyer_cards.php",
+	{
+		"user_phone_data" : users_phone_data
+	},
+	 function(data){
+
+	 	$$("#load-my-cards").removeClass('text-center').html(data);
+	 	
+
+	 }, function(){
+
+	 		myApp.alert("Unable to connect to Cydene servers");
+	 });
+
+
+	deleteCardForever = function(cardSN){
+		myApp.showPreloader("Deleting Card...");
+		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/delete_card.php",
+			{
+				"user_phone_data" : users_phone_data,
+				"card_serial" : cardSN
+			},
+			 function(data){
+
+			 	if(data == "delete success"){
+
+			 		myApp.hidePreloader();
+			 		mainView.router.reloadPage("paymentmethods.html");
+
+			 	}
+			 	else{
+
+			 		myApp.hidePreloader();
+			 		myApp.alert(data);
+			 	}
+			 	
+
+			 }, function(){
+			 	
+			 		myApp.hidePreloader();
+			 		myApp.alert("Unable to connect to Cydene servers");
+			 });
+
+	}
+	
+
+}); //Payment Methods Page
 
 
 
+
+
+var selectMeCard;
+myApp.onPageInit('cardpayment', function(page){ //Payment Methods Page
+
+
+
+
+	var users_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
+	var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
+	var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
+	var parsedCouponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
+	
+	var totalPrice, initialPrice, parsedCouponSN, cashback;
+	if(window.localStorage.getItem("discounted_price")){
+
+			totalPrice = window.localStorage.getItem("discounted_price");
+			initialPrice = window.localStorage.getItem("original_total_price");
+
+			var discountValue = parsedCouponDetails.coupon_value;
+			parsedCouponSN = parsedCouponDetails.coupon_sn;
+
+			$$("#discount-highlighter").html("<b><i>" + discountValue + "% Discount Applied!</i></b>").show();
+			cashback = initialPrice - totalPrice;
+		}
+		else{
+
+			totalPrice = window.localStorage.getItem("original_total_price");
+			parsedCouponSN = 0;
+			cashback = 0;
+		}
+		
+
+		$$("#show-card-amount").html("<strike>N</strike>" + totalPrice);
+		$$("#amount-to-pay-display").html("<strike>N</strike>" + totalPrice);
+		
+
+		$$("#continue-2-paystack-btn").on("click", function(){
+
+			myApp.showPreloader("Procesing...");
+
+					 		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/card_transaction_recorder.php", 
+
+							{
+
+								"tnx_cylinder_size" : splitBuyDetails.gasSize,
+								"tnx_quantity" : splitBuyDetails.gasQty,
+								"tnx_total_price" : totalPrice,
+								"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
+								"tnx_seller" : splitSellerDetails.seller_details_id,
+								"tnx_payment_method" : "Card",
+								"tnx_delivery_address" : splitBuyDetails.delivery_address,
+								"tnx_coupon_sn" : parsedCouponSN,
+								"tnx_cashback" : cashback
+							},
+
+							function(data){
+
+								var splitData = data.split(' ');
+								var returnedTnx = splitData[0];
+
+								if(splitData[1] == "Successful"){
+
+									$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/paystack_init.php",
+										{
+											"buyer_email" : window.localStorage.getItem("buyerMail"),
+											"amount_2_pay" : totalPrice * 100,
+											"tnx_reference" : returnedTnx
+										},
+										 function(data){
+
+										 	myApp.hidePreloader();
+										 	
+										 	var parsedData = JSON.parse(data);
+										 	var authUrl = parsedData.data.authorization_url;
+										 	fireUpPayments(authUrl, returnedTnx);
+										 	console.log(data);	 	
+
+										 }, function(){
+
+										 		myApp.alert("Unable to connect to Cydene servers");
+										 });
+
+								}
+								else{
+
+									myApp.hidePreloader();
+									myApp.alert("Error creating a transaction. Try again later.");
+
+								}
+
+							},
+							function(){
+
+								myApp.hidePreloader();
+								myApp.alert("Unable to connect to Cydene Servers. Try again later");
+							});
+
+
+
+
+
+
+
+
+
+			/*$$.get("http://cydene.com/paystackco/paystack_init.php",
+				{
+					"user_phone_data" : users_phone_data
+				},
+				 function(data){
+
+				 	console.log(data);	 	
+
+				 }, function(){
+
+				 		myApp.alert("Unable to connect to Cydene servers");
+				 });*/
+
+		});
+
+	
+
+
+
+
+
+
+
+
+	/*deleteCardForever = function(cardSN){
+		myApp.showPreloader("Deleting Card...");
+		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/delete_card.php",
+			{
+				"user_phone_data" : users_phone_data,
+				"card_serial" : cardSN
+			},
+			 function(data){
+
+			 	if(data == "delete success"){
+
+			 		myApp.hidePreloader();
+			 		mainView.router.reloadPage("paymentmethods.html");
+
+			 	}
+			 	else{
+
+			 		myApp.hidePreloader();
+			 		myApp.alert(data);
+			 	}
+			 	
+
+			 }, function(){
+			 	
+			 		myApp.hidePreloader();
+			 		myApp.alert("Unable to connect to Cydene servers");
+			 });
+
+	}
+	*/
+
+	/*selectMeCard = function(cardNo, cardExp, cardCVV){
+
+		
+		$$("#" + cardCVV).show();
+		$$("input[type='tel']").hide();
+		$$("#" + cardCVV).show();
+
+	}*/
+
+
+
+}); //Payment Methods Page
+
+
+
+
+
+myApp.onPageInit('fbtry', function(page){
+
+
+	function openFbLogin(){
+
+		facebookConnectPlugin.login(["public_profile", "email"], function(result){
+		//auth success
+		console.log(JSON.stringify(result));
+
+
+		//calling api
+		facebookConnectPlugin.api("/me?fields=email,name,picture", ["public_profile","email"], function(userData){
+
+			alert(JSON.stringify(userData));
+
+		}, function(error){
+
+			//error callback
+			myApp.alert(JSON.stringify(error));
+		});
+
+
+	},
+
+	function(error){
+
+		myApp.alert(JSON.stringify(userData));
+
+	});
+
+
+
+	}
+
+
+	$$("#fbtry-btn").click(function(){
+
+		openFbLogin();
+	});
+
+
+});
 
 
 
