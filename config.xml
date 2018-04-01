@@ -8,7 +8,6 @@
         @codegreenie
     </author>
     <content src="index.html" />
-    <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="15" />
     <preference name="AutoHideSplashScreen" value="true" />
     <preference name="StatusBarBackgroundColor" value="#00A0E3" />
