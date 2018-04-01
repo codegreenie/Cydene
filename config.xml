@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.cydene.express" version="1.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="com.cydene.express" version="1.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>Cydene Express</name>
     <description>
         On Demand home gas delivery for Lagos Metropolis, Nigeria.
@@ -11,7 +11,7 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="15" />
     <preference name="AutoHideSplashScreen" value="true" />
-    <preference name="StatusBarBackgroundColor" value="#3f51b5" />
+    <preference name="StatusBarBackgroundColor" value="#00A0E3" />
     <platform name="android">
         <icon src="icon.png" />
     </platform>
@@ -27,9 +27,6 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
-        <config-file parent="application" target="AndroidManifest.xml">
-            <meta-data android:name="co.paystack.android.PublicKey" android:value="pk_test_a7f2df2cdb8269a8f04b43d3e33f1ca70268462a" />
-        </config-file>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -49,7 +46,9 @@
     <plugin name="cordova-plugin-statusbar" spec="^2.4.1" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-file-transfer" spec="~1.5.0" />
-    
     <plugin name="cordova-plugin-inappbrowser" spec="^2.0.2" />
-    <gap:plugin name="cordova-plugin-paystack" source="npm" />
+    <plugin name="cordova-plugin-facebook4" spec="^1.9.1">
+        <variable name="APP_ID" value="1898026053564430" />
+        <variable name="APP_NAME" value="CydeneExpress" />
+    </plugin>
 </widget>
