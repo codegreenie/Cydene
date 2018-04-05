@@ -7,7 +7,7 @@ var myApp = new Framework7({
     modalTitle : 'Cydene Express',
     fastClicks : false,
     sortable : false,
-    modalButtonCancel : "No Coupon"
+    modalButtonCancel : 'No Coupon'
    });
 
 // Export selectors engine
@@ -494,11 +494,12 @@ function test4connection(){
 
 		},
 		success : function(){
-
+			
 			//check for reg or login status via window localStorage
 				if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("buyerFN") && window.localStorage.getItem("buyerLN") && window.localStorage.getItem("buyerMail")){
 
 						mainView.router.loadPage("dashboard.html");
+						console.log("Buyers Dashboard");
 				}
 
 			else if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("sellerName") && window.localStorage.getItem("sellerMail") && window.localStorage.getItem("sellerAddress")){
@@ -510,6 +511,7 @@ function test4connection(){
 				else{
 
 					mainView.router.loadPage("theswipe.html");
+					console.log("No Registration");
 				}
 			
 		}
