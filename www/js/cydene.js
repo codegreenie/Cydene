@@ -6,7 +6,8 @@ var myApp = new Framework7({
     materialRippleElements : '.ripple',
     modalTitle : 'Cydene Express',
     fastClicks : false,
-    sortable : false
+    sortable : false,
+    modalButtonCancel : "No Coupon"
    });
 
 // Export selectors engine
@@ -14,12 +15,12 @@ var $$ = Dom7;
 
 
 
-// Add view
+// Add main view
 var mainView = myApp.addView('.view-main', {
     // Because we use fixed-through navbar we can enable dynamic navbar
     dynamicNavbar: true
 });
-/********App Initialization *************/
+/******** App Initialization *************/
 
 
 
@@ -30,7 +31,7 @@ var mainView = myApp.addView('.view-main', {
 
 
 
-var getLatLong, deviceCoords, exitMyApp, getImg4rmGallery, loginWithFB, driveCard, fireUpPayments, loginWithFB;
+var getLatLong, deviceCoords, exitMyApp, getImg4rmGallery, loginWithFB, driveCard, fireUpPayments, fireUpPayments2;
 
 document.addEventListener("deviceready", deviceIsReady, false);
 
@@ -43,8 +44,8 @@ if (cordova.platformId == 'android') {
 	StatusBar.backgroundColorByHexString("#00A0E3");
 }
 
-	/*window.plugins.PushbotsPlugin.initialize("5a6153c6a5d1030b9c4e444c", {"android":{"sender_id":"106429099464"}});*/
-	navigator.splashscreen.hide();
+	
+	//navigator.splashscreen.hide();
 
 	getLatLong = function(){
 			
@@ -68,7 +69,7 @@ if (cordova.platformId == 'android') {
 
 	geoFailure = function(error){
 
-			myApp.modal({
+			/*myApp.modal({
 
 				title : 'Cydene Express',
 				text : 'Please turn on your GPS and allow access',
@@ -87,7 +88,11 @@ if (cordova.platformId == 'android') {
 					}
 				]
 
-			});
+			});*/
+			myApp.addNotification({
+			        message: 'Please turn on GPS'
+			    });
+			console.log("Could not get geolocation");
 	}
 
 
@@ -217,16 +222,137 @@ if (cordova.platformId == 'android') {
 
 	function exitInappBrowser(){
 		
-   		mainView.router.loadPage("wallet.html");
+   		mainView.router.loadPage("orderhistory.html");
+	}
+
+
+
+
+	fireUpPayments2 = function(thePaymentUrl, tnxRef){
+
+		var ref2 = cordova.InAppBrowser.open(thePaymentUrl, '_blank', 'location=yes');
+		ref2.addEventListener('exit', exitInappBrowser2);
+	}
+
+	function exitInappBrowser2(){
+		
+   		mainView.router.loadPage("settings.html");
 	}
 
 	
 
 
-		loginWithFB = function(){
+		
 
-	
-}
+	getSellerDocument = function(){
+
+		
+
+			 destinationTyper = Camera.DestinationType.FILE_URI;
+    		documentSource = Camera.PictureSourceType.PHOTOLIBRARY;
+			    
+			    navigator.camera.getPicture(documentGood, documentBad, 
+			    {
+			        quality : 70, 
+			        destinationType : destinationTyper,
+			        sourceType : documentSource
+			     });
+	}
+
+
+
+	function documentGood(docURI) {
+				
+				  console.log(docURI);
+				    image.src = docURI;
+
+				    setTimeout(function(){
+
+				    	myApp.showPreloader('Uploading Document...');
+				    	uploadDocument(docURI);
+
+				    }, 2000);
+
+		}
+
+
+	function documentBad(message) {
+	    
+	    alert('Failed because: ' + message);
+	}
+
+
+
+	function uploadDocument(theURI){
+			var thePhone = window.localStorage.getItem("_cydene_user_phone_no");
+
+			
+			    var win = function (r) {
+
+				    console.log("Code = " + r.responseCode);
+				    console.log("Response = " + r.response);
+				    console.log("Sent = " + r.bytesSent);
+
+
+
+				    $$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/finish_seller_document_upload.php",
+						{
+
+							"the_uploaded_doc" : r.response,
+							"the_seller_phone" : thePhone
+						},
+						function(data){
+							myApp.hidePreloader();
+
+							/*if(data == "Successful Upload"){
+								
+								window.localStorage.setItem("sellerLogo", thePhone + r.response);
+								mainView.router.loadPage("sellerdashboard.html");
+							}
+							else{
+
+								myApp.alert(data);
+							}*/
+
+							
+							myApp.alert(data);
+						}
+						,
+						function(){
+							myApp.alert("Unable to connect to Cydene Servers. Try again later");
+						});
+
+
+				}
+
+				var fail = function (error) {
+
+					myApp.hidePreloader();
+				    myApp.alert("An error has occurred: Code = " + error.code);
+				    console.log("upload error source " + error.source);
+				    console.log("upload error target " + error.target);
+				}
+
+				var options = new FileUploadOptions();
+				options.fileKey = "file";
+				options.fileName = theURI.substr(theURI.lastIndexOf('/') + 1);
+				options.mimeType = "image/jpeg";
+				options.chunkedMode = false;
+
+				var params = {};
+				params.value1 = "test";
+				params.value2 = "param";
+
+				options.params = params;
+
+				var ft = new FileTransfer();
+				ft.upload(theURI, encodeURI("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/upload_seller_document.php"), win, fail, options);
+
+
+		}
+
+
+
 	
 } //Device is ready
 
@@ -242,39 +368,44 @@ if (cordova.platformId == 'android') {
 		var cpageName = cpage.name;
 
 		//Re-route to Dashboard
-		if(cpageName == "mapexp" || cpageName == "settings" || cpageName == "helpsection" || cpageName == "orderhistory" || cpageName == "offers" || cpageName == "sellers"){
+		if(cpageName == "mapexp" || cpageName == "settings" || cpageName == "ordersuccess" || cpageName == "orderhistory"){
 
 				mainView.router.loadPage("dashboard.html");
 		}
 
-		//Re-route to Settings
-		else if(cpageName == "wallet" || cpageName == "editprofile" || cpageName == "setnewpin" || cpageName == "addresseslist" ||  cpageName == "about" || cpageName == "setnewpin"){
 
-			mainView.router.loadPage("settings.html");
-		}
-
-		//Re-route to Sellers Page
-		else if(cpageName == "sellerdetails"){
-
-			mainView.router.loadPage("sellers.html");
-		}
-
-		//Re-route to Seller Details Page
-		else if(cpageName == "pinexec"){
-
-			mainView.router.loadPage("sellersdetails.html");
-		}
-
-		//Re-route to Addresses list Page
-		else if(cpageName == "editaddress"){
-
-			mainView.router.loadPage("addresseslist.html");
-		}
-
-		//Re-route to dashboard
-		else if(cpageName == "dashboard"){
+		//Exit App
+		else if(cpageName == "dashboard" || cpageName == "theswipe" || cpageName == "getstarted" ||cpageName == "begin"){
 
 			navigator.app.exitApp();
+		}
+
+
+
+		//Seller Section
+
+		//Exit App
+		else if(cpageName == "payoutsuccess"){
+
+			mainView.router.loadPage("sellerdashboard.html");
+		}
+
+		
+
+		//Exit App
+		else if(cpageName == "sellerdashboard" || cpageName == "theswipe" || cpageName == "getstarted" ||cpageName == "begin"){
+
+			navigator.app.exitApp();
+		}
+
+
+
+
+		//Re-route to Settings
+		else if($$('.modal-in').length > 0){
+
+			myApp.closeModal();
+			return false;
 		}
 
 		else{
@@ -653,27 +784,80 @@ myApp.onPageInit('getStarted', function(page){
 
 
 	myApp.onPageInit('signup', function(page){
-	loginWithFB = function(){
-
-
-		FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
-    		function (response) {
-
-    			console.log(response);
-    		});
-	}
-
-
+	
 
 	function fbLogin() {
-    FB.login(function (response) {
-        if (response.authResponse) {
-            // Get and display the user profile data
-            loginWithFB();
-        } else {
-            console.log("i am not sure what happened");
-        }
-    }, {scope: 'email'});
+    	
+
+		facebookConnectPlugin.login(["public_profile", "email"], function(result){
+		//auth success
+		console.log(JSON.stringify(result));
+
+
+		//calling api
+		facebookConnectPlugin.api("/me?fields=email,name,picture", ["public_profile","email"], function(userData){
+
+			//success callback
+			var stringifyData = JSON.stringify(userData);
+			var signupEmail = stringifyData.email;
+			var signUpName = stringifyData.name;
+			var splitName = signUpName.split(" ");
+
+
+			signupFirstName = splitName[0];
+			signupLastName = splitName[1];
+
+
+
+
+			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/buyer_registration.php",{
+
+				new_user_first_name : signupFirstName,
+				new_user_last_name : signupLastName,
+				new_user_mail : signupEmail,
+				new_user_phone : window.localStorage.getItem("_cydene_user_phone_no")
+			},
+			function(data){
+
+				if(data == "Registration Successful"){
+
+					window.localStorage.setItem("buyerFN", signupFirstName);
+					window.localStorage.setItem("buyerLN", signupLastName);
+					window.localStorage.setItem("buyerMail", signupEmail);
+					mainView.router.loadPage("setexecpin.html");
+				}
+				else{
+
+					myApp.alert(data);
+				}
+
+			},
+			function(error){
+
+				myApp.alert("Unable to connect to Cydene Servers. Try again later.");
+			});
+
+
+
+		}, function(error){
+
+			//error callback
+			myApp.alert(JSON.stringify(error));
+		});
+
+
+	},
+
+	function(error){
+
+		myApp.alert(JSON.stringify(userData));
+
+	});
+
+
+
+
+
 	}
 
 
@@ -873,7 +1057,7 @@ $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 											bold : true,
 											onClick : function(){
 
-												//exitMyApp();
+												exitMyApp();
 											}
 										},
 										{
@@ -1193,6 +1377,7 @@ var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceL
 							arrangeMyLat.push(data[vv]);
 						}
 						theAddressDetails = arrangeMyLat;
+						console.log(theAddressDetails);
 						
 
 					}, function(){
@@ -1385,7 +1570,7 @@ myApp.onPageInit('sellerdetails', function(page){
 				else if(paymentMethod == "Card"){
 
 						myApp.hidePreloader();
-						myApp.prompt('Have a coupon code? Apply it now for discounts!!!', 'Coupons!!!', function (value) {
+						myApp.prompt('Have a coupon code? Apply it now for discounts!', 'Coupons!', function (value) {
        					 
        					 myApp.showPreloader('Checking coupon code...');
        					 $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
@@ -1452,7 +1637,7 @@ myApp.onPageInit('sellerdetails', function(page){
 					window.localStorage.setItem("tnx_delivery_address", deliver2Address);
 
 					myApp.hidePreloader();
-					myApp.prompt('Have a coupon code? Apply it now for discounts!!!', 'Coupons!!!', function (value) {
+					myApp.prompt('Have a coupon code? Apply it now for discounts!', 'Coupons!', function (value) {
        					 
        					 myApp.showPreloader('Checking coupon code...');
        					 $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
@@ -1522,6 +1707,29 @@ myApp.onPageInit('sellerdetails', function(page){
 
 
 
+	//Pull seller ratings
+	var ratingData = splitSellerDetails.this_seller_ratings;
+	
+
+		 	var theRatingsDesign;
+		 	var zeroStar = "<i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var oneStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var twoStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var threeStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var fourStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var fiveStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i>";
+
+		 	switch(parseInt(ratingData)){
+		 		case 0 : theRatingsDesign = zeroStar; break;
+		 		case 1 : theRatingsDesign = oneStar; break;
+		 		case 2 : theRatingsDesign = twoStar; break;
+		 		case 3 : theRatingsDesign = threeStar; break;
+		 		case 4 : theRatingsDesign = fourStar; break;
+		 		default : theRatingsDesign = fiveStar;
+		 	}
+
+		 	$$(".ratings-container").html(theRatingsDesign);
+		
 
 
 
@@ -1883,8 +2091,9 @@ myApp.onPageInit('orderhistory', function(page){
 
 
 
-	orderComplete = function(tranxID){
+	orderComplete = function(tranxID, theSellerSN){
 
+	window.localStorage.setItem("seller_2_rate", theSellerSN);
 	myApp.showPreloader('Completing Order...');	
 
 	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
@@ -1896,7 +2105,7 @@ myApp.onPageInit('orderhistory', function(page){
 	 	myApp.hidePreloader();
 	 	if(data == "update success"){
 
-	 		mainView.router.reloadPage("orderhistory.html");
+	 		mainView.router.loadPage("rateorder.html");
 	 	}
 	 	else{
 
@@ -1980,6 +2189,33 @@ if(tranxPaymentType == "Wallet")
 
 			});
 }
+
+
+else if(tranxPaymentType == "Card")
+{
+	myApp.modal({
+
+				title : 'Cydene Express',
+				text : 'A cancellation fee of NGN250 will take effect?',
+				buttons : [
+					{
+						text : '<span class=color-orange>No</span>',
+						bold : true,
+						
+					},
+					{
+						text : '<span class=color-indigo>Continue</span>',
+						bold : true,
+						onClick : function(){ 
+							
+							cancelMyOrder(tranxSN, "Card");
+						}	
+					}
+				]
+
+			});
+}
+
 
 else{
 
@@ -2537,7 +2773,58 @@ myApp.onPageInit('wallet', function(page){ // Wallet page
 
 	$$("#add-money-2-wallet").on("click", function(){
 
-		driveCard();
+		myApp.showPreloader("Processing...");
+		var amount2Add = $$("#the-amount-2-add").val();
+
+		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/add_money_2_wallet_transaction.php",
+		{
+			"amount_2_add" : amount2Add,
+			"user_phone_data" : user_phone_data
+		},
+		 function(data){
+
+		 	console.log(data);
+
+		var splitData = data.split(' ');
+		var returnedTnx = splitData[0];
+
+			if(splitData[1] == "Successful"){
+
+				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/paystack_init.php",
+					{
+						"buyer_email" : window.localStorage.getItem("buyerMail"),
+						"amount_2_pay" : amount2Add * 100,
+						"tnx_reference" : returnedTnx
+					},
+					 function(data){
+
+					 	myApp.hidePreloader();
+					 	
+					 	var parsedData = JSON.parse(data);
+					 	var authUrl = parsedData.data.authorization_url;
+					 	fireUpPayments2(authUrl, returnedTnx);
+					 	console.log(data);	 	
+
+					 }, function(){
+
+					 		myApp.alert("Unable to connect to Cydene servers");
+					 });
+
+				
+			}
+			else{
+
+				myApp.hidePreloader();
+				myApp.alert(data);
+			}
+	},
+
+	 function(){
+	 	myApp.hidePreloader();
+		console.log("Unable to connect to Cydene servers");
+	});
+
+
 	});
 
 
@@ -2859,6 +3146,45 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 		 });
 
 
+
+
+		//Pull seller ratings
+		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_seller_ratings.php", 
+		{
+			"user_phone_data" : window.localStorage.getItem("_cydene_user_phone_no")
+		},
+		 function(data){
+
+		 	var theRatingsDesign;
+		 	var zeroStar = "<i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var oneStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var twoStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var threeStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var fourStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var fiveStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i>";
+
+		 	switch(parseInt(data)){
+		 		case 0 : theRatingsDesign = zeroStar; break;
+		 		case 1 : theRatingsDesign = oneStar; break;
+		 		case 2 : theRatingsDesign = twoStar; break;
+		 		case 3 : theRatingsDesign = threeStar; break;
+		 		case 4 : theRatingsDesign = fourStar; break;
+		 		default : theRatingsDesign = fiveStar;
+		 	}
+
+		 	$$(".ratings-container").html(theRatingsDesign);
+		},
+
+		function(xhr, status, error){
+
+	        console.log("Error fetching seller ratings");
+
+		});
+
+
+
+
+
 	
 }); //Sellers Dashboard
 
@@ -2866,7 +3192,7 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 
 
 
-var acceptOrder, declineOrder, acceptSchOrder, declineSchOrder, orderComplete, schOrderComplete, pushSaleDetails;
+var acceptOrder, declineOrder, acceptSchOrder, declineSchOrder, orderComplete, schOrderComplete, pushSaleDetails, pushScheduleSaleDetails;
 myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 	
@@ -2917,7 +3243,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 	 function(data){
 
 	 	myApp.hidePreloader();
-	 	/*if(data == "Accept success"){
+	 	if(data == "Accept success"){
 
 	 		myApp.hidePreloader();
 	 		mainView.router.reloadPage("sellerbookings.html");
@@ -2926,10 +3252,9 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 	 		myApp.hidePreloader();
 	 		myApp.alert("Error accepting order, try later");
-	 	}*/
+	 	}
 
-	 	myApp.hidePreloader();
-	 	myApp.alert(data);
+	 	
 	 	
 	},
 
@@ -3140,6 +3465,53 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 
 
+
+
+
+	pushScheduleSaleDetails = function(theBuyer, tranxSN){
+		myApp.showPreloader('Processing...');
+
+		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_schedule_sale_details.php", 
+		{
+			"the_buyer" :  theBuyer,
+			"tranx_SN" : tranxSN
+
+		},
+			 function(data){
+
+			 	myApp.hidePreloader();
+			 	if(data.pack_status == "correct"){
+
+			 		window.localStorage.setItem("theScheduleSaleDetails", JSON.stringify(data));
+			 		mainView.router.loadPage('customerdeliveryrouteschedule.html');
+
+			 	}
+			 	else{
+
+			 		myApp.alert("Error processing delivery route");
+			 	}
+
+			 	console.log(data);
+
+	
+			},
+
+			function(xhr, status, error){
+
+				myApp.hidePreloader();
+		        myApp.alert("Unable to reach Cydene Servers, Try again later");
+
+			});
+	
+
+		
+	}
+	
+
+
+
+
+
 	acceptSchOrder = function(tranxSN){
 
 	myApp.showPreloader('Accepting Order...');	
@@ -3329,7 +3701,76 @@ myApp.onPageInit('customerdeliveryroute', function(page){ //Offers page
 
 
 
+
+
 //Customer Route Page
+myApp.onPageInit('customerdeliveryrouteschedule', function(page){ //Offers page
+
+	var splitSaleDetails = window.localStorage.getItem("theScheduleSaleDetails");
+	splitSaleDetails = JSON.parse(splitSaleDetails);
+
+
+	$$("#buyer-name-space").html(splitSaleDetails.the_buyer_fn + " " + splitSaleDetails.the_buyer_ln);
+	$$("#cylinder-size-name-space").html(splitSaleDetails.the_cylinder_size);
+	$$("#cylinder-qty-name-space").html(splitSaleDetails.the_cylinder_qty);
+	$$("#sale-payment-method").html("<b>COD</b>");
+	$$("#tnx-date").html(splitSaleDetails.the_tnx_date);
+	$$("#the-buyer-address").html("<b>" + splitSaleDetails.address_string + "</b>");
+	
+
+	console.log("customer delivery route schedule order.");
+
+	function calcRoute() {
+	  var directionsService = new google.maps.DirectionsService();
+	  var directionsDisplay = new google.maps.DirectionsRenderer();
+	  var sellerOrigin = new google.maps.LatLng(splitSaleDetails.sellers_lat_lng.sellers_lat, splitSaleDetails.sellers_lat_lng.sellers_lng);
+	  var buyerDestination = new google.maps.LatLng(splitSaleDetails.the_buyer_addr.lat, splitSaleDetails.the_buyer_addr.lng);
+	  var mapOptions = {
+	   	center: sellerOrigin,
+	    zoom: 204
+	  }
+	  var map = new google.maps.Map(document.getElementById('route-map'), mapOptions);
+	  
+	
+	  var request = {
+	      origin: sellerOrigin,
+	      destination: buyerDestination,
+	      unitSystem: google.maps.UnitSystem.IMPERIAL,
+	      travelMode: 'DRIVING'
+	  };
+	  
+	  directionsService.route(request, function(response, status) {
+
+	    if (status == 'OK') {
+	      
+	      directionsDisplay.setDirections(response);
+	      directionsDisplay.setMap(map);
+
+	    }
+	    else{
+	    	myApp.alert("Error getting directions from Google, Try again later.");
+	    }
+	  });
+
+	}
+
+	window.setTimeout(function() {calcRoute()}, 2500);
+
+
+
+	$$("#click-2-call-customer").on("click", function(){
+
+		window.document.location.href = "tel: " + splitSaleDetails.the_buyer_phone;
+
+	});
+
+}); //Customer Route Page
+
+
+
+
+
+
 myApp.onPageInit('sellerorderhistory', function(page){ //Sellers Order History
 
 
@@ -3344,7 +3785,7 @@ myApp.onPageInit('sellerorderhistory', function(page){ //Sellers Order History
 
 	function(xhr, status, error){
 
-        myApp.alert(status);
+        console.log("Unable to connect to Cydene Servers");
 
 	});
 
@@ -3362,7 +3803,7 @@ myApp.onPageInit('sellerorderhistory', function(page){ //Sellers Order History
 
 	function(xhr, status, error){
 
-        myApp.alert(status);
+       console.log(status);
 
 	});
 
@@ -3524,6 +3965,39 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 		});
 
 
+
+		//Pull seller ratings
+		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_seller_ratings.php", 
+		{
+			"user_phone_data" : window.localStorage.getItem("_cydene_user_phone_no")
+		},
+		 function(data){
+
+		 	var theRatingsDesign;
+		 	var zeroStar = "<i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var oneStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var twoStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var threeStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var fourStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons'>star_border</i>";
+		 	var fiveStar = "<i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i> <i class='material-icons color-amber'>star_border</i>";
+
+		 	switch(parseInt(data)){
+		 		case 0 : theRatingsDesign = zeroStar; break;
+		 		case 1 : theRatingsDesign = oneStar; break;
+		 		case 2 : theRatingsDesign = twoStar; break;
+		 		case 3 : theRatingsDesign = threeStar; break;
+		 		case 4 : theRatingsDesign = fourStar; break;
+		 		default : theRatingsDesign = fiveStar;
+		 	}
+
+		 	$$(".ratings-container").html(theRatingsDesign);
+		},
+
+		function(xhr, status, error){
+
+	        console.log("Error fetching seller ratings");
+
+		});
 
 }); //Sellers Settings
 
@@ -3899,8 +4373,10 @@ myApp.onPageInit('paymentmethods', function(page){ //Payment Methods Page
 
 
 
-var selectMeCard;
-myApp.onPageInit('cardpayment', function(page){ //Payment Methods Page
+
+
+
+myApp.onPageInit('cardpayment', function(page){ //Card Payment Page
 
 
 
@@ -3973,7 +4449,9 @@ myApp.onPageInit('cardpayment', function(page){ //Payment Methods Page
 										 	var parsedData = JSON.parse(data);
 										 	var authUrl = parsedData.data.authorization_url;
 										 	fireUpPayments(authUrl, returnedTnx);
-										 	console.log(data);	 	
+										 	
+										 	
+										 	console.log(data); 	
 
 										 }, function(){
 
@@ -3996,130 +4474,138 @@ myApp.onPageInit('cardpayment', function(page){ //Payment Methods Page
 							});
 
 
-
-
-
-
-
-
-
-			/*$$.get("http://cydene.com/paystackco/paystack_init.php",
-				{
-					"user_phone_data" : users_phone_data
-				},
-				 function(data){
-
-				 	console.log(data);	 	
-
-				 }, function(){
-
-				 		myApp.alert("Unable to connect to Cydene servers");
-				 });*/
-
 		});
 
 	
 
 
+}); //Card Payment Page
 
 
 
 
 
 
-	/*deleteCardForever = function(cardSN){
-		myApp.showPreloader("Deleting Card...");
-		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/delete_card.php",
-			{
-				"user_phone_data" : users_phone_data,
-				"card_serial" : cardSN
-			},
-			 function(data){
 
-			 	if(data == "delete success"){
 
-			 		myApp.hidePreloader();
-			 		mainView.router.reloadPage("paymentmethods.html");
 
-			 	}
-			 	else{
 
-			 		myApp.hidePreloader();
-			 		myApp.alert(data);
-			 	}
-			 	
+myApp.onPageInit('rateorder', function(page){ //Rate order
 
-			 }, function(){
-			 	
-			 		myApp.hidePreloader();
-			 		myApp.alert("Unable to connect to Cydene servers");
-			 });
+$$("#the-rate").val("1");
 
-	}
-	*/
+	$$("#one-star").click(() => {
 
-	/*selectMeCard = function(cardNo, cardExp, cardCVV){
+		$$("#one-star").addClass("color-amber");
+		$$("#two-star").removeClass("color-amber");
+		$$("#three-star").removeClass("color-amber");
+		$$("#four-star").removeClass("color-amber");
+		$$("#five-star").removeClass("color-amber");
 
+		$$("#the-rate").val("1");
+
+	});
+
+
+
+	$$("#two-star").click(() => {
+
+		$$("#two-star").addClass("color-amber");
+		$$("#one-star").addClass("color-amber");
+		$$("#three-star").removeClass("color-amber");
+		$$("#four-star").removeClass("color-amber");
+		$$("#five-star").removeClass("color-amber");
+
+		$$("#the-rate").val("2");
+
+	});
+
+
+
+	$$("#three-star").click(() => {
+
+		$$("#three-star").addClass("color-amber");
+		$$("#two-star").addClass("color-amber");
+		$$("#one-star").addClass("color-amber");
+		$$("#four-star").removeClass("color-amber");
+		$$("#five-star").removeClass("color-amber");
+
+		$$("#the-rate").val("3");
+	});
+
+
+	$$("#four-star").click(() => {
+
+		$$("#four-star").addClass("color-amber");
+		$$("#one-star").addClass("color-amber");
+		$$("#two-star").addClass("color-amber");
+		$$("#three-star").addClass("color-amber");
+		$$("#five-star").removeClass("color-amber");
+
+		$$("#the-rate").val("4");
+
+	});
+
+
+	$$("#five-star").click(() => {
+
+		$$("#five-star").addClass("color-amber");
+		$$("#one-star").addClass("color-amber");
+		$$("#two-star").addClass("color-amber");
+		$$("#three-star").addClass("color-amber");
+		$$("#four-star").addClass("color-amber");
+
+
+		$$("#the-rate").val("5");
+
+	});
+
+
+	$$("#send-rating").click(() => {
+
+		myApp.showPreloader("Sending...");
 		
-		$$("#" + cardCVV).show();
-		$$("input[type='tel']").hide();
-		$$("#" + cardCVV).show();
+		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/rate_seller.php",
+				{
+					"the_seller" : window.localStorage.getItem("seller_2_rate"),
+					"the_rate" : $$("#the-rate").val()
 
-	}*/
+				},
+				 function(data){
 
+				 	myApp.hidePreloader();
+				 	mainView.router.loadPage("dashboard.html");
 
+				 }, function(){
 
-}); //Payment Methods Page
-
-
-
-
-
-myApp.onPageInit('fbtry', function(page){
-
-
-	function openFbLogin(){
-
-		facebookConnectPlugin.login(["public_profile", "email"], function(result){
-		//auth success
-		console.log(JSON.stringify(result));
+				 		console.log("Unable to connect to Cydene servers");
+				 });
 
 
-		//calling api
-		facebookConnectPlugin.api("/me?fields=email,name,picture", ["public_profile","email"], function(userData){
-
-			alert(JSON.stringify(userData));
-
-		}, function(error){
-
-			//error callback
-			myApp.alert(JSON.stringify(error));
-		});
+	});
+}); //Rate order
 
 
-	},
 
-	function(error){
 
-		myApp.alert(JSON.stringify(userData));
+
+
+myApp.onPageInit('explainverification', function(page){ //Verifications Page
+
+
+	
+	$$("#seller-upload-document").click(() => {
+
+		getSellerDocument();
 
 	});
 
 
 
-	}
-
-
-	$$("#fbtry-btn").click(function(){
-
-		openFbLogin();
-	});
-
-
-});
 
 
 
+});//Verifications Page
 
 
 
