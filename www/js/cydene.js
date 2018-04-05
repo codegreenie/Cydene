@@ -797,7 +797,42 @@ myApp.onPageInit('getStarted', function(page){
 		//calling api
 		facebookConnectPlugin.api("/me?fields=email,name,picture", ["public_profile","email"], function(userData){
 
-			//success callback
+			
+				window.localStorage.setItem("facebook_return", JSON.stringify(userData));
+				setTimeout(function(){
+					registerFBUser();
+				}, 3000);
+
+		}, function(error){
+
+			//error callback
+			myApp.alert(JSON.stringify(error));
+		});
+
+
+	},
+
+	function(error){
+
+		myApp.alert(JSON.stringify(userData));
+
+	});
+
+
+
+
+
+	}
+
+
+
+	function registerFBUser(){
+
+		myApp.showPreloader("Processsing...");
+		var userData = window.localStorage.getItem("facebook_return");
+		userData = JSON.parse(userData);
+
+		//success callback
 			var stringifyData = JSON.stringify(userData);
 			var signupEmail = stringifyData.email;
 			var signUpName = stringifyData.name;
@@ -819,6 +854,7 @@ myApp.onPageInit('getStarted', function(page){
 			},
 			function(data){
 
+				myApp.hidePreloader();
 				if(data == "Registration Successful"){
 
 					window.localStorage.setItem("buyerFN", signupFirstName);
@@ -836,27 +872,6 @@ myApp.onPageInit('getStarted', function(page){
 
 				myApp.alert("Unable to connect to Cydene Servers. Try again later.");
 			});
-
-
-
-		}, function(error){
-
-			//error callback
-			myApp.alert(JSON.stringify(error));
-		});
-
-
-	},
-
-	function(error){
-
-		myApp.alert(JSON.stringify(userData));
-
-	});
-
-
-
-
 
 	}
 
