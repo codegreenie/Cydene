@@ -9,6 +9,7 @@
     </author>
     <content src="index.html" />
     <preference name="android-minSdkVersion" value="15" />
+    <preference name="android-targetSdkVersion" value="15" />
     <preference name="orientation" value="portrait" />
     <preference name="StatusBarBackgroundColor" value="#00A0E3" />
     <preference name="android-build-tool" value="gradle" />
