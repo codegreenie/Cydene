@@ -455,11 +455,11 @@ if (cordova.platformId == 'android') {
 
 /******** Start Page *************/
 
-myApp.onPageInit('begin', function(page){
+/*myApp.onPageInit('begin', function(page){
 
 	test4connection();
 
-}).trigger();
+}).trigger();*/
 
 
 
