@@ -8,7 +8,7 @@
         @codegreenie
     </author>
     <content src="index.html" />
-    <preference name="android-minSdkVersion" value="8" />
+    <preference name="android-minSdkVersion" value="14" />
     <preference name="android-targetSdkVersion" value="16" />
     <preference name="orientation" value="portrait" />
     <preference name="StatusBarBackgroundColor" value="#00A0E3" />
