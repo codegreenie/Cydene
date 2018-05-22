@@ -4,7 +4,7 @@
 
  <div class="navbar theme-indigo">
     <div class="navbar-inner">
-      <div class="left"><a href="dashboard.html" class="back link icon-only"><i class="icon icon-back"></i></a></div>
+      <div class="left"><a href="#" class="back link icon-only"><i class="icon icon-back"></i></a></div>
       <div class="center populate-sellers-name"></div>
       <div class="right"></div>
 
@@ -57,15 +57,18 @@
               </li>
 
 
-              <li class="item-content">
+              <li class="item-content" id="update-qty">
               
                 <div class="item-media"><i class="material-icons color-indigo">layers</i></div>
                 <div class="item-inner">
+                  <input type="hidden" name="" id="seller-qty-update">
                   <div class="item-title">Quantity</div>
-                  <div class="item-after quote-qty"></div>
+                  <div class="item-after quote-qty" id="quote-qty"></div>
                 </div>
              
               </li>
+
+
 
 
 
@@ -80,9 +83,16 @@
               </li>
 
               
+
+              
+              
               
             </ul>
           </div>
+
+
+
+
         
 
 
@@ -93,11 +103,11 @@
           
             <div class="list-block">
             <ul>
-              <li class="item-content bg-yellow">
+              <li class="item-content">
               
                 <div class="item-media"><i class="material-icons color-black">local_shipping</i></div>
                 <div class="item-inner">
-                  <div class="item-title">Service Charge:<br><small><em>Wallet &amp; Card</em></small></div>
+                  <div class="item-title">Service Charge:</div>
                   <div class="item-after color-black"><em>NGN150</em></div>
                 </div>
              
@@ -115,6 +125,33 @@
 
 
 
+          
+          
+            <div class="list-block">
+            <ul>
+
+            <li class="item-content" id="apply-coupon">
+              
+                <div class="item-media"><i class="material-icons color-indigo">room_service</i></div>
+                <div class="item-inner">
+                  <div class="item-title">Apply Coupon</div>
+                  <div class="item-after">></div>
+
+                </div>
+
+
+
+
+            
+              </li>
+
+            </ul>
+
+          </div>
+
+
+          <div class=" content-block-title bg-green text-white text-center" id="coupon-highlight" style="padding-top: 15px; padding-bottom: 15px; display: none;"></div>
+
 
 
 <div class="content-block-title color-orange"><span>Payment Method:</span></div>
@@ -125,7 +162,7 @@
               <li>
                 <label class="label-radio item-content">
                   <!-- Checked by default -->
-                  <input type="radio" name="payment_method" value="Card">
+                  <input type="radio" name="payment_method" value="Card" checked="checked">
                   <div class="item-media">
                     <i class="icon icon-form-radio"></i>
                   </div>
@@ -152,7 +189,7 @@
               
               <li>
                 <label class="label-radio item-content">
-                  <input type="radio" name="payment_method" value="COD" checked="checked">
+                  <input type="radio" name="payment_method" value="COD">
                   <div class="item-media">
                     <i class="icon icon-form-radio"></i>
                   </div>
@@ -178,10 +215,8 @@
 
 
 
-           <div style="position: absolute; bottom: 0px; width: 100%; z-index: 30;">
-            <a href="#" class="button button-fill color-orange" id="payment-btn" style="border-radius:0px;">
-           &nbsp;
-            </a>
+           <div style="position: fixed; bottom: 3%; width: 90%; left: 5%; z-index: 30; border-radius:0px; padding-top: 15px; padding-bottom: 15px; background-color:#069; color:#fff; text-align: center;" id="payment-btn">
+         
             </div>
 
 

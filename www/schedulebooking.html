@@ -1,0 +1,197 @@
+<div data-page="schedulebooking" class="page">	
+
+  <div class="navbar theme-indigo">
+    <div class="navbar-inner">
+      <div class="left"><a href="#" class="link back icon-only"><i class="material-icons">clear</i></a></div>
+      <div class="center">Schedule Booking</div>
+     
+      </div>
+  </div>
+
+
+
+	<div class="page-content">
+  
+
+  <div class="content-block">
+    <p style="margin:0;"><span id="buyers-name"></span>, create and order and select a delivery date, a seller will deliver to you. </p>
+  </div>
+
+
+<div class="content-block-title">Select Cylinder Size:</div>
+
+  <!-- swiper properties in data- attributes -->
+<div class="swiper-container swiper-init" data-speed="400" data-space-between="10" data-pagination=".swiper-pagination" data-slides-per-view = "2.5" id="cylinder-size-swipe">
+    <div class="swiper-wrapper">
+
+        <div class="swiper-slide" id="fivekggas-schedule">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">5kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_orange.png" style="max-width:120px;">
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+        <div class="swiper-slide" id="threekggas-schedule">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">3kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_green.png" style="max-width:120px;">
+               
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+        <div class="swiper-slide" id="sixkggas-schedule">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">6kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_blue.png" style="max-width:120px;">
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+
+
+         <div class="swiper-slide" id="twelvepointfivekggas-schedule">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">12.5kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_yellow.png" style="max-width:57px; display: block; margin: 0 auto;">
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+
+        <div class="swiper-slide" id="twentyfivekggas-schedule">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">25kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_orange.png" style="max-width:121px;">
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+       
+
+        <div class="swiper-slide" id="fiftykggas-schedule">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">50kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_green.png" style="max-width:120px;">
+                
+              </div>
+              </div>
+             
+            </div>
+        </div>
+       
+    </div>
+    <!-- <div class="swiper-pagination"></div> -->
+</div> 
+
+
+
+<div class="content-block-title">Delivery Address:</div>
+   <div class="card cylinder-card">
+    <div class="card-content">
+      <div class="card-content-inner" id="populate-schedule-address">
+        
+
+        
+      </div>
+      </div>
+     
+    </div>
+
+
+
+  <div class="list-block theme-indigo">
+  <ul>
+    <li>
+      <div class="item-content">
+        <div class="item-inner">
+          <div class="item-input">
+            <input type="text" placeholder="Delivery Date" id="delivery-date">
+          </div>
+        </div>
+      </div>
+    </li>
+
+     <li>
+      <div class="item-content">
+        <div class="item-inner">
+          <div class="item-input">
+            <input type="number" placeholder="Cylinder Quantity" id="cylinder-quantity">
+          </div>
+        </div>
+      </div>
+    </li>
+
+     <li>
+      <div class="item-content">
+        <div class="item-inner">
+          <div class="item-input">
+            <button type="button" class="button button-fill color-indigo" style="width: 100%;padding-top: 15px; padding-bottom: 15px;" id="create-booking">Create Schedule Booking</button>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+
+
+<input type="hidden" id="cylinder-size-store" value="5kg">
+
+
+<!-- 
+          <div class="content-block">
+
+            <h3 class="color-indigo">What is Schedule Booking</h3>
+            <p>The is is a feature of Cydene thats allows you to order for gas on a later date. Once this date reaches, We assign a nearby seller to match your order.</p>
+
+
+          </div>
+ -->
+
+
+
+
+
+
+          
+
+
+          </div><!--Page content-->
+
+
+</div>
+
+
+
+
+
+
+

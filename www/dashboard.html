@@ -1,150 +1,286 @@
-<div data-page="dashboard" class="page">
-
-
-  <div class="navbar theme-indigo">
-    <div class="navbar-inner">
-      
-      <div class="center">Home</div>
-      </div>
-  </div>
-
-	
+<div data-page="dashboard" class="page">	
 	<div class="page-content">
     
  
 
-     <!-- About popover -->
-  <div class="popover popover-about">
-    <div class="popover-angle"></div>
-    <div class="popover-inner">
-      <div class="content-block">
-        <p style="font-size:12px;">What is Schedule Booking?</p>
-        <p style="font-size:11px;">Schedule booking allows to get gas to your door step on a later date.</p>
-        <p style="font-size:11px;">NB: We assign a seller to you on your delivery date. This may affect the pricing</p>
-      </div> 
-    </div>
+  
+
+  <div class="content-block" style="margin-top:-30px;">
+    <p style="margin:0;"><span id="buyers-namesake"></span>, order for gas from nearby sellers or sellers across Lagos.</p>
   </div>
 
-  <div class="content-block">
-    <p><span id="buyers-namesake"></span>, order for gas from nearby sellers or sellers across Lagos.</p>
 
-    </div>
-    
-                <div class="card">
-              <div class="card-header">Buy Gas&nbsp;<i class="icon material-icons">add_shopping_cart</i></div>
+
+
+  <!-- swiper properties in data- attributes -->
+<div class="swiper-container swiper-init" data-speed="400" data-space-between="10" data-pagination=".swiper-pagination" data-slides-per-view = "2.5">
+    <div class="swiper-wrapper">
+
+        <div class="swiper-slide" id="fivekggas">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">5kg Gas</div>
               <div class="card-content">
-                  <div class="card-content-inner">
-                    
-                    <form action="" method="POST" class="ajax-submit inputs-lists list-block">
-                     <ul class="theme-indigo">
-        <li>
-          <div class="item-content">
-            <div class="item-media"><i class="icon material-icons color-indigo">delete</i></div>
-            <div class="item-inner theme-indigo"> 
-              <div class="item-title label color-indigo">Cylinder Size</div>
-              <div class="item-input">
-                <select id="gas-cylinder-size">
-                  <option value="3kg">3kg</option>
-                  <option value="5kg">5kg</option>
-                  <option value="6kg">6kg</option>
-                  <option value="12.5kg">12.5kg</option>
-                  <option value="25kg">25kg</option>
-                  <option value="50kg">50kg</option>
-                  
-
-                </select>
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_orange.png" style="max-width:120px;">
+                
               </div>
-            </div>
-          </div>
-        </li>
-
-
-        <li>
-          <div class="item-content">
-            <div class="item-media"><i class="icon material-icons color-indigo">layers</i></div>
-            <div class="item-inner theme-indigo"> 
-              <div class="item-title label color-indigo">Quantity</div>
-              <div class="item-input">
-                <select id="gas-purchase-qty">
-                                  
-                </select>
-              </div>
-            </div>
-          </div>
-        </li>
-
-
-
-        <li id="schedule-switch-panel">
-          <div class="item-content">
-            <div class="item-media"><i class="icon material-icons color-indigo">date_range</i></div>
-            <div class="item-inner"> 
-              <div class="item-title label">Schedule Booking</div>
-              <div class="item-input">
-
-
-                <label class="label-switch color-indigo">
-                  <input type="checkbox" id="schedule-switch" readonly>
-                  <div class="checkbox"></div>
-                </label>
-
-
-                <label>
-                  <a href="#" data-popover=".popover-about" class="open-popover color-indigo">
-                  <i class="material-icons" style="float:right;margin-top:7px;">help_outline</i></label>
-                </a>
-
-              </div>
-            </div>
-          </div>
-        </li>
-
-
-
-        
-                     <li>
-
-                      <div class="item-content">
-                        <div class="item-inner">
-                          
-                            <a href="#" class="button button-fill color-orange" id="proceed-gas-purchase">PROCEED</a>
-                         
-                        </div>
-                      </div>
-                    </li>
-                 
-
-
-
-      </ul>
-    </form>
-    
-    
- 
-         </div>
               </div>
               
-          </div> 
+            </div>
+        </div>
+
+        <div class="swiper-slide" id="threekggas">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">3kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_green.png" style="max-width:120px;">
+               
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+        <div class="swiper-slide" id="sixkggas">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">6kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_blue.png" style="max-width:120px;">
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+
+
+         <div class="swiper-slide" id="twelvepointfivekggas">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">12.5kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_yellow.png" style="max-width:57px; display: block; margin: 0 auto;">
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+
+        <div class="swiper-slide" id="twentyfivekggas">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">25kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_orange.png" style="max-width:121px;">
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+       
+
+        <div class="swiper-slide" id="fiftykggas">
+            <div class="card cylinder-card">
+              <div class="card-header cylinder-icon-top text-white">50kg Gas</div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                <img src="docs/imgs/cylinder_green.png" style="max-width:120px;">
+                
+              </div>
+              </div>
+             
+            </div>
+        </div>
+       
+    </div>
+    <!-- <div class="swiper-pagination"></div> -->
+</div> 
+
+
+
+
+
+<div class="content-block-title">SCHEDULE BOOKING</div>
+   <div class="card">
+            <a href="schedulebooking.html" class="color-indigo">  
+              <div class="card-content">
+                  <div class="card-content-inner text-center color-indigo">
+                    <p>Create an order to be delivered later</p>
+                    <i class="material-icons" style="font-size:40px;">date_range</i>
+                  
+                  </div>
+                </div>
+                </a>
+              </div>
+
+
+
+
+
+
+
+
+
+
+<div class="content-block-title">ORDER HISTORY</div>
+  <!-- swiper properties in data- attributes -->
+<div class="swiper-container swiper-init home-history-swiper">
+       
+       <div class='swiper-wrapper'>
+
+
+
+        <div class='swiper-slide' id="no-order-div">
+                    <div class='card'>
+                      
+                      <div class='card-content'>
+                      <div class='card-content-inner text-center'>
+                          
+                          <i class="material-icons">history</i><br>
+                          Create an order and your trasactions will appear here
+
+
+                      </div>
+                      </div>
+                      
+                    </div>
+                </div>
+
+
+
+       <div class='swiper-slide hide-me' id="swiper-div0">
+            <div class='card'>
+              
+              <div class='card-content'>
+              <div class='card-content-inner text-center' id="swiper-div0-junior">
+                
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+
+         <div class='swiper-slide hide-me' id="swiper-div1">
+            <div class='card'>
+              
+              <div class='card-content'>
+              <div class='card-content-inner text-center' id="swiper-div1-junior">
+               
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+
+        <div class='swiper-slide hide-me' id="swiper-div2">
+            <div class='card'>
+              
+              <div class='card-content'>
+              <div class='card-content-inner text-center' id="swiper-div2-junior">
+               
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+
+        <div class='swiper-slide hide-me' id="swiper-div3">
+            <div class='card'>
+              
+              <div class='card-content'>
+              <div class='card-content-inner text-center' id="swiper-div3-junior">
+               
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+
+        <div class='swiper-slide hide-me' id="swiper-div4">
+            <div class='card'>
+              
+              <div class='card-content'>
+              <div class='card-content-inner text-center' id="swiper-div4-junior">
+               
+                
+              </div>
+              </div>
+              
+            </div>
+        </div>
+
+
+
+
+
+        <div class='swiper-slide hide-me' id="see-all-history">
+          <a href="orderhistory.html" class="color-indigo">
+            <div class='card'>
+              
+              <div class='card-content'>
+              <div class='card-content-inner text-center'>
+               
+               <i class="material-icons">arrow_forward</i><br>
+               See all history
+                
+              </div>
+              </div>
+              
+            </div>
+            </a>
+        </div>
+      
+
+
+
+
+
+      </div>
+
+</div> 
+
+
+
+
+
+<div class="content-block-title">WALLET</div>
+  
+    
+      <div class="card">
+              
+              <div class="card-content">
+                  <div class="card-content-inner text-center color-indigo">
+                    <i class="material-icons" style="font-size:40px;">account_balance_wallet</i>
+                    <br>
+                    <span class="home-wallet-balance"></span>
+                  </div>
+                </div>
+                <a href="wallet.html">
+                <div class="card-footer cylinder-icon-top text-white text-center">ADD MONEY</div>
+                </a>
+              </div>
+
+         
 
 
 
           <input type="hidden" id="pop-calendar">
       
 
-
-          <a href="helpsection.html" class="color-indigo">
-           <div class="card">
-            <div class="card-header">Support</div>
-            <div class="card-content">
-                <div class="card-content-inner text-center">
-                  <i class="material-icons color-indigo" style="font-size:44px;">help_outline</i>
-                  <p>Help is around the corner</p>
-                  
-                </div>
-            </div>
-            <div class="card-footer">View Support</div>
-          </div> 
-			   </a>
 
 
 
@@ -181,3 +317,10 @@
 
 
 </div>
+
+
+
+
+
+
+

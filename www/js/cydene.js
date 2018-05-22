@@ -6,8 +6,7 @@ var myApp = new Framework7({
     materialRippleElements : '.ripple',
     modalTitle : 'Cydene Express',
     fastClicks : false,
-    sortable : false,
-    modalButtonCancel : 'No Coupon'
+    sortable : false
    });
 
 // Export selectors engine
@@ -22,6 +21,7 @@ var mainView = myApp.addView('.view-main', {
 });
 /******** App Initialization *************/
 
+var toast = myApp.toast("...", "", { duration : 3500 });
 
 
 
@@ -30,8 +30,7 @@ var mainView = myApp.addView('.view-main', {
 
 
 
-
-var getLatLong, deviceCoords, exitMyApp, getImg4rmGallery, loginWithFB, driveCard, fireUpPayments, fireUpPayments2;
+var exitMyApp, getImg4rmGallery, loginWithFB, driveCard, fireUpPayments, fireUpPayments2, clearStatusBar;
 
 document.addEventListener("deviceready", deviceIsReady, false);
 
@@ -40,61 +39,18 @@ function deviceIsReady(){
 
 window.open = cordova.InAppBrowser.open;
 
-if (cordova.platformId == 'android') {
-	StatusBar.backgroundColorByHexString("#00A0E3");
-}
 
-	
-	//navigator.splashscreen.hide();
 
-	getLatLong = function(){
-			
-			navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure, {enableHighAccuracy : true, timeout : 10000});
-	}
-	
 
-	geoSuccess =  function(position){
+var cpage = mainView.activePage;
+var cpageName = cpage.name;
 
-		var geolatitude = position.coords.latitude;
-		var geolongitude = position.coords.longitude;
+	StatusBar.backgroundColorByHexString("#069");
 
-		deviceCoords = {
-
-			"sweetLatty" : geolatitude,
-			"sweetLonggy" : geolongitude
-		};
-	}
 
 
 
-	geoFailure = function(error){
-
-			/*myApp.modal({
-
-				title : 'Cydene Express',
-				text : 'Please turn on your GPS and allow access',
-				buttons : [
-					{
-						text : '<span class=color-orange>Not Now</span>',
-						bold : true,
-						onClick : function(){
-							mainView.router.loadPage('dashboard.html');
-						}
-					},
-					{
-						text : '<span class=color-indigo>Try Again</span>',
-						bold : true,
-						onClick : function(){ getLatLong(); }	
-					}
-				]
-
-			});*/
-			myApp.addNotification({
-			        message: 'Please turn on GPS'
-			    });
-			console.log("Could not get geolocation");
-	}
-
+	
 
 	exitMyApp = function(){
 
@@ -244,112 +200,6 @@ if (cordova.platformId == 'android') {
 
 		
 
-	getSellerDocument = function(){
-
-		
-
-			 destinationTyper = Camera.DestinationType.FILE_URI;
-    		documentSource = Camera.PictureSourceType.PHOTOLIBRARY;
-			    
-			    navigator.camera.getPicture(documentGood, documentBad, 
-			    {
-			        quality : 70, 
-			        destinationType : destinationTyper,
-			        sourceType : documentSource
-			     });
-	}
-
-
-
-	function documentGood(docURI) {
-				
-				  console.log(docURI);
-				    image.src = docURI;
-
-				    setTimeout(function(){
-
-				    	myApp.showPreloader('Uploading Document...');
-				    	uploadDocument(docURI);
-
-				    }, 2000);
-
-		}
-
-
-	function documentBad(message) {
-	    
-	    alert('Failed because: ' + message);
-	}
-
-
-
-	function uploadDocument(theURI){
-			var thePhone = window.localStorage.getItem("_cydene_user_phone_no");
-
-			
-			    var win = function (r) {
-
-				    console.log("Code = " + r.responseCode);
-				    console.log("Response = " + r.response);
-				    console.log("Sent = " + r.bytesSent);
-
-
-
-				    $$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/finish_seller_document_upload.php",
-						{
-
-							"the_uploaded_doc" : r.response,
-							"the_seller_phone" : thePhone
-						},
-						function(data){
-							myApp.hidePreloader();
-
-							/*if(data == "Successful Upload"){
-								
-								window.localStorage.setItem("sellerLogo", thePhone + r.response);
-								mainView.router.loadPage("sellerdashboard.html");
-							}
-							else{
-
-								myApp.alert(data);
-							}*/
-
-							
-							myApp.alert(data);
-						}
-						,
-						function(){
-							myApp.alert("Unable to connect to Cydene Servers. Try again later");
-						});
-
-
-				}
-
-				var fail = function (error) {
-
-					myApp.hidePreloader();
-				    myApp.alert("An error has occurred: Code = " + error.code);
-				    console.log("upload error source " + error.source);
-				    console.log("upload error target " + error.target);
-				}
-
-				var options = new FileUploadOptions();
-				options.fileKey = "file";
-				options.fileName = theURI.substr(theURI.lastIndexOf('/') + 1);
-				options.mimeType = "image/jpeg";
-				options.chunkedMode = false;
-
-				var params = {};
-				params.value1 = "test";
-				params.value2 = "param";
-
-				options.params = params;
-
-				var ft = new FileTransfer();
-				ft.upload(theURI, encodeURI("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/upload_seller_document.php"), win, fail, options);
-
-
-		}
 
 
 
@@ -368,7 +218,7 @@ if (cordova.platformId == 'android') {
 		var cpageName = cpage.name;
 
 		//Re-route to Dashboard
-		if(cpageName == "mapexp" || cpageName == "settings" || cpageName == "ordersuccess" || cpageName == "orderhistory"){
+		if(cpageName == "mapexp" || cpageName == "settings" || cpageName == "ordersuccess" || cpageName == "orderhistory" || cpageName == "addresseslist" || cpageName == "cardpayment"){
 
 				mainView.router.loadPage("dashboard.html");
 		}
@@ -429,96 +279,43 @@ if (cordova.platformId == 'android') {
 
 
 
+myApp.onPageInit('theswipe', function(page){
 
 
+	$$("#get-started-btn").on("click", function(){
 
+		mainView.router.loadPage("getstarted.html");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/******** Start Page *************/
-
-/*myApp.onPageInit('begin', function(page){
-
-	test4connection();
-
-}).trigger();*/
-
-
-
-function test4connection(){
-
-	$$.ajax({
-		url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/conn_file.php",
-		method : "GET",
-		crossDomain : true,
-		timeout : 10000,
-		error : function(xhr, status){
-			myApp.modal({
-				title : 'Cydene Express',
-				text : 'Please check Internet connection.',
-				buttons : [
-					{
-						text : '<span class=color-orange>Exit</span>',
-						bold : true,
-						onClick : function(){
-							exitMyApp();
-						}
-					},
-					{
-						text : '<span class=color-indigo>Try Again</span>',
-						bold : true,
-						onClick : function(){test4connection();}	
-
-					}
-				]
-				
-			}); 
-
-		},
-		success : function(){
-			
-			//check for reg or login status via window localStorage
-				if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("buyerFN") && window.localStorage.getItem("buyerLN") && window.localStorage.getItem("buyerMail")){
-
-						mainView.router.loadPage("dashboard.html");
-						console.log("Buyers Dashboard");
-				}
-
-			else if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("sellerName") && window.localStorage.getItem("sellerMail") && window.localStorage.getItem("sellerAddress")){
-
-						mainView.router.loadPage("sellerdashboard.html");
-						console.log("Sellers Dashboard");
-				}
-
-				else{
-
-					mainView.router.loadPage("theswipe.html");
-					console.log("No Registration");
-				}
-			
-		}
 	});
-}
-/******** Start Page *************/
-	
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -531,7 +328,8 @@ function test4connection(){
 myApp.onPageInit('getStarted', function(page){
 
 
-			$$('#user_tel').on('keyup', function(e){
+
+		$$('#user_tel').on('keyup', function(e){
 
 				var phoneLength = $$(this).val().length;
 				if(phoneLength >= 10){
@@ -543,34 +341,27 @@ myApp.onPageInit('getStarted', function(page){
 					$$("#verify_reg_arrow").hide();	
 				}
 			});
+			
+
 
 
 
 			$$("#verify_reg_arrow").on('click', function(e){
 
-						myApp.showPreloader(' ');
+				myApp.showPreloader("Verifying...");
+
 
 						var improved_phone = "+234" + $$("#user_tel").val();
 
-						$$.ajax({
-						url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/verify_user.php",
-						method : "POST",
-						crossDomain : true,
-						timeout : 10000,
-						data : {
+						$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/verify_user.php",
+						{
 
 							users_phone : $$("#user_tel").val()
 						},
-						dataType : "text", 
-						error : function(xhr, status){
-						
+						function(data){
 							myApp.hidePreloader();
-							myApp.alert(status);
 
-						},
-						success : function(data, status, xhr){
-							myApp.hidePreloader();
-							
+							toast.show(data);
 
 							if(data === "OTP Created"){
 
@@ -590,8 +381,13 @@ myApp.onPageInit('getStarted', function(page){
 
 								myApp.alert("An Error occured. Try again later");
 							}
-						}
+						},
+
+						 function(xhr, status){
 						
+							myApp.hidePreloader();
+							toast.show("Unable to connect to Cydene Ntework");
+
 						});
 
 			});
@@ -1045,15 +841,78 @@ myApp.onPageInit('setexecpin', function(page){
 
 myApp.onPageInit('dashboard', function(page){
 
+	
+	
+
+	$$('.hide-me').hide();
+
+var cydeneUsersPhone = window.localStorage.getItem("_cydene_user_phone_no");
 $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 
-	for (var i = 1; i <=100; i++) {
-		
-		$$("#gas-purchase-qty").append("<option value= " + i + ">" + i + "</option>");	
-	}
 
-		
-	var cydeneUsersPhone = window.localStorage.getItem("_cydene_user_phone_no");
+$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
+	{
+		"user_phone_data" : cydeneUsersPhone
+	},
+	 function(data){
+
+	 	$$(".home-wallet-balance").html("<strike>N</strike>" + data);
+
+	 }, function(){
+
+	 		myApp.alert("Could not connect to Cydene servers");
+	 });
+
+
+
+
+
+$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homepage_order_history.php",
+	{
+		"the_buyer" : cydeneUsersPhone
+	},
+	 function(data){
+
+	 	
+	 	console.log(data);
+	 	the_status = data[0].stack_status;
+
+	 	if(the_status == "record found"){
+
+	 		$$("#no-order-div").hide();
+
+		 	for(p = 1; p < data.length; p++){
+
+		 		var cylinder_size = data[p].cylinder_size;
+		 		var cylinder_qty = data[p].cylinder_qty;
+
+
+		 		$$("#" + data[p].myDiv + "-junior").html("<img src=http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png style='max-width: 20px;'><br>" + cylinder_size + "Gas<br><br>" + cylinder_qty + "piece(s)");
+		 		$$("#" + data[p].myDiv).show();
+
+		 	}
+
+		 	$$("#see-all-history").show();
+
+		 		mySwipe = myApp.swiper('.home-history-swiper', {
+				slidesPerView : 2.5
+
+			});
+	 	}
+
+	
+	 }, function(){
+
+	 		toast.show("Could not connect to Cydene servers");
+	 });
+
+
+	
+
+	
+
+
+
 				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/verify_delivery_address.php",
 						 {
 
@@ -1104,9 +963,52 @@ $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 
 
 
-		$$("#proceed-gas-purchase").on("click", function(){
+		$$("#fivekggas").on("click", function(){
 
 			myApp.showPreloader('Listing Addresses...');
+			loadMyAddresses("5kg");
+
+		});
+
+		$$("#threekggas").on("click", function(){
+
+			myApp.showPreloader('Listing Addresses...');
+			loadMyAddresses("3kg");
+
+		});
+		$$("#sixkggas").on("click", function(){
+
+			myApp.showPreloader('Listing Addresses...');
+			loadMyAddresses("6kg");
+
+		});
+
+		$$("#twelvepointfivekggas").on("click", function(){
+
+			myApp.showPreloader('Listing Addresses...');
+			loadMyAddresses("12.5kg");
+
+		});
+
+		$$("#twentyfivekggas").on("click", function(){
+
+			myApp.showPreloader('Listing Addresses...');
+			loadMyAddresses("25kg");
+
+		});
+
+		$$("#fiftykggas").on("click", function(){
+
+			myApp.showPreloader('Listing Addresses...');
+			loadMyAddresses("50kg");
+
+		});
+
+
+
+
+
+		function loadMyAddresses(cylinderSize){
 		
 		//populate buyers addresses
 		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/address_fetcher_2.php", 
@@ -1129,7 +1031,7 @@ $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 					{ text : "<span class='color-orange'>Cancel</span>", bold : true },
 					{ text : "<span class='color-indigo'>Continue</span>", bold : true,
 						onClick : function(){
-							addressPicker();
+							addressPicker(cylinderSize);
 						}
 					}]
 		});
@@ -1138,25 +1040,24 @@ $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 
 		function(data){
 
-			myApp.alert("Unable to connect to Cydene Servers. Try again later.");
+			toast.show("Unable to connect to Cydene Servers. Try again later.");
 
 		});
 
-	}); // End of proceed gas purchase button function.
+	}
 
 
 
 
-		function addressPicker(){
+		function addressPicker(gasCylinderSize){
 			myApp.showPreloader('Processsing...');
 
-			var gasSize = $$("#gas-cylinder-size").val();
-			var gasQty = $$("#gas-purchase-qty").val();
+		
 			var delivery_address = $$(".address-pointer").filter(function(){return $$(this).prop("checked");}).val();
 			
 					var uniqPurchase = {
-						"gasSize" : gasSize,
-						"gasQty" : gasQty,
+						"gasSize" : gasCylinderSize,
+						"gasQty" : 5,
 						"delivery_address" : delivery_address 
 					}
 			window.localStorage.setItem("uniqPurchase", JSON.stringify(uniqPurchase));
@@ -1181,73 +1082,6 @@ $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 
 
 
-
-		function runScheduledTransaction(){
-
-			var theRecurrDate = $$("#recurring-date-select-text").val();
-			var theBuyer = window.localStorage.getItem("_cydene_user_phone_no");
-			var scheduleDeliveryAddress = $$(".address-pointer").filter(function(){return $$(this).prop("checked");}).val();
-			var theUniqPurchase = JSON.parse(window.localStorage.getItem("uniqPurchase"));
-				var theGasSize = theUniqPurchase.gasSize;
-				var theGasQty = theUniqPurchase.gasQty;
-
-			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/schedule_transaction_recorder.php", 
-							
-					{
-						"the_cylinder_size" : theGasSize,
-						"the_quantity" : theGasQty,
-						"the_recurr_date" : theRecurrDate,
-						"the_buyer" : theBuyer,
-						"the_delivery_address" : scheduleDeliveryAddress
-					},
-
-							function(data){
-								myApp.hidePreloader();
-								if(data == "Successful"){
-										mainView.router.loadPage("orderhistory.html");
-									}
-										else{
-
-											myApp.alert(data);
-										}
-
-
-							}, function(){
-
-								myApp.alert("Unable to connect to Cydene Servers. Please try later");
-
-							});
-			}
-
-
-
-
-
-		$$("#schedule-switch").change(function(){		
-
-					if($$(this).prop("checked") == true){
-			               
-				$$("<li id='recurring-date-select'><div class='item-content'><div class='item-media'></div><div class='item-inner theme-indigo'><div class='item-title label color-indigo'>Schedule Date.</div><div class='item-input'><input type='text' required id='recurring-date-select-text'></div></div></div></li>").insertAfter($$("#schedule-switch-panel"));
-					           
-					$$("#recurring-date-select-text").click(function(){
-
-						var qqs = myApp.calendar({
-
-							input : "#recurring-date-select-text",
-							yearPicker : false,
-							monthPicker : false,
-							cssClass : "theme-indigo",
-							dateFormat: "yyyy-mm-dd"
-
-						});
-
-					});
-				}
-				    else{
-
-				    	$$("#recurring-date-select").remove();
-					  }
-			});
 
 
 
@@ -1298,7 +1132,7 @@ $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 
 });
 
-/**********************Dashboard****************
+/**********************Dashboard****************/
 
 
 
@@ -1307,6 +1141,152 @@ $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 
 
 
+
+
+
+/**********************Schedule Bookings****************/
+myApp.onPageInit('schedulebooking', function(page){
+
+
+	$$("#buyers-name").text(window.localStorage.getItem("buyerFN"));
+		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/address_fetcher_2.php", 
+			{"users_phone" : window.localStorage.getItem("_cydene_user_phone_no")}, 
+		
+		function(data){
+			myApp.hidePreloader();
+			var django = data;
+			var addrPack = "";
+			for(b in django){
+
+				addrPack += "<input type='radio' name='address_selected' class='address-pointer' value='" + django[b] + "'> " + django[b] + "<br>";
+			}
+
+			$$("#populate-schedule-address").html(addrPack);
+		
+		}, 
+
+		function(data){
+
+			toast.show("Unable to connect to Cydene Servers. Try again later.");
+
+		});
+
+
+
+
+
+
+		$$("#create-booking").click(function(){
+
+			runScheduledTransaction();
+		})
+
+
+
+
+
+
+		function runScheduledTransaction(){
+
+			var theRecurrDate = $$("#delivery-date").val();
+			var theBuyer = window.localStorage.getItem("_cydene_user_phone_no");
+			var scheduleDeliveryAddress = $$(".address-pointer").filter(function(){return $$(this).prop("checked");}).val();
+			var theGasSize = $$("#cylinder-size-store").val();
+			var theGasQty = $$("#cylinder-quantity").val();
+
+			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/schedule_transaction_recorder.php", 
+							
+					{
+						"the_cylinder_size" : theGasSize,
+						"the_quantity" : theGasQty,
+						"the_recurr_date" : theRecurrDate,
+						"the_buyer" : theBuyer,
+						"the_delivery_address" : scheduleDeliveryAddress
+					},
+
+							function(data){
+								myApp.hidePreloader();
+								if(data == "Successful"){
+										toast.show("Schedule Booking Created.");
+										mainView.router.loadPage("orderhistory.html");
+									}
+										else{
+
+											toast.show(data);
+										}
+
+
+							}, function(){
+
+								myApp.alert("Unable to connect to Cydene Servers. Please try later");
+
+							});
+			}
+
+
+
+			$$("#fivekggas-schedule").click(function(){
+
+				toast.show("5kg selected. Add delivery address, delivery date and quantity");
+				$$("#cylinder-size-store").val("5kg");
+
+			})
+
+
+			$$("#threekggas-schedule").click(function(){
+
+				toast.show("3kg selected. Add delivery address, delivery date and quantity");
+				$$("#cylinder-size-store").val("3kg");
+
+			})
+
+
+			$$("#sixkggas-schedule").click(function(){
+
+				toast.show("6kg selected. Add delivery address, delivery date and quantity");
+				$$("#cylinder-size-store").val("6kg");
+
+			})
+
+			$$("#twelvepointfivekggas-schedule").click(function(){
+
+				toast.show("12.5kg selected. Add delivery address, delivery date and quantity");
+				$$("#cylinder-size-store").val("12.5kg");
+
+			})
+
+			$$("#twentyfivekggas-schedule").click(function(){
+
+				toast.show("25kg selected. Add delivery address, delivery date and quantity");
+				$$("#cylinder-size-store").val("25kg");
+
+			})
+
+			$$("#fiftykggas-schedule").click(function(){
+
+				toast.show("50kg selected. Add delivery address, delivery date and quantity");
+				$$("#cylinder-size-store").val("50kg");
+
+			})
+					           
+					
+
+						myApp.calendar({
+
+							input : "#delivery-date",
+							yearPicker : false,
+							monthPicker : false,
+							cssClass : "theme-indigo",
+							dateFormat: "yyyy-mm-dd"
+
+						});
+
+
+
+
+
+});
+/**********************Schedule Bookings****************/
 
 
 
@@ -1317,20 +1297,128 @@ $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 
 
 /**********************Sellers*****************/
-var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceLists = [];
+var buyFromThisSeller, getBuyQty;
 	myApp.onPageInit('sellers', function(page){
 
 	var selectedPurchases = JSON.parse(window.localStorage.getItem("uniqPurchase"));
 	var postedCylinderSize = selectedPurchases.gasSize;
 	var theBuyerDeliveryAddress = selectedPurchases.delivery_address;
-
-	
-
+	myApp.showPreloader("Finding Sellers...");
 
 
-		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php", {"posted_cylinder_size" : postedCylinderSize}, function(data){
+	var arrangeMyLat = [];
+						
+					function pushMap(){
 
-			$$(".populate-all-sellers").removeClass('text-center').html(data);
+					myApp.hidePreloader();
+					toast.show("Pick a supplier from the map");
+					var locations = JSON.parse(window.localStorage.getItem("returnJson"));
+
+					  var themArray = [];
+					  for(var x in locations){
+							themArray.push(locations[x]);
+
+					  }
+
+					  console.log(themArray);
+
+					  var infowindow = new google.maps.InfoWindow();
+
+					var mapOptions = {
+				        center: new google.maps.LatLng(6.5244, 3.3792),
+				        zoom: 10,
+				        mapTypeId: google.maps.MapTypeId.ROADMAP
+				    	};
+
+				    map = new google.maps.Map(document.getElementById("sellers-map"), mapOptions);
+
+
+
+					
+				    	
+				    var image = {
+				    	url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png",
+				    	scaledSize: new google.maps.Size(15, 50)
+				    }
+
+
+				    var homeImage = {
+				    	url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/home_4.png",
+				    	scaledSize: new google.maps.Size(30, 50)
+				    }
+
+				    
+				   
+
+				   var jason = new google.maps.Marker({
+						        position : new google.maps.LatLng(arrangeMyLat[0], arrangeMyLat[1]),
+						        map: map,
+						        icon : homeImage
+						        
+					      });
+
+				   jason.addListener('click', function(){
+
+			   			infowindow.setContent("<div class='text-center'>My Delivery Address<br>" + arrangeMyLat[2] + "</div>");
+					    infowindow.open(map, jason);
+
+				   })
+
+				   
+				     
+				     var marker, i;
+
+				    for (i = 0; i < themArray.length; i++) {  
+
+						    marker = new google.maps.Marker({
+						        position : new google.maps.LatLng(themArray[i][1], themArray[i][2]),
+						        map: map,
+						        icon : image
+						        
+					      });
+
+						   google.maps.event.addListener(marker, 'click', (function(marker, i) {
+						        return function() {
+						          infowindow.setContent(themArray[i][0]);
+						          infowindow.open(map, marker);
+						        }
+						      })(marker, i));
+
+						}
+
+
+
+
+					}
+
+
+
+
+		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php", {"posted_cylinder_size" : postedCylinderSize}, function(data){
+
+			window.localStorage.setItem("returnJson", JSON.stringify(data));
+			//Get address details from addressname
+				$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/get_address_details_from_name.php", 
+				{
+					"the_address_name" : theBuyerDeliveryAddress,
+					"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
+				},
+					function(data){
+						
+						
+						for(vv in data){
+
+							arrangeMyLat.push(data[vv]);
+						}
+						console.log(arrangeMyLat);
+						window.setTimeout(function(){ pushMap(); }, 2000);
+						
+
+					}, function(){
+						toast.show("Unable to fetch your address geocode");
+				});
+
+
 
 		}, function(){
 
@@ -1338,6 +1426,41 @@ var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceL
 		});
 						
 					
+
+
+		getBuyQty = function(SellerID, CylinderSize){
+
+
+				    myApp.prompt('How many Cylinders?', function (val) {
+
+				    	val = parseInt(val);
+				        
+				    		if(Number.isInteger(val) == false){
+
+				    			myApp.alert("Please enter a valid number");
+				    		}
+				    		else{
+
+				    			var merry = {
+
+				    				"gasSize" : postedCylinderSize,
+				    				"gasQty" : val,
+				    				"delivery_address" : theBuyerDeliveryAddress
+				    			}
+
+				    			storeNewPurchase = JSON.stringify(merry);
+				    			window.localStorage.setItem("uniqPurchase", storeNewPurchase);
+
+				    			buyFromThisSeller(SellerID, CylinderSize);
+				    			
+				    		}
+				    });
+				
+		}
+
+
+
+
 
 		buyFromThisSeller = function(theSellerID, theCylinderSize){
 			myApp.showPreloader("Processsing...");
@@ -1349,149 +1472,21 @@ var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceL
 					window.localStorage.setItem("full_seller_details", stringData);
 					myApp.hidePreloader();
 					mainView.router.loadPage("sellerdetails.html");
-
+					
 				}, function(){
 
 						myApp.hidePreloader();
-						myApp.alert("Error occured, try again later");
+						toast.show("Error processing trnsaction. Network Error");
 				});
 
 
 			}
 
-		
-
-
-			
-			$$(".nearby-sellers").on("click", function(){
-				myApp.showPreloader("Loading Nearby Sellers...");
-
-				//Grab a list of all sellers
-				$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/list_all_sellers.php", function(data){
-						
-
-						theAddresses = data;
-					
-					}, function(){
-					myApp.hidePreloader();
-					myApp.alert("error in getting addresses");
-				});
 
 
 
-				//Get address details from addressname
-				$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/get_address_details_from_name.php", 
-				{
-					"the_address_name" : theBuyerDeliveryAddress,
-					"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
-				},
-					function(data){
-						
-						var arrangeMyLat = [];
-						
-						for(vv in data){
-
-							arrangeMyLat.push(data[vv]);
-						}
-						theAddressDetails = arrangeMyLat;
-						console.log(theAddressDetails);
-						
-
-					}, function(){
-					myApp.hidePreloader();
-					myApp.alert("Could not connect to Cydene Servers. Try later");
-				});
-
-
-
-
-
-
-				//Giant For
-				talkTogGoogle = function(){
-					distanceLists = [];
-					var service = new google.maps.DistanceMatrixService();
-
-					for(h in theAddresses){
-
-					var sellersAddress = new google.maps.LatLng(theAddresses[h][0], theAddresses[h][1]);
-					var myPlace = new google.maps.LatLng(theAddressDetails[0], theAddressDetails[1]);
-
-					
-					service.getDistanceMatrix(
-					  {
-					    origins: [sellersAddress],
-					    destinations: [myPlace],
-					    travelMode: 'DRIVING',
-					    avoidHighways: false,
-					    avoidTolls: false,
-					  }, callback);
-
-					}
-
-
-
-				function callback(response, status) {
-					if (status == 'OK') {
-				    var origins = response.originAddresses;
-				    var destinations = response.destinationAddresses;
-
-				    for (var i = 0; i < origins.length; i++) {
-
-				      var results = response.rows[i].elements;
-				      for (var j = 0; j < results.length; j++) {
-				        var element = results[j];
-				        var distance = element.distance.text;
-
-				        var splitDistance = distance.split(" ");
-				        var clearDistance = splitDistance[0];
-				        
-				        /*var duration = element.duration.text;*/
-				        var from = origins[i];
-				        var to = destinations[j];
-							distanceLists.push(clearDistance);
-				    	}
-				    }
-
-
-				  }
-				  else{
-				  		myApp.hidePreloader();
-				  		myApp.alert("Sorry, i'm having issues talking to Google Maps. Network Error");
-				  }
-				}
-			
-				console.log(distanceLists);
-				window.setTimeout(function(){listNearbyAddresses()}, 5000);
-		}
-
-
-			window.setTimeout(function(){talkTogGoogle()}, 5000);
-
-
-			function listNearbyAddresses(){
-
-					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/list_nearby_sellers.php",
-					 {
-					 	"nearby_list" : distanceLists,
-					 	"posted_cylinder_size" : postedCylinderSize
-
-					 },
-					function(data){
-							myApp.hidePreloader();
-							$$(".populate-nearby-sellers").removeClass('text-center').html(data);
-														
-					},
-					function(){
-							myApp.hidePreloader();
-							myApp.alert("Unable to connect to Cydene Servers");
-					});
-			}
-
-	}); // End of Click Function
-
-
-
+window.localStorage.removeItem("discounted_price");
+window.localStorage.removeItem("coupon_details");
 
 	});
 
@@ -1515,13 +1510,9 @@ var buyFromThisSeller, theAddresses, theAddressDetails, talkTogGoogle, distanceL
 myApp.onPageInit('sellerdetails', function(page){
 
 
-
-	var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
-
-	var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
-	
-	
-		
+var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
+var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
+var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 
 
 		$$(".populate-sellers-name").html(splitSellerDetails.seller_details_name);
@@ -1530,23 +1521,132 @@ myApp.onPageInit('sellerdetails', function(page){
 		$$(".quote-size").html(splitBuyDetails.gasSize + " (<strike>N</strike>" + splitSellerDetails.cylinder_size_price + ")" );
 		$$(".quote-qty").html(splitBuyDetails.gasQty);
 
-		var totalPrice = splitSellerDetails.cylinder_size_price * splitBuyDetails.gasQty;
-		var totalPricePlusCharge = totalPrice + 150;
+		if(couponDetails){
 
-		$$(".quote-total-price").html("<strike>N</strike>" + totalPrice);
+			var couponValue = couponDetails.coupon_value;
+			$$("#coupon-highlight").html(couponValue + "% Discount Applied!").show();
+		}
+		else{
+
+			$$("#coupon-highlight").hide();
+		}
+
+		var totalPrice, totalPricePlusCharge;
+
+		if(window.localStorage.getItem("discounted_price")){
+
+			var discountedPrice = window.localStorage.getItem("discounted_price");
+			totalPricePlusCharge = parseInt(discountedPrice);
+		}
+		else{
+
+			totalPrice = splitSellerDetails.cylinder_size_price * splitBuyDetails.gasQty;
+			totalPricePlusCharge = totalPrice + 150;
+			window.localStorage.setItem("original_total_price", totalPricePlusCharge);
+
+		}
+		totalPricePlusCharge = parseInt(totalPricePlusCharge);
 
 
 
-		$$("#payment-btn").html("Pay <strike>N</strike>" + totalPricePlusCharge).click(function(){
-			var paymentMethod = $$("input[name='payment_method']:checked").val();
+		$$(".quote-total-price").html("<strike>N</strike>" + splitSellerDetails.cylinder_size_price * splitBuyDetails.gasQty);
+		$$("#payment-btn").html("Pay <strike>N</strike>" + totalPricePlusCharge);
+
+
+
+
+		$$("#apply-coupon").click(function(){
+			couponSN = 25;
+
+					myApp.prompt('Enter Coupon Code', 'Cydene Coupons!', function (value) {
+       					 
+       					 myApp.showPreloader('Checking coupon code...');
+       					 $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
+								 {
+								 	coupon_user : window.localStorage.getItem('_cydene_user_phone_no'),
+								 	coupon_code : value
+								 },
+								function(data){
+
+										myApp.hidePreloader();
+										console.log(data);
+
+										if(data.status == "Coupon Code Invalid or Expired" || data.status == "You have made use of this coupon code once"){
+
+											toast.show(data.status);
+										}
+										else{
+											
+											if(window.localStorage.getItem("discounted_price")){
+
+														toast.show("Coupon can be applied once.");
+												}
+												else{
+
+													discountedPrice = totalPricePlusCharge - ((data.coupon_value / 100) * totalPricePlusCharge);
+													discountedPrice = parseInt(discountedPrice);
+													window.localStorage.setItem("discounted_price", discountedPrice);
+														var couponDetails = {
+
+															"coupon_sn" : data.coupon_sn,
+															"coupon_value" : data.coupon_value
+														}
+														window.localStorage.setItem("coupon_details", JSON.stringify(couponDetails));
+														mainView.router.reloadPage("sellerdetails.html");
+														toast.show("Coupon applied!");
+												}
+
+										}
+
+								},
+								function(){
+										
+										myApp.hidePreloader();
+										toast.show("Unable to check coupon code!");
+								});
+										
+
+    				},
+
+    				function(){
+    					
+    					toast.show("No Coupon applied.");
+
+    				});
+		
+
+
+
+		});
+
+
+
+
+
+
+			
+
+
+
+
+	
+		$$("#payment-btn").click(function(){
+		var paymentMethod = $$("input[name='payment_method']:checked").val();
+		var dynamicCoupon;
+		if(couponDetails){
+
+			dynamicCoupon = couponDetails.coupon_sn;
+		}
+		else{
+
+			dynamicCoupon = 0;
+		}
+
 			
 				myApp.showPreloader('Processsing...');
 				
 				var deliver2Address =  splitBuyDetails.delivery_address;
-				
 			
-
-				
 				if(paymentMethod == "COD"){
 
 					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
@@ -1555,168 +1655,47 @@ myApp.onPageInit('sellerdetails', function(page){
 
 						"tnx_cylinder_size" : splitBuyDetails.gasSize,
 						"tnx_quantity" : splitBuyDetails.gasQty,
-						"tnx_total_price" : totalPrice,
+						"tnx_total_price" : totalPricePlusCharge,
 						"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
 						"tnx_seller" : splitSellerDetails.seller_details_id,
 						"tnx_payment_method" : "COD",
 						"tnx_delivery_address" : deliver2Address,
-						"tnx_coupon_sn" : 0,
-						"tnx_cashback" : 0
+						"tnx_coupon_sn" : dynamicCoupon
 					}, 
 
 					function(data){
 					if(data == "Successful"){
 							
 							myApp.hidePreloader();
-							mainView.router.loadPage("ordersuccess.html");
+							mainView.router.loadPage("orderhistory.html");
+							toast.show("Order Created! Delivery on its way!");
 
 						}
 						else{
 
 							myApp.hidePreloader();
-							myApp.alert("Could not place order try again later.");
+							toast.show("Could not place order try again later.");
 						}
 
 					}, function(){
-
-						myApp.alert("An error has occured. Network Error");
+						myApp.hidePreloader();
+						toast.show("An error has occured. Network Error");
 					});
 				}
 
 
-				else if(paymentMethod == "Card"){
+				else if(paymentMethod == "Wallet"){
 
 						myApp.hidePreloader();
-						myApp.prompt('Have a coupon code? Apply it now for discounts!', 'Coupons!', function (value) {
-       					 
-       					 myApp.showPreloader('Checking coupon code...');
-       					 $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
-								 {
-								 	coupon_user : window.localStorage.getItem('_cydene_user_phone_no'),
-								 	coupon_code : value
-								 },
-								function(data){
-										myApp.hidePreloader();
-
-
-										if(data.status == "Coupon Code Invalid or Expired" || data.status == "You have made use of this coupon code once"){
-
-											myApp.alert(data.status);
-										}
-										else{
-											window.localStorage.setItem("original_total_price", totalPricePlusCharge);
-											
-
-											discountedPrice = totalPricePlusCharge - ((data.coupon_value / 100) * totalPricePlusCharge);
-											discountedPrice = parseInt(discountedPrice);
-											window.localStorage.setItem("discounted_price", discountedPrice);
-
-											//Setup coupon details
-											var couponDetails = {
-
-												"coupon_sn" : data.coupon_sn,
-												"coupon_value" : data.coupon_value
-											}
-
-											window.localStorage.setItem("coupon_details", JSON.stringify(couponDetails));
-
-											setTimeout(function(){
-											mainView.router.loadPage("cardpayment.html");
-											}, 1500);
-											
-										}
-
-								},
-								function(){
-										
-										myApp.hidePreloader();
-										myApp.alert("Unable to check coupon code!");
-								});
-										
-
-    				},
-
-    				function(){
-    					
-    					myApp.hidePreloader();
-    					window.localStorage.removeItem("discounted_price");
-    					window.localStorage.setItem("original_total_price", totalPricePlusCharge);
-
-    					setTimeout(function(){
-    					mainView.router.loadPage("cardpayment.html");
-    					}, 1500);
-
-    				});
-
+						mainView.router.loadPage("pinexec.html");
+					
 				}
 
 				else{
-					window.localStorage.setItem("tnx_delivery_address", deliver2Address);
-
-					myApp.hidePreloader();
-					myApp.prompt('Have a coupon code? Apply it now for discounts!', 'Coupons!', function (value) {
-       					 
-       					 myApp.showPreloader('Checking coupon code...');
-       					 $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
-								 {
-								 	coupon_user : window.localStorage.getItem('_cydene_user_phone_no'),
-								 	coupon_code : value
-								 },
-								function(data){
-										myApp.hidePreloader();
-
-
-										if(data.status == "Coupon Code Invalid or Expired" || data.status == "You have made use of this coupon code once"){
-
-											myApp.alert(data.status);
-										}
-										else{
-											window.localStorage.setItem("original_total_price", totalPricePlusCharge);
-											
-
-											discountedPrice = totalPricePlusCharge - ((data.coupon_value / 100) * totalPricePlusCharge);
-											discountedPrice = parseInt(discountedPrice);
-											window.localStorage.setItem("discounted_price", discountedPrice);
-
-											//Setup coupon details
-											var couponDetails = {
-
-												"coupon_sn" : data.coupon_sn,
-												"coupon_value" : data.coupon_value
-											}
-
-											window.localStorage.setItem("coupon_details", JSON.stringify(couponDetails));
-
-											setTimeout(function(){
-											mainView.router.loadPage("pinexec.html");
-											}, 1500);
-											
-										}
-
-								},
-								function(){
-										
-										myApp.hidePreloader();
-										myApp.alert("Unable to check coupon code!");
-								});
-										
-
-    				},
-
-    				function(){
-    					
-    					myApp.hidePreloader();
-    					window.localStorage.removeItem("discounted_price");
-    					window.localStorage.setItem("original_total_price", totalPricePlusCharge);
-
-    					setTimeout(function(){
-    					mainView.router.loadPage("pinexec.html");
-    					}, 1500);
-
-    				});
 					
-						
-
+					myApp.hidePreloader();
+					window.localStorage.setItem("tnx_delivery_address", deliver2Address);
+					mainView.router.loadPage("cardpayment.html");
 				}
 
 		});
@@ -1773,24 +1752,18 @@ myApp.onPageInit('pinexec', function(page){
 		var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
 		var parsedCouponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 		
-		var totalPrice, initialPrice, parsedCouponSN, cashback;
+				
 		if(window.localStorage.getItem("discounted_price")){
 
 			totalPrice = window.localStorage.getItem("discounted_price");
 			initialPrice = window.localStorage.getItem("original_total_price");
-
-			var discountValue = parsedCouponDetails.coupon_value;
 			parsedCouponSN = parsedCouponDetails.coupon_sn;
-
-			$$("#discount-highlighter").html("<b><i>" + discountValue + "% Discount Applied!</i></b>").show();
-			cashback = initialPrice - totalPrice;
 		}
 		else{
 
 			totalPrice = window.localStorage.getItem("original_total_price");
 			parsedCouponSN = 0;
-			cashback = 0;
-		}
+	 	}
 		
 
 		$$("#show-amount").html("<strike>N</strike>" + totalPrice);
@@ -1835,8 +1808,8 @@ myApp.onPageInit('pinexec', function(page){
 								"tnx_seller" : splitSellerDetails.seller_details_id,
 								"tnx_payment_method" : "Wallet",
 								"tnx_delivery_address" : window.localStorage.getItem("tnx_delivery_address"),
-								"tnx_coupon_sn" : parsedCouponSN,
-								"tnx_cashback" : cashback
+								"tnx_coupon_sn" : parsedCouponSN
+								
 							}, 
 
 							function(data){
@@ -1845,24 +1818,22 @@ myApp.onPageInit('pinexec', function(page){
 										if(data == "Successful"){
 
 											myApp.hidePreloader();
-								 			mainView.router.loadPage("ordersuccess.html");
-
-									 		}
+								 			mainView.router.loadPage("orderhistory.html");
+								 			toast.show("Order Created! Delivery on its way!");
+									 	}
 
 									 		else{
 
 									 				myApp.hidePreloader();
-										 			myApp.alert(data);
+										 			toast.show(data);
 									 		}
 
 									 	},
 
 						 	function(){
 									
-									myApp.alert("An error has occured. Please try again later");
-					 		}
-
-							);
+									toast.show("Network Error. Please try again later");
+					 		});
 
 						}
 
@@ -1871,13 +1842,13 @@ myApp.onPageInit('pinexec', function(page){
 					
 					else{
 						myApp.hidePreloader();
-						myApp.alert("Wrong PIN");
+						toast.show("Wrong PIN");
 					}
 
 			}, function(data){
 
 				myApp.hidePreloader();
-			 	myApp.alert(data);
+			 	toast.show("Network Error. Please try again later");
 
 			});// End of validate PIN script
 
@@ -1915,39 +1886,18 @@ myApp.onPageInit('pinexec', function(page){
 
 myApp.onPageInit('mapexp', function(page){
 
-		getLatLong();
-		window.setTimeout(function(){pushMap();}, 3000);	
+	 var mapOptions = {
+		        center: new google.maps.LatLng(6.5244, 3.3792),
+		        zoom: 15,
+		        mapTypeId: google.maps.MapTypeId.ROADMAP
+		    };
+
+		    map = new google.maps.Map
+		    (document.getElementById("map"), mapOptions);
+
+		    initAutoComplete();
+
 	
-
-	function pushMap(){
-
-	var latitude = deviceCoords.sweetLatty;
-	var longitude = deviceCoords.sweetLonggy;
-
-		 var mapOptions = {
-        center: new google.maps.LatLng(latitude, longitude),
-        zoom: 1,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-
-    map = new google.maps.Map
-    (document.getElementById("map"), mapOptions);
-
-
-    var latLong = new google.maps.LatLng(latitude, longitude);
-
-    var marker = new google.maps.Marker({
-        position: latLong
-    });
-
-    marker.setMap(map);
-    map.setZoom(15);
-    map.setCenter(marker.getPosition());
-
-    initAutoComplete();
-
-	}
-
 	
 
 	
@@ -2001,28 +1951,27 @@ myApp.onPageInit('mapexp', function(page){
 							console.log(data);
 							
 							if(data == "Save Successful"){
-
+								toast.show(data);
 								myApp.hidePreloader();
-								mainView.router.loadPage("dashboard.html");
+								mainView.router.loadPage("addresseslist.html");
 							}
 							else{
-
+								toast.show(data);
 								myApp.hidePreloader();
-								myApp.alert("Error saving address, try again later.");
-
+					
 							}
 							
 						}, function(){
 
 							 myApp.hidePreloader();
-							myApp.alert("Unable to connect to Cydene Servers. Try again later");
+							toast.show("Unable to connect to Cydene Servers.");
 
 						});
 
 				} else {
 
 						 myApp.hidePreloader();
-				        myApp.alert('Unable to Geocode your Address. Please try again later');
+				        toast.show('Unable to Geocode your Address. Please try again later');
 				  }
 
 
@@ -2342,8 +2291,10 @@ myApp.onPageInit('settings', function(page){
 				window.localStorage.removeItem("full_seller_details");
 				window.localStorage.removeItem("tnx_delivery_address");
 				window.localStorage.removeItem("original_total_price");
+				window.localStorage.removeItem("discounted_price");
 
 				myApp.hidePreloader();
+				toast.show("Logged Out!");
 				mainView.router.loadPage("theswipe.html");
 		}
 
@@ -2511,6 +2462,7 @@ myApp.onPageInit('setnewpin', function(page){ // Set New PIN Page
 						  if(data == "PIN Saved"){
 
 						  		myApp.hidePreloader();
+						  		toast.show("Pin Changed.");
 						  		mainView.router.loadPage("settings.html");
 						  }
 						  else{
@@ -2571,6 +2523,7 @@ myApp.onPageInit('addresseslist', function(page){ // Address List
 	 	
 	 	if(data == "delete success"){
 
+	 		toast.show(data);
 	 		mainView.router.reloadPage("addresseslist.html");
 	 	}
 	 	else{
@@ -2628,38 +2581,19 @@ myApp.onPageInit('addresseslist', function(page){ // Address List
 
 myApp.onPageInit('editaddress', function(page){ // edit address page
 
-		getLatLong();
-		window.setTimeout(function(){pushMap();}, 3000);	
 	
-
-	function pushMap(){
-
-	var latitude = deviceCoords.sweetLatty;
-	var longitude = deviceCoords.sweetLonggy;
-
 		 var mapOptions = {
-        center: new google.maps.LatLng(latitude, longitude),
-        zoom: 1,
+        center: new google.maps.LatLng(6.5244, 3.3792),
+        zoom: 15,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
     map = new google.maps.Map
     (document.getElementById("map"), mapOptions);
-
-
-    var latLong = new google.maps.LatLng(latitude, longitude);
-
-    var marker = new google.maps.Marker({
-        position: latLong
-    });
-
-    marker.setMap(map);
-    map.setZoom(15);
-    map.setCenter(marker.getPosition());
+ 
 
     initAutoComplete();
 
-	}
 
 
 
@@ -2725,12 +2659,13 @@ $$("#edit-address-id").val(patchAddrSN);
 			if(data == "Update Successful"){
 				
 				myApp.hidePreloader();
+				toast.show(data);
 				mainView.router.loadPage("addresseslist.html");
 
 			}
 			else{
 
-				myApp.alert(data);
+				toast.show(data)
 
 			}
 			
@@ -2741,7 +2676,7 @@ $$("#edit-address-id").val(patchAddrSN);
 		else{
 
 			myApp.hidePreloader();
-			myApp.alert("Google could not geocode address. Select an address from dropdown");
+			toast.show("Google could not geocode address. Select an address from dropdown");
 		}
 
 
@@ -2958,6 +2893,7 @@ myApp.onPageInit('editprofile', function(page){ // Edit Profile page
 					window.localStorage.setItem("buyerFN", $$("#edit-user-first-name").val());
 					window.localStorage.setItem("buyerLN", $$("#edit-user-last-name").val());
 					myApp.hidePreloader();
+					toast.show("Profile Updated");
 					mainView.router.loadPage("settings.html");
 				}
 				else{
@@ -2967,7 +2903,7 @@ myApp.onPageInit('editprofile', function(page){ // Edit Profile page
 			},
 			function(){
 
-				myApp.alert("Cannot connect to Cydene servers. Try again later");
+				toast.show("Error Saving Data");
 
 			});
 
@@ -3017,10 +2953,9 @@ myApp.onPageInit('offers', function(page){ //Offers page
 
 	 }, function(){
 
-	 		myApp.alert("Could not connect to Cydene servers. Try again later");
-	 });
+	 		toast.show("No coupon available yet");
 
-
+	 	});
 
 }); //Offers Page
 
@@ -4423,7 +4358,7 @@ myApp.onPageInit('cardpayment', function(page){ //Card Payment Page
 		}
 		
 
-		$$("#show-card-amount").html("<strike>N</strike>" + totalPrice);
+		//$$("#show-card-amount").html("<strike>N</strike>" + totalPrice);
 		$$("#amount-to-pay-display").html("<strike>N</strike>" + totalPrice);
 		
 
@@ -4442,14 +4377,17 @@ myApp.onPageInit('cardpayment', function(page){ //Card Payment Page
 								"tnx_seller" : splitSellerDetails.seller_details_id,
 								"tnx_payment_method" : "Card",
 								"tnx_delivery_address" : splitBuyDetails.delivery_address,
-								"tnx_coupon_sn" : parsedCouponSN,
-								"tnx_cashback" : cashback
+								"tnx_coupon_sn" : parsedCouponSN
+							
 							},
 
 							function(data){
 
+								console.log(data);
+
 								var splitData = data.split(' ');
 								var returnedTnx = splitData[0];
+								
 
 								if(splitData[1] == "Successful"){
 
@@ -4462,7 +4400,7 @@ myApp.onPageInit('cardpayment', function(page){ //Card Payment Page
 										 function(data){
 
 										 	myApp.hidePreloader();
-										 	
+										 	console.log(data);
 										 	var parsedData = JSON.parse(data);
 										 	var authUrl = parsedData.data.authorization_url;
 										 	fireUpPayments(authUrl, returnedTnx);

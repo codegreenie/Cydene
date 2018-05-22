@@ -2,9 +2,9 @@
 
   <div class="navbar theme-indigo">
     <div class="navbar-inner">
-      <div class="left"><a href="#" class="back link icon-only"><i class="material-icons">clear</i></a></div>
+      <div class="left"><a href="dashboard.html" class="link icon-only"><i class="material-icons">clear</i></a></div>
       <div class="center">Card Payment</div>
-      <div class="right" id="show-card-amount"></div>
+     
       </div>
   </div>
 
@@ -19,28 +19,9 @@
       <h4>You will be redirect to Paystack to complete the payment.</h4>
       
 
+              <img src="docs/imgs/cyan_card.png" style="max-width: 120px;">
+              <h2 class="color-indigo" id="amount-to-pay-display"></h2>
 
-       <div class="list-block">
-      <ul>
-
-        <li>
-          <a href="#" class="item-link item-content">
-          <div class="item-media"><i class="material-icons color-indigo">account_balance_wallet</i></div>
-          <div class="item-inner">
-            <div class="item-title">Amount:</div>
-            <div class="item-after wallet-balance">
-              
-              <span class="color-indigo" id="amount-to-pay-display"></span>
-
-            </div>
-          </div>
-        </a>
-        </li>
-
-
-      </ul>
-
-    </div>
 
     </div>
 
@@ -51,9 +32,10 @@
     </div>
 
 
-     <div style="position:absolute; bottom:0px;width:100%;">
-        <a href="#" class="color-indigo button button-fill" id="continue-2-paystack-btn">Continue to Paystack</a>
-    </div>
+
+     <div style="position: fixed; bottom: 3%; width: 90%; left: 5%; z-index: 30; border-radius:0px; padding-top: 15px; padding-bottom: 15px; background-color:#069; color:#fff; text-align: center;" id="continue-2-paystack-btn">
+         Continue to Paystack
+            </div>
  
 
 

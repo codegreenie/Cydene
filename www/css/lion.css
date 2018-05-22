@@ -1,10 +1,11 @@
 body{
 	font-size: 16px;
+    background-color: #efefef;
 }
 .text-center{
 	text-align: center;
 }
-.swiper-container{
+.home-swiper-container{
 	height: 100%;
 }
 .swiper-wrapper span{
@@ -17,7 +18,10 @@ body{
 .swiper-pagination-bullet-active{
 	background-color: #fff;
 }
+.text-white{
 
+    color: #fff !important;
+}
 
 
 .panel-overlay{
@@ -27,6 +31,9 @@ body{
  #map {
         height: 55%;
       }
+#sellers-map {
+        height: 100%;
+    }
       /* Optional: Makes the sample page fill the window. */
       html, body {
         height: 100%;
@@ -42,12 +49,15 @@ body{
 }
 .toolbar a.link{
 
-	color: #00A0E3;
+	color: #069;
 }
 .toolbar-bottom{
-	border-top:solid 1.5px #00A0E3;
+	border-top:solid 1.5px #069;
 }
-
+.cylinder-icon-top{
+    background-color: #069;
+    /*background: linear-gradient(to bottom right, #069, #096);*/
+}
 
 
 
@@ -55,56 +65,56 @@ body{
 /******Override theme colors to Cydene's****/
 
 .bg-indigo, a.bg-indigo, .list-block .swipeout-actions-left a.bg-indigo, .list-block .swipeout-actions-right a.bg-indigo {
-    background-color: #00A0E3;
+    background-color: #069;
 }
 .list-block .item-link.list-button.color-indigo, .list-button.color-indigo, .list-block .item-link.color-indigo, .tabbar a.active.color-indigo, a.color-indigo {
-    color: #00A0E3;
+    color: #069;
 }
 .color-indigo {
-    color: #00A0E3;
+    color: #069;
 }
 .theme-indigo .navbar, .navbar.theme-indigo, .theme-indigo .toolbar, .toolbar.theme-indigo, .theme-indigo .subnavbar, .subnavbar.theme-indigo, .theme-indigo .searchbar, .searchbar.theme-indigo {
-    background-color: #00A0E3;
+    background-color: #069;
 }
 .color-indigo i.icon, i.icon.color-indigo {
-    color: #00A0E3;
+    color: #069;
 }
 .theme-indigo .item-input-field.focus-state:after, .theme-indigo .input-field.focus-state:after, .theme-indigo .item-input-field.not-empty-state:after, .theme-indigo .input-field.not-empty-state:after {
-    background: #00A0E3;
+    background: #069;
 }
 .theme-indigo .picker-header {
-    background-color: #00A0E3;
+    background-color: #069;
 }
 .picker-modal .picker-header {
-    background: #00A0E3;
+    background: #069;
 }
 .theme-indigo .picker-calendar-day.picker-calendar-day-today span {
-    color: #00A0E3;
+    color: #069;
 }
 .theme-indigo .picker-calendar-day.picker-calendar-day-selected span {
-    background: #00A0E3;
+    background: #069;
 }
 .theme-indigo .button:not(.button-fill) {
-    color: #00A0E3;
+    color: #069;
 }
 .label-switch input[type="checkbox"]:checked + .checkbox.color-indigo, .label-switch.color-indigo input[type="checkbox"]:checked + .checkbox {
-     background-color: #00A0E3; 
+     background-color: #069; 
 }
 .theme-indigo .label-switch input[type="checkbox"]:checked + .checkbox:after, .label-switch.theme-indigo input[type="checkbox"]:checked + .checkbox:after {
-    background-color: #00A0E3;
+    background-color: #069;
 }
 .button.button-fill.bg-indigo, .button.button-fill.color-indigo {
-    background: #00A0E3 !important;
+    background: #069 !important;
     /* color: #fff; */
 }
 .floating-button.color-indigo, .speed-dial-buttons a.color-indigo, .floating-button.bg-indigo, .speed-dial-buttons a.bg-indigo {
-     background: #00A0E3;
+     background: #069;
 }
 .theme-indigo label.label-radio input[type="checkbox"]:checked + .item-media i.icon-form-radio, label.label-radio.theme-indigo input[type="checkbox"]:checked + .item-media i.icon-form-radio, .theme-indigo label.label-radio input[type="radio"]:checked + .item-media i.icon-form-radio, label.label-radio.theme-indigo input[type="radio"]:checked + .item-media i.icon-form-radio, .theme-indigo label.label-radio input[type="checkbox"]:checked ~ .item-after i.icon-form-radio, label.label-radio.theme-indigo input[type="checkbox"]:checked ~ .item-after i.icon-form-radio, .theme-indigo label.label-radio input[type="radio"]:checked ~ .item-after i.icon-form-radio, label.label-radio.theme-indigo input[type="radio"]:checked ~ .item-after i.icon-form-radio, .theme-indigo label.label-radio input[type="checkbox"]:checked ~ .item-inner i.icon-form-radio, label.label-radio.theme-indigo input[type="checkbox"]:checked ~ .item-inner i.icon-form-radio, .theme-indigo label.label-radio input[type="radio"]:checked ~ .item-inner i.icon-form-radio, label.label-radio.theme-indigo input[type="radio"]:checked ~ .item-inner i.icon-form-radio {
-    border-color: #00A0E3;
+    border-color: #069;
 }
 .theme-indigo label.label-radio input[type="checkbox"]:checked + .item-media i.icon-form-radio:after, label.label-radio.theme-indigo input[type="checkbox"]:checked + .item-media i.icon-form-radio:after, .theme-indigo label.label-radio input[type="radio"]:checked + .item-media i.icon-form-radio:after, label.label-radio.theme-indigo input[type="radio"]:checked + .item-media i.icon-form-radio:after, .theme-indigo label.label-radio input[type="checkbox"]:checked ~ .item-after i.icon-form-radio:after, label.label-radio.theme-indigo input[type="checkbox"]:checked ~ .item-after i.icon-form-radio:after, .theme-indigo label.label-radio input[type="radio"]:checked ~ .item-after i.icon-form-radio:after, label.label-radio.theme-indigo input[type="radio"]:checked ~ .item-after i.icon-form-radio:after, .theme-indigo label.label-radio input[type="checkbox"]:checked ~ .item-inner i.icon-form-radio:after, label.label-radio.theme-indigo input[type="checkbox"]:checked ~ .item-inner i.icon-form-radio:after, .theme-indigo label.label-radio input[type="radio"]:checked ~ .item-inner i.icon-form-radio:after, label.label-radio.theme-indigo input[type="radio"]:checked ~ .item-inner i.icon-form-radio:after {
-    background-color: #00A0E3;
+    background-color: #069;
 }
 
 
