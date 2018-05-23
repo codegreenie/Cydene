@@ -24,7 +24,17 @@ var mainView = myApp.addView('.view-main', {
 var toast = myApp.toast("...", "", { duration : 3500 });
 
 
+function showNylon(){
 
+	$$(".nylon").show();
+
+}
+
+function hideNylon(){
+
+	$$(".nylon").hide();
+
+}
 
 
 
@@ -37,6 +47,20 @@ document.addEventListener("deviceready", deviceIsReady, false);
 
 function deviceIsReady(){
 
+
+var thispage = mainView.activePage;
+var ourPage = thispage.name;
+
+
+
+	StatusBar.backgroundColorByHexString("#069");
+	
+
+
+
+
+window.plugins.PushbotsPlugin.initialize("5b0526d91db2dc33d672ae6d", {"android":{"sender_id":"118378131628"}});
+
 window.open = cordova.InAppBrowser.open;
 
 
@@ -45,7 +69,7 @@ window.open = cordova.InAppBrowser.open;
 var cpage = mainView.activePage;
 var cpageName = cpage.name;
 
-	StatusBar.backgroundColorByHexString("#069");
+	
 
 
 
@@ -85,7 +109,7 @@ var cpageName = cpage.name;
 
 				    setTimeout(function(){
 
-				    	myApp.showPreloader('Uploading image...');
+				    	showNylon();
 				    	uploadImage(imageURI);
 
 				    }, 4000);
@@ -119,7 +143,7 @@ var cpageName = cpage.name;
 							"the_seller_phone" : thePhone
 						},
 						function(data){
-							myApp.hidePreloader();
+							hideNylon();
 
 							if(data == "Successful Upload"){
 								
@@ -128,12 +152,12 @@ var cpageName = cpage.name;
 							}
 							else{
 
-								myApp.alert(data);
+								toast.show(data);
 							}
 						}
 						,
 						function(){
-							myApp.alert("Unable to connect to Cydene Servers. Try again later");
+							toast.show("Unable to connect to Cydene Servers. Try again later");
 						});
 
 
@@ -141,8 +165,8 @@ var cpageName = cpage.name;
 
 				var fail = function (error) {
 
-					myApp.hidePreloader();
-				    myApp.alert("An error has occurred: Code = " + error.code);
+					hideNylon();
+				    toast.show("An error has occurred: Code = " + error.code);
 				    console.log("upload error source " + error.source);
 				    console.log("upload error target " + error.target);
 				}
@@ -218,7 +242,7 @@ var cpageName = cpage.name;
 		var cpageName = cpage.name;
 
 		//Re-route to Dashboard
-		if(cpageName == "mapexp" || cpageName == "settings" || cpageName == "ordersuccess" || cpageName == "orderhistory" || cpageName == "addresseslist" || cpageName == "cardpayment"){
+		if(cpageName == "mapexp" || cpageName == "settings" || cpageName == "ordersuccess" || cpageName == "orderhistory" || cpageName == "addresseslist" || cpageName == "cardpayment" || cpageName == "sellers"){
 
 				mainView.router.loadPage("dashboard.html");
 		}
@@ -348,7 +372,7 @@ myApp.onPageInit('getStarted', function(page){
 
 			$$("#verify_reg_arrow").on('click', function(e){
 
-				myApp.showPreloader("Verifying...");
+				showNylon();
 
 
 						var improved_phone = "+234" + $$("#user_tel").val();
@@ -359,7 +383,7 @@ myApp.onPageInit('getStarted', function(page){
 							users_phone : $$("#user_tel").val()
 						},
 						function(data){
-							myApp.hidePreloader();
+							hideNylon();
 
 							toast.show(data);
 
@@ -379,13 +403,13 @@ myApp.onPageInit('getStarted', function(page){
 
 							else{
 
-								myApp.alert("An Error occured. Try again later");
+								toast.show("An Error occured. Try again later");
 							}
 						},
 
 						 function(xhr, status){
 						
-							myApp.hidePreloader();
+							hideNylon();
 							toast.show("Unable to connect to Cydene Ntework");
 
 						});
@@ -438,7 +462,7 @@ myApp.onPageInit('getStarted', function(page){
 
 			$$("#verify_existing_reg_arrow").on('click', function(e){
 
-						myApp.showPreloader('Verifying OTP...');
+						showNylon();
 
 						
 
@@ -449,7 +473,7 @@ myApp.onPageInit('getStarted', function(page){
 						},
 						function(data){
 
-							myApp.hidePreloader();
+							hideNylon();
 							console.log(data);
 							
 
@@ -500,7 +524,7 @@ myApp.onPageInit('getStarted', function(page){
 
 						else if(blowData.this_data_type == "Wrong OTP"){
 
-							myApp.alert("Wrong OTP");
+							toast.show("Wrong OTP");
 
 						}
 
@@ -516,7 +540,7 @@ myApp.onPageInit('getStarted', function(page){
 
 			function(){
 
-					myApp.alert("Unable to connect to Cydene Servers");
+					toast.show("Unable to connect to Cydene Servers");
 
 			});
 
@@ -528,7 +552,7 @@ myApp.onPageInit('getStarted', function(page){
 
 
 			$$("#resend_otp").on("click", function(){
-				myApp.showPreloader('Resending OTP...');
+				showNylon();
 
 				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
 				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
@@ -537,12 +561,12 @@ myApp.onPageInit('getStarted', function(page){
 							users_phone : theUserPhone
 						},
 						function(data, status, xhr){
-							myApp.hidePreloader();
+							hideNylon();
 						}
 						,
 						function(){
 
-							myApp.alert("Unable to connect to Cydene Servers. Try again later");
+							toast.show("Unable to connect to Cydene Servers. Try again later");
 						});
 
 			});
@@ -604,7 +628,7 @@ myApp.onPageInit('getStarted', function(page){
 		}, function(error){
 
 			//error callback
-			myApp.alert(JSON.stringify(error));
+			toast.show(JSON.stringify(error));
 		});
 
 
@@ -612,7 +636,7 @@ myApp.onPageInit('getStarted', function(page){
 
 	function(error){
 
-		myApp.alert(JSON.stringify(userData));
+		toast.show(JSON.stringify(userData));
 
 	});
 
@@ -626,7 +650,7 @@ myApp.onPageInit('getStarted', function(page){
 
 	function registerFBUser(){
 
-		myApp.showPreloader("Processsing...");
+		showNylon();
 		var userData = window.localStorage.getItem("facebook_return");
 		userData = JSON.parse(userData);
 
@@ -652,7 +676,7 @@ myApp.onPageInit('getStarted', function(page){
 			},
 			function(data){
 
-				myApp.hidePreloader();
+				hideNylon();
 				if(data == "Registration Successful"){
 
 					window.localStorage.setItem("buyerFN", signupFirstName);
@@ -662,13 +686,13 @@ myApp.onPageInit('getStarted', function(page){
 				}
 				else{
 
-					myApp.alert(data);
+					toast.show(data);
 				}
 
 			},
 			function(error){
 
-				myApp.alert("Unable to connect to Cydene Servers. Try again later.");
+				toast.show("Unable to connect to Cydene Servers. Try again later.");
 			});
 
 	}
@@ -695,15 +719,15 @@ myApp.onPageInit('getStarted', function(page){
 
 
 				$$('form.ajax-submit').on('form:beforesend', function (e) {
-					  myApp.showPreloader(' ');
+					  showNylon();
 				});
 				
 
 				$$('form.ajax-submit').on('form:error', function (e) {
 					  
-						myApp.hidePreloader();
+						hideNylon();
 						var xcode = e.detail.data;
-						myApp.alert("An error has occured, try again later");
+						toast.show("An error has occured, try again later");
 
 					});
 							
@@ -712,7 +736,7 @@ myApp.onPageInit('getStarted', function(page){
 					  var xhr = e.detail.xhr; // actual XHR object
 					 
 					  var data = e.detail.data; // Ajax response from action file
-					  myApp.hidePreloader();
+					  hideNylon();
 					  
 					  if(data == "Registration Successful"){
 					  var new_user_first_name = $$("#new_user_first_name").val();
@@ -727,7 +751,7 @@ myApp.onPageInit('getStarted', function(page){
 
 					else{
 
-						myApp.alert(data);
+						toast.show(data);
 					}
 
 					});
@@ -792,14 +816,14 @@ myApp.onPageInit('setexecpin', function(page){
 
 
 				$$('form#set_pin_form').on('form:beforesend', function (e) {
-					  myApp.showPreloader(' ');
+					  showNylon();
 				});
 				
 
 				$$('form#set_pin_form').on('form:error', function (e) {
 					  
-						myApp.hidePreloader();
-						myApp.alert("An error has occured, try again later");
+						hideNylon();
+						toast.show("An error has occured, try again later");
 
 					});
 							
@@ -808,7 +832,7 @@ myApp.onPageInit('setexecpin', function(page){
 					  var xhr = e.detail.xhr; // actual XHR object
 					 
 					  var data = e.detail.data; // Ajax response from action file
-					  	myApp.hidePreloader();
+					  	hideNylon();
 						mainView.router.loadPage("dashboard.html");
 					
 
@@ -841,8 +865,7 @@ myApp.onPageInit('setexecpin', function(page){
 
 myApp.onPageInit('dashboard', function(page){
 
-	
-	
+
 
 	$$('.hide-me').hide();
 
@@ -860,7 +883,7 @@ $$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_
 
 	 }, function(){
 
-	 		myApp.alert("Could not connect to Cydene servers");
+	 		toast.show("Could not connect to Cydene servers");
 	 });
 
 
@@ -887,7 +910,7 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 		 		var cylinder_qty = data[p].cylinder_qty;
 
 
-		 		$$("#" + data[p].myDiv + "-junior").html("<img src=http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png style='max-width: 20px;'><br>" + cylinder_size + "Gas<br><br>" + cylinder_qty + "piece(s)");
+		 		$$("#" + data[p].myDiv + "-junior").html("<img src=http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png style='max-width: 20px;'><br>" + cylinder_size + "Gas<br><br>Quantity: " + cylinder_qty);
 		 		$$("#" + data[p].myDiv).show();
 
 		 	}
@@ -952,8 +975,8 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 						}
 						, function(xhr, status){
 						
-							myApp.hidePreloader();
-							myApp.alert("Cannot connect to Cydene Servers");
+							hideNylon();
+							toast.show("Cannot connect to Cydene Servers");
 
 						});
 
@@ -965,41 +988,41 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 
 		$$("#fivekggas").on("click", function(){
 
-			myApp.showPreloader('Listing Addresses...');
+			showNylon();
 			loadMyAddresses("5kg");
 
 		});
 
 		$$("#threekggas").on("click", function(){
 
-			myApp.showPreloader('Listing Addresses...');
+			showNylon();
 			loadMyAddresses("3kg");
 
 		});
 		$$("#sixkggas").on("click", function(){
 
-			myApp.showPreloader('Listing Addresses...');
+			showNylon();
 			loadMyAddresses("6kg");
 
 		});
 
 		$$("#twelvepointfivekggas").on("click", function(){
 
-			myApp.showPreloader('Listing Addresses...');
+			showNylon();
 			loadMyAddresses("12.5kg");
 
 		});
 
 		$$("#twentyfivekggas").on("click", function(){
 
-			myApp.showPreloader('Listing Addresses...');
+			showNylon();
 			loadMyAddresses("25kg");
 
 		});
 
 		$$("#fiftykggas").on("click", function(){
 
-			myApp.showPreloader('Listing Addresses...');
+			showNylon();
 			loadMyAddresses("50kg");
 
 		});
@@ -1015,7 +1038,7 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 			{"users_phone" : window.localStorage.getItem("_cydene_user_phone_no")}, 
 		
 		function(data){
-			myApp.hidePreloader();
+			hideNylon();
 			var django = data;
 			var addrPack = "";
 			for(b in django){
@@ -1023,7 +1046,7 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 				addrPack += "<input type='radio' name='address_selected' class='address-pointer' value='" + django[b] + "'> " + django[b] + "<br>";
 			}
 
-			myApp.hidePreloader();
+			hideNylon();
 			myApp.modal({
 				title : "Pick delivery Address",
 				text : addrPack,
@@ -1050,7 +1073,7 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 
 
 		function addressPicker(gasCylinderSize){
-			myApp.showPreloader('Processsing...');
+			showNylon();
 
 		
 			var delivery_address = $$(".address-pointer").filter(function(){return $$(this).prop("checked");}).val();
@@ -1069,7 +1092,7 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 			}
 			else{
 
-				myApp.hidePreloader();
+				hideNylon();
 				mainView.router.loadPage("sellers.html");
 			}
 
@@ -1153,7 +1176,7 @@ myApp.onPageInit('schedulebooking', function(page){
 			{"users_phone" : window.localStorage.getItem("_cydene_user_phone_no")}, 
 		
 		function(data){
-			myApp.hidePreloader();
+			hideNylon();
 			var django = data;
 			var addrPack = "";
 			for(b in django){
@@ -1205,7 +1228,7 @@ myApp.onPageInit('schedulebooking', function(page){
 					},
 
 							function(data){
-								myApp.hidePreloader();
+								hideNylon();
 								if(data == "Successful"){
 										toast.show("Schedule Booking Created.");
 										mainView.router.loadPage("orderhistory.html");
@@ -1218,7 +1241,7 @@ myApp.onPageInit('schedulebooking', function(page){
 
 							}, function(){
 
-								myApp.alert("Unable to connect to Cydene Servers. Please try later");
+								toast.show("Unable to connect to Cydene Servers. Please try later");
 
 							});
 			}
@@ -1303,14 +1326,14 @@ var buyFromThisSeller, getBuyQty;
 	var selectedPurchases = JSON.parse(window.localStorage.getItem("uniqPurchase"));
 	var postedCylinderSize = selectedPurchases.gasSize;
 	var theBuyerDeliveryAddress = selectedPurchases.delivery_address;
-	myApp.showPreloader("Finding Sellers...");
+	showNylon();
 
 
 	var arrangeMyLat = [];
 						
 					function pushMap(){
 
-					myApp.hidePreloader();
+					hideNylon();
 					toast.show("Pick a supplier from the map");
 					var locations = JSON.parse(window.localStorage.getItem("returnJson"));
 
@@ -1422,7 +1445,7 @@ var buyFromThisSeller, getBuyQty;
 
 		}, function(){
 
-				myApp.alert("Error occured, try again later");
+				toast.show("Error occured, try again later");
 		});
 						
 					
@@ -1437,7 +1460,7 @@ var buyFromThisSeller, getBuyQty;
 				        
 				    		if(Number.isInteger(val) == false){
 
-				    			myApp.alert("Please enter a valid number");
+				    			toast.show("Please enter a valid number");
 				    		}
 				    		else{
 
@@ -1463,19 +1486,19 @@ var buyFromThisSeller, getBuyQty;
 
 
 		buyFromThisSeller = function(theSellerID, theCylinderSize){
-			myApp.showPreloader("Processsing...");
+			showNylon();
 
 			$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_seller_details.php", {"seller_id" : theSellerID, "cylinder_size" : theCylinderSize}, function(data){
 
 					console.log(data);
 					var stringData = JSON.stringify(data);
 					window.localStorage.setItem("full_seller_details", stringData);
-					myApp.hidePreloader();
+					hideNylon();
 					mainView.router.loadPage("sellerdetails.html");
 					
 				}, function(){
 
-						myApp.hidePreloader();
+						hideNylon();
 						toast.show("Error processing trnsaction. Network Error");
 				});
 
@@ -1560,7 +1583,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 
 					myApp.prompt('Enter Coupon Code', 'Cydene Coupons!', function (value) {
        					 
-       					 myApp.showPreloader('Checking coupon code...');
+       					 showNylon();
        					 $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
 								 {
 								 	coupon_user : window.localStorage.getItem('_cydene_user_phone_no'),
@@ -1568,7 +1591,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 								 },
 								function(data){
 
-										myApp.hidePreloader();
+										hideNylon();
 										console.log(data);
 
 										if(data.status == "Coupon Code Invalid or Expired" || data.status == "You have made use of this coupon code once"){
@@ -1601,7 +1624,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 								},
 								function(){
 										
-										myApp.hidePreloader();
+										hideNylon();
 										toast.show("Unable to check coupon code!");
 								});
 										
@@ -1643,7 +1666,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 		}
 
 			
-				myApp.showPreloader('Processsing...');
+				showNylon();
 				
 				var deliver2Address =  splitBuyDetails.delivery_address;
 			
@@ -1666,19 +1689,19 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 					function(data){
 					if(data == "Successful"){
 							
-							myApp.hidePreloader();
+							hideNylon();
 							mainView.router.loadPage("orderhistory.html");
 							toast.show("Order Created! Delivery on its way!");
 
 						}
 						else{
 
-							myApp.hidePreloader();
+							hideNylon();
 							toast.show("Could not place order try again later.");
 						}
 
 					}, function(){
-						myApp.hidePreloader();
+						hideNylon();
 						toast.show("An error has occured. Network Error");
 					});
 				}
@@ -1686,14 +1709,14 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 
 				else if(paymentMethod == "Wallet"){
 
-						myApp.hidePreloader();
+						hideNylon();
 						mainView.router.loadPage("pinexec.html");
 					
 				}
 
 				else{
 					
-					myApp.hidePreloader();
+					hideNylon();
 					window.localStorage.setItem("tnx_delivery_address", deliver2Address);
 					mainView.router.loadPage("cardpayment.html");
 				}
@@ -1783,7 +1806,7 @@ myApp.onPageInit('pinexec', function(page){
 
 		$$("#exec-arrow").click(function(){
 			
-			myApp.showPreloader('Validating PIN...');
+			showNylon();
 			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/validate_exec_pin.php", 
 				{
 					"exec_pin" : $$("#exec-pin").val(),
@@ -1813,18 +1836,18 @@ myApp.onPageInit('pinexec', function(page){
 							}, 
 
 							function(data){
-										myApp.hidePreloader();
+										hideNylon();
 										
 										if(data == "Successful"){
 
-											myApp.hidePreloader();
+											hideNylon();
 								 			mainView.router.loadPage("orderhistory.html");
 								 			toast.show("Order Created! Delivery on its way!");
 									 	}
 
 									 		else{
 
-									 				myApp.hidePreloader();
+									 				hideNylon();
 										 			toast.show(data);
 									 		}
 
@@ -1841,13 +1864,13 @@ myApp.onPageInit('pinexec', function(page){
 
 					
 					else{
-						myApp.hidePreloader();
+						hideNylon();
 						toast.show("Wrong PIN");
 					}
 
 			}, function(data){
 
-				myApp.hidePreloader();
+				hideNylon();
 			 	toast.show("Network Error. Please try again later");
 
 			});// End of validate PIN script
@@ -1920,7 +1943,7 @@ myApp.onPageInit('mapexp', function(page){
 
 	$$("#save-address-btn").on("click", function(){
 
-		myApp.showPreloader('Saving Address...');
+		showNylon();
 
 		var theDeliveryAddress =  $$("#searchTextField").val();
 
@@ -1928,7 +1951,7 @@ myApp.onPageInit('mapexp', function(page){
 		    geocoder.geocode( { 'address': theDeliveryAddress}, function(results, status) {
 		      if (status == 'OK') {
 		        
-		        myApp.hidePreloader();
+		        hideNylon();
 		        theAddressLatLng = results[0].geometry.location;
 		        
 
@@ -1947,30 +1970,30 @@ myApp.onPageInit('mapexp', function(page){
 							the_address_Lng: theAddressLng
 						},
 						function(data){
-							myApp.hidePreloader();
+							hideNylon();
 							console.log(data);
 							
 							if(data == "Save Successful"){
 								toast.show(data);
-								myApp.hidePreloader();
+								hideNylon();
 								mainView.router.loadPage("addresseslist.html");
 							}
 							else{
 								toast.show(data);
-								myApp.hidePreloader();
+								hideNylon();
 					
 							}
 							
 						}, function(){
 
-							 myApp.hidePreloader();
+							 hideNylon();
 							toast.show("Unable to connect to Cydene Servers.");
 
 						});
 
 				} else {
 
-						 myApp.hidePreloader();
+						 hideNylon();
 				        toast.show('Unable to Geocode your Address. Please try again later');
 				  }
 
@@ -2012,7 +2035,7 @@ myApp.onPageInit('orderhistory', function(page){
 
 	function(){
 
-        myApp.alert(status);
+        toast.show(status);
 
 	});
 
@@ -2030,7 +2053,7 @@ myApp.onPageInit('orderhistory', function(page){
 
 	function(){
 
-        myApp.alert("Unable to connect to Cydene Servers");
+        toast.show("Unable to connect to Cydene Servers");
 
 	});
 
@@ -2048,7 +2071,7 @@ myApp.onPageInit('orderhistory', function(page){
 
 	function(){
 
-        myApp.alert("Unable to connect to Cydene Servers");
+        toast.show("Unable to connect to Cydene Servers");
 
 	});
 
@@ -2060,7 +2083,7 @@ myApp.onPageInit('orderhistory', function(page){
 	orderComplete = function(tranxID, theSellerSN){
 
 	window.localStorage.setItem("seller_2_rate", theSellerSN);
-	myApp.showPreloader('Completing Order...');	
+	showNylon();	
 
 	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
 	{
@@ -2068,22 +2091,22 @@ myApp.onPageInit('orderhistory', function(page){
 	},
 	 function(data){
 
-	 	myApp.hidePreloader();
+	 	hideNylon();
 	 	if(data == "update success"){
 
 	 		mainView.router.loadPage("rateorder.html");
 	 	}
 	 	else{
 
-	 		myApp.alert("Error completing order, try later");
+	 		toast.show("Error completing order, try later");
 	 	}
 	 	
 	},
 
 	function(){
 
-		myApp.hidePreloader();
-        myApp.alert("Cannot reach Cydene Express servers, try again later");
+		hideNylon();
+        toast.show("Cannot reach Cydene Express servers, try again later");
 
 	});
 
@@ -2096,28 +2119,28 @@ myApp.onPageInit('orderhistory', function(page){
 
 	cancelScheduleOrder = function(tranxSN){
 
-	myApp.showPreloader('Canceling Order...');	
+	showNylon();	
 	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/cancel_scheduled_order.php", 
 	{
 		"order_sn" : tranxSN
 	},
 	 function(data){
 
-	 	myApp.hidePreloader();
+	 	hideNylon();
 	 	if(data == "delete success"){
 
 	 		mainView.router.reloadPage("orderhistory.html");
 	 	}
 	 	else{
 
-	 		myApp.alert("Error cancelling order, try later");
+	 		toast.show("Error cancelling order, try later");
 	 	}
 	},
 
 	function(xhr, status, error){
 
-		myApp.hidePreloader();
-        myApp.alert("Cannot reach Cydene Express servers, try again later");
+		hideNylon();
+        toast.show("Cannot reach Cydene Express servers, try again later");
 
 	});
 
@@ -2192,7 +2215,7 @@ else{
 
 
 
-			myApp.showPreloader('Canceling...');
+			showNylon();
 			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/cancel_order.php", 
 			{
 				"order_sn" : tranxSN,
@@ -2201,21 +2224,21 @@ else{
 			},
 			 function(data){
 
-			 	myApp.hidePreloader();
+			 	hideNylon();
 			 	if(data == "cancel success"){
 
 			 		mainView.router.reloadPage("orderhistory.html");
 			 	}
 			 	else{
 
-			 		myApp.alert("Error cancelling order, try later");
+			 		toast.show("Error cancelling order, try later");
 			 	}
 			},
 
 			function(xhr, status, error){
 
-				myApp.hidePreloader();
-		        myApp.alert("Cannot reach Cydene Express servers, try again later");
+				hideNylon();
+		        toast.show("Cannot reach Cydene Express servers, try again later");
 
 			});
 
@@ -2265,7 +2288,7 @@ myApp.onPageInit('settings', function(page){
 
 	 }, function(){
 
-	 		myApp.alert("Could not connect to Cydene servers");
+	 		toast.show("Could not connect to Cydene servers");
 	 });
 	
 
@@ -2278,7 +2301,7 @@ myApp.onPageInit('settings', function(page){
 
 	$$("#logout-app").on("click", function(){
 
-		myApp.showPreloader("Please Wait...");
+		showNylon();
 
 		function pushLogout(){
 
@@ -2293,7 +2316,7 @@ myApp.onPageInit('settings', function(page){
 				window.localStorage.removeItem("original_total_price");
 				window.localStorage.removeItem("discounted_price");
 
-				myApp.hidePreloader();
+				hideNylon();
 				toast.show("Logged Out!");
 				mainView.router.loadPage("theswipe.html");
 		}
@@ -2353,15 +2376,15 @@ $$("#current_user_pin").on("keyup", function(){
 
 
 				$$('form.set_current_pin').on('form:beforesend', function (e) {
-					  myApp.showPreloader(' ');
+					  showNylon();
 					  
 				});
 				
 
 				$$('form.set_current_pin').on('form:error', function (e) {
 					  
-						myApp.hidePreloader();
-						myApp.alert("An error has occured, try again later");
+						hideNylon();
+						toast.show("An error has occured, try again later");
 
 					});
 							
@@ -2371,13 +2394,13 @@ $$("#current_user_pin").on("keyup", function(){
 					 
 					  var data = e.detail.data; // Ajax response from action file
 					  if(data == "PIN Match"){
-					  		myApp.hidePreloader();
+					  		hideNylon();
 					  		mainView.router.loadPage("setnewpin.html");
 					  }
 					  else{
 
-					  		myApp.hidePreloader();
-					  		myApp.alert(data);
+					  		hideNylon();
+					  		toast.show(data);
 					  }
 					
 					
@@ -2442,15 +2465,15 @@ myApp.onPageInit('setnewpin', function(page){ // Set New PIN Page
 
 
 				$$('form#set_new_pin').on('form:beforesend', function (e) {
-					  myApp.showPreloader(' ');
+					  showNylon();
 					  
 				});
 				
 
 				$$('form#set_new_pin').on('form:error', function (e) {
 					  
-						myApp.hidePreloader();
-						myApp.alert("An error has occured, try again later");
+						hideNylon();
+						toast.show("An error has occured, try again later");
 
 					});
 							
@@ -2461,14 +2484,14 @@ myApp.onPageInit('setnewpin', function(page){ // Set New PIN Page
 						  var data = e.detail.data; // Ajax response from action file
 						  if(data == "PIN Saved"){
 
-						  		myApp.hidePreloader();
+						  		hideNylon();
 						  		toast.show("Pin Changed.");
 						  		mainView.router.loadPage("settings.html");
 						  }
 						  else{
 
-								myApp.hidePreloader();
-						  		myApp.alert(data);
+								hideNylon();
+						  		toast.show(data);
 						  }
 					
 				});
@@ -2502,7 +2525,7 @@ myApp.onPageInit('addresseslist', function(page){ // Address List
 
 		function(){
 
-				myApp.alert("could not get data from Cydene servers")
+				toast.show("could not get data from Cydene servers")
 		});
 
 
@@ -2512,14 +2535,14 @@ myApp.onPageInit('addresseslist', function(page){ // Address List
 
 	deleteAddr = function(addrSN){
 
-	myApp.showPreloader(' ');	
+	showNylon();	
 	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/delete_address.php", 
 	{
 		"address_sn" : addrSN
 	},
 	 function(data){
 
-	 	myApp.hidePreloader();
+	 	hideNylon();
 	 	
 	 	if(data == "delete success"){
 
@@ -2528,14 +2551,14 @@ myApp.onPageInit('addresseslist', function(page){ // Address List
 	 	}
 	 	else{
 
-	 		myApp.alert(data);
+	 		toast.show(data);
 	 	}
 	},
 
 	function(xhr, status, error){
 
-		myApp.hidePreloader();
-        myApp.alert("Cannot reach Cydene Express servers, try again later");
+		hideNylon();
+        toast.show("Cannot reach Cydene Express servers, try again later");
 
 	});
 
@@ -2632,7 +2655,7 @@ $$("#edit-address-id").val(patchAddrSN);
 
 
 	$$("#save-edit-address-btn").on("click", function(){
-		myApp.showPreloader('Updating address...');
+		showNylon();
 
 
 		var geocoder = new google.maps.Geocoder();
@@ -2653,12 +2676,12 @@ $$("#edit-address-id").val(patchAddrSN);
 							the_address_longitude : theAddressLng
 				},
 		 function(data){
-			myApp.hidePreloader();
+			hideNylon();
 			
 			
 			if(data == "Update Successful"){
 				
-				myApp.hidePreloader();
+				hideNylon();
 				toast.show(data);
 				mainView.router.loadPage("addresseslist.html");
 
@@ -2675,7 +2698,7 @@ $$("#edit-address-id").val(patchAddrSN);
 
 		else{
 
-			myApp.hidePreloader();
+			hideNylon();
 			toast.show("Google could not geocode address. Select an address from dropdown");
 		}
 
@@ -2719,13 +2742,13 @@ myApp.onPageInit('wallet', function(page){ // Wallet page
 
 	 }, function(){
 
-	 		myApp.alert("Could not connect to Cydene servers");
+	 		toast.show("Could not connect to Cydene servers");
 	 });
 
 
 	$$("#add-money-2-wallet").on("click", function(){
 
-		myApp.showPreloader("Processing...");
+		showNylon();
 		var amount2Add = $$("#the-amount-2-add").val();
 
 		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/add_money_2_wallet_transaction.php",
@@ -2750,7 +2773,7 @@ myApp.onPageInit('wallet', function(page){ // Wallet page
 					},
 					 function(data){
 
-					 	myApp.hidePreloader();
+					 	hideNylon();
 					 	
 					 	var parsedData = JSON.parse(data);
 					 	var authUrl = parsedData.data.authorization_url;
@@ -2759,20 +2782,20 @@ myApp.onPageInit('wallet', function(page){ // Wallet page
 
 					 }, function(){
 
-					 		myApp.alert("Unable to connect to Cydene servers");
+					 		toast.show("Unable to connect to Cydene servers");
 					 });
 
 				
 			}
 			else{
 
-				myApp.hidePreloader();
-				myApp.alert(data);
+				hideNylon();
+				toast.show(data);
 			}
 	},
 
 	 function(){
-	 	myApp.hidePreloader();
+	 	hideNylon();
 		console.log("Unable to connect to Cydene servers");
 	});
 
@@ -2803,7 +2826,7 @@ myApp.onPageInit('sellerwallet', function(page){ // Wallet page
 
 	 }, function(){
 
-	 		myApp.alert("Could not connect to Cydene servers");
+	 		toast.show("Could not connect to Cydene servers");
 	 });
 
 
@@ -2814,7 +2837,7 @@ myApp.onPageInit('sellerwallet', function(page){ // Wallet page
 	$$("#request-payout-btn").on("click", function(){
 		var thePayoutAmount = $$("#payout-amount").val();
 
-			myApp.showPreloader("Processing...");
+			showNylon();
 
 			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/request_seller_payout.php",
 					{
@@ -2824,22 +2847,22 @@ myApp.onPageInit('sellerwallet', function(page){ // Wallet page
 					 function(data){
 					 	if(data == "Payout Updated"){
 					 		
-					 		myApp.hidePreloader();
+					 		hideNylon();
 					 		mainView.router.loadPage("payoutsuccess.html");
 
 					 	}
 
 					 	else{
 
-					 			myApp.hidePreloader();
-					 			myApp.alert(data);
+					 			hideNylon();
+					 			toast.show(data);
 					 	}
 					 	
 
 
 					 }, function(){
-					 		myApp.hidePreloader();
-					 		myApp.alert("Could not connect to Cydene servers");
+					 		hideNylon();
+					 		toast.show("Could not connect to Cydene servers");
 					 });
 							
 
@@ -2878,7 +2901,7 @@ myApp.onPageInit('editprofile', function(page){ // Edit Profile page
 	$$("#profile-edit-btn").on("click", function(x){
 
 			x.preventDefault();
-			myApp.showPreloader(' ');
+			showNylon();
 			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/user_profile_update.php", 
 			{
 
@@ -2892,13 +2915,13 @@ myApp.onPageInit('editprofile', function(page){ // Edit Profile page
 
 					window.localStorage.setItem("buyerFN", $$("#edit-user-first-name").val());
 					window.localStorage.setItem("buyerLN", $$("#edit-user-last-name").val());
-					myApp.hidePreloader();
+					hideNylon();
 					toast.show("Profile Updated");
 					mainView.router.loadPage("settings.html");
 				}
 				else{
 
-					myApp.alert(data);
+					toast.show(data);
 				}
 			},
 			function(){
@@ -2949,7 +2972,7 @@ myApp.onPageInit('offers', function(page){ //Offers page
 	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_offers.php",
 	 function(data){
 
-	 	$$(".populate-offers").html(data);
+	 	$$(".populate-offers").html(data).removeClass('text-center');
 
 	 }, function(){
 
@@ -2984,7 +3007,7 @@ myApp.onPageInit('walletstatement', function(page){ //Offers page
 
 	 }, function(){
 
-	 		myApp.alert("Could not connect to Cydene servers. Try again later");
+	 		toast.show("Could not connect to Cydene servers. Try again later");
 	 });
 
 
@@ -3086,7 +3109,7 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 
 		function(xhr, status, error){
 
-	        myApp.alert(status);
+	        toast.show(status);
 
 		});
 
@@ -3161,7 +3184,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 	function(xhr, status, error){
 
-        myApp.alert(status);
+        toast.show(status);
 
 	});
 
@@ -3179,7 +3202,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 	function(xhr, status, error){
 
-        myApp.alert(status);
+        toast.show(status);
 
 	});
 
@@ -3187,23 +3210,23 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 	acceptOrder = function(tranxSN){
 
-	myApp.showPreloader('Accepting Order...');	
+	showNylon();	
 	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_order.php", 
 	{
 		"order_sn" : tranxSN
 	},
 	 function(data){
 
-	 	myApp.hidePreloader();
+	 	hideNylon();
 	 	if(data == "Accept success"){
 
-	 		myApp.hidePreloader();
+	 		hideNylon();
 	 		mainView.router.reloadPage("sellerbookings.html");
 	 	}
 	 	else{
 
-	 		myApp.hidePreloader();
-	 		myApp.alert("Error accepting order, try later");
+	 		hideNylon();
+	 		toast.show("Error accepting order, try later");
 	 	}
 
 	 	
@@ -3212,8 +3235,8 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 	function(xhr, status, error){
 
-		myApp.hidePreloader();
-        myApp.alert("Unable to reach Cydene Express servers, try again later");
+		hideNylon();
+        toast.show("Unable to reach Cydene Express servers, try again later");
 
 	});
 
@@ -3256,7 +3279,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 			function letsDeclinOrder(theTranxSN, theDeclineReason){
 
-				myApp.showPreloader('Declining Order...');	
+				showNylon();	
 				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_decline_order.php", 
 				{
 					"order_sn" : tranxSN,
@@ -3264,16 +3287,16 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 				},
 				 function(data){
 
-				 	myApp.hidePreloader();
+				 	hideNylon();
 				 	if(data == "Decline success"){
 
-				 		myApp.hidePreloader();
+				 		hideNylon();
 				 		mainView.router.reloadPage("sellerbookings.html");
 				 	}
 				 	else{
 
-				 		myApp.hidePreloader();
-				 		myApp.alert("Error declining order, try later");
+				 		hideNylon();
+				 		toast.show("Error declining order, try later");
 				 	}
 					
 					
@@ -3282,8 +3305,8 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 				function(xhr, status, error){
 
-					myApp.hidePreloader();
-			        myApp.alert("Unable to reach Cydene Express servers, try again later");
+					hideNylon();
+			        toast.show("Unable to reach Cydene Express servers, try again later");
 
 				});
 			}
@@ -3330,7 +3353,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 			function letsDeclinSchOrder(theTranxSN, theDeclineReason){
 
-				myApp.showPreloader('Declining Order...');	
+				showNylon();	
 				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_decline_schedule_order.php", 
 				{
 					"order_sn" : tranxSN,
@@ -3338,19 +3361,19 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 				},
 				 function(data){
 
-				 	myApp.hidePreloader();
+				 	hideNylon();
 				 	/*if(data == "Decline success"){
 
-				 		myApp.hidePreloader();
+				 		hideNylon();
 				 		mainView.router.reloadPage("sellerbookings.html");
 				 	}
 				 	else{
 
-				 		myApp.hidePreloader();
-				 		myApp.alert("Error declining order, try later");
+				 		hideNylon();
+				 		toast.show("Error declining order, try later");
 				 	}*/
 
-				 	myApp.alert(data);
+				 	toast.show(data);
 					
 					
 				 	
@@ -3358,8 +3381,8 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 				function(xhr, status, error){
 
-					myApp.hidePreloader();
-			        myApp.alert("Unable to reach Cydene Express servers, try again later");
+					hideNylon();
+			        toast.show("Unable to reach Cydene Express servers, try again later");
 
 				});
 			}
@@ -3374,7 +3397,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 
 	pushSaleDetails = function(theBuyer, tranxID, tranxSN){
-		myApp.showPreloader('Processing...');
+		showNylon();
 
 		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_sale_details.php", 
 		{
@@ -3385,7 +3408,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 		},
 			 function(data){
 
-			 	myApp.hidePreloader();
+			 	hideNylon();
 			 	if(data.pack_status == "correct"){
 
 			 		window.localStorage.setItem("theSaleDetails", JSON.stringify(data));
@@ -3394,7 +3417,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 			 	}
 			 	else{
 
-			 		myApp.alert("Error accepting order, try later");
+			 		toast.show("Error accepting order, try later");
 			 	}
 
 			 	console.log(data);
@@ -3404,8 +3427,8 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 			function(xhr, status, error){
 
-				myApp.hidePreloader();
-		        myApp.alert("Unable to reach Cydene Servers, Try again later");
+				hideNylon();
+		        toast.show("Unable to reach Cydene Servers, Try again later");
 
 			});
 	
@@ -3421,7 +3444,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 
 	pushScheduleSaleDetails = function(theBuyer, tranxSN){
-		myApp.showPreloader('Processing...');
+		showNylon();
 
 		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_schedule_sale_details.php", 
 		{
@@ -3431,7 +3454,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 		},
 			 function(data){
 
-			 	myApp.hidePreloader();
+			 	hideNylon();
 			 	if(data.pack_status == "correct"){
 
 			 		window.localStorage.setItem("theScheduleSaleDetails", JSON.stringify(data));
@@ -3440,7 +3463,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 			 	}
 			 	else{
 
-			 		myApp.alert("Error processing delivery route");
+			 		toast.show("Error processing delivery route");
 			 	}
 
 			 	console.log(data);
@@ -3450,8 +3473,8 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 			function(xhr, status, error){
 
-				myApp.hidePreloader();
-		        myApp.alert("Unable to reach Cydene Servers, Try again later");
+				hideNylon();
+		        toast.show("Unable to reach Cydene Servers, Try again later");
 
 			});
 	
@@ -3466,24 +3489,24 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 	acceptSchOrder = function(tranxSN){
 
-	myApp.showPreloader('Accepting Order...');	
+	showNylon();	
 	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_schedule_order.php", 
 	{
 		"order_sn" : tranxSN
 	},
 	 function(data){
 
-	 	myApp.hidePreloader();
+	 	hideNylon();
 	 	
 	 	if(data == "Accept success"){
 
-	 		myApp.hidePreloader();
+	 		hideNylon();
 	 		mainView.router.reloadPage("sellerbookings.html");
 	 	}
 	 	else{
 
-	 		myApp.hidePreloader();
-	 		myApp.alert("Error accepting order, try later");
+	 		hideNylon();
+	 		toast.show("Error accepting order, try later");
 	 	}
 
 	 	
@@ -3491,8 +3514,8 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 	function(xhr, status, error){
 
-		myApp.hidePreloader();
-        myApp.alert("Cannot reach Cydene Express servers, try again later");
+		hideNylon();
+        toast.show("Cannot reach Cydene Express servers, try again later");
 
 	});
 
@@ -3504,7 +3527,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 orderComplete = function(tranxID){
 
-	myApp.showPreloader('Completing Order...');	
+	showNylon();	
 
 	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
 	{
@@ -3512,22 +3535,22 @@ orderComplete = function(tranxID){
 	},
 	 function(data){
 
-	 	myApp.hidePreloader();
+	 	hideNylon();
 	 	if(data == "update success"){
 
 	 		mainView.router.reloadPage("sellerbookings.html");
 	 	}
 	 	else{
 
-	 		myApp.alert("Error completing order, try later");
+	 		toast.show("Error completing order, try later");
 	 	}
 	 	
 	},
 
 	function(){
 
-		myApp.hidePreloader();
-        myApp.alert("Cannot reach Cydene Express servers, try again later");
+		hideNylon();
+        toast.show("Cannot reach Cydene Express servers, try again later");
 
 	});
 
@@ -3537,7 +3560,7 @@ orderComplete = function(tranxID){
 
 schOrderComplete = (tranxID) => {
 
-	myApp.showPreloader('Completing Order...');	
+	showNylon();	
 
 	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/sellers_schedule_transaction_complete.php", 
 	{
@@ -3545,14 +3568,14 @@ schOrderComplete = (tranxID) => {
 	},
 	 (data) => {
 
-	 	myApp.hidePreloader();
+	 	hideNylon();
 	 	if(data == "update success"){
 
 	 		mainView.router.reloadPage("sellerbookings.html");
 	 	}
 	 	else{
 
-	 		myApp.alert("Error completing order, try later");
+	 		toast.show("Error completing order, try later");
 	 	}
 	 	
 
@@ -3561,8 +3584,8 @@ schOrderComplete = (tranxID) => {
 
 	() => {
 
-		myApp.hidePreloader();
-        myApp.alert("Cannot reach Cydene Express servers, try again later");
+		hideNylon();
+        toast.show("Cannot reach Cydene Express servers, try again later");
 
 	});
 
@@ -3629,7 +3652,7 @@ myApp.onPageInit('customerdeliveryroute', function(page){ //Offers page
 
 	    }
 	    else{
-	    	myApp.alert("Error getting directions from Google, Try again later.");
+	    	toast.show("Error getting directions from Google, Try again later.");
 	    }
 	  });
 
@@ -3700,7 +3723,7 @@ myApp.onPageInit('customerdeliveryrouteschedule', function(page){ //Offers page
 
 	    }
 	    else{
-	    	myApp.alert("Error getting directions from Google, Try again later.");
+	    	toast.show("Error getting directions from Google, Try again later.");
 	    }
 	  });
 
@@ -3794,7 +3817,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 
 	 }, function(){
 
-	 		myApp.alert("Could not connect to Cydene servers");
+	 		toast.show("Could not connect to Cydene servers");
 	 });
 
 
@@ -3810,7 +3833,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 
 	 }, function(){
 
-	 		myApp.alert("Unable to connect to Cydene servers");
+	 		toast.show("Unable to connect to Cydene servers");
 	 });
 
 
@@ -3845,7 +3868,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 						 	
 						 }, function(){
 
-						 		myApp.alert("Unable to connect to Cydene servers");
+						 		toast.show("Unable to connect to Cydene servers");
 						 });
 				}
 			},
@@ -3868,7 +3891,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 						 	
 						 }, function(){
 
-						 		myApp.alert("Unable to connect to Cydene servers");
+						 		toast.show("Unable to connect to Cydene servers");
 						 });
 				}
 			}
@@ -3892,7 +3915,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 				window.localStorage.removeItem("sellerName");
 				
 
-				myApp.hidePreloader();
+				hideNylon();
 				mainView.router.loadPage("theswipe.html");
 		}
 
@@ -3902,7 +3925,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 
 		$$("#logout-app-seller").click(() => {
 
-			myApp.showPreloader('Please wait...');
+			showNylon();
 			window.setTimeout(function(){pushLogoutSeller()}, 5000);
 
 		});
@@ -3978,7 +4001,7 @@ myApp.onPageInit('sellersignup', function(page){ //Sellers Signup
 
 	$$("#submit_new_company_reg_button").click(() => {
 
-		myApp.showPreloader('Processing...');
+		showNylon();
 		var theDeliveryAddress = $$("#searchTextFieldAddr").val();
 
 
@@ -4007,7 +4030,7 @@ myApp.onPageInit('sellersignup', function(page){ //Sellers Signup
 				},
 				 (data) => {
 
-				 		myApp.hidePreloader();
+				 		hideNylon();
 				 		  
 						  if(data == "Registration Successful"){
 							  var theSellerAddress = $$("#searchTextFieldAddr").val();
@@ -4024,13 +4047,13 @@ myApp.onPageInit('sellersignup', function(page){ //Sellers Signup
 
 						else{
 
-							myApp.alert(data);
+							toast.show(data);
 						}
 
 				 }, () => {
 
-				 		myApp.hidePreloader();
-				 		myApp.alert("Unable to connect to Cydene servers");
+				 		hideNylon();
+				 		toast.show("Unable to connect to Cydene servers");
 				 });
 
 
@@ -4038,8 +4061,8 @@ myApp.onPageInit('sellersignup', function(page){ //Sellers Signup
 
 			else{
 
-				myApp.hidePreloader();
-				myApp.alert("Unable to connect to Google. Try again later.");
+				hideNylon();
+				toast.show("Unable to connect to Google. Try again later.");
 			}
 
 		});
@@ -4076,15 +4099,15 @@ myApp.onPageInit('sellersignuppricelist', function(page){ //Sellers Set price li
 
 
 				$$('#price-list').on('form:beforesend', function (e) {
-					  myApp.showPreloader('Saving Price List...');
+					  showNylon();
 				});
 				
 
 				$$('#price-list').on('form:error', function (e) {
 					  
-						myApp.hidePreloader();
+						hideNylon();
 						var xcode = e.detail.data;
-						myApp.alert("Unable to connect to Cydene Servers. Try again later");
+						toast.show("Unable to connect to Cydene Servers. Try again later");
 
 					});
 							
@@ -4093,7 +4116,7 @@ myApp.onPageInit('sellersignuppricelist', function(page){ //Sellers Set price li
 					  var xhr = e.detail.xhr; // actual XHR object
 					 
 					  var data = e.detail.data; // Ajax response from action file
-					  myApp.hidePreloader();
+					  hideNylon();
 					  
 					  if(data == "Update Successful"){
 					  
@@ -4103,7 +4126,7 @@ myApp.onPageInit('sellersignuppricelist', function(page){ //Sellers Set price li
 
 					  else{
 
-					  	myApp.alert("An error occured. Please try again later.");
+					  	toast.show("An error occured. Please try again later.");
 					  }
 					});
 	
@@ -4117,7 +4140,7 @@ myApp.onPageInit('sellersignuppricelist', function(page){ //Sellers Set price li
 
 myApp.onPageInit("updatepricelist", function(page){
 
-	myApp.showPreloader("Fetching prices...");
+	showNylon();
 
 	var userPhone = window.localStorage.getItem("_cydene_user_phone_no");
 	$$("#seller-phone").val(userPhone);
@@ -4130,9 +4153,9 @@ myApp.onPageInit("updatepricelist", function(page){
 		},
 		 function(data){
 		 		console.log(data);
-		 		myApp.hidePreloader();
+		 		hideNylon();
 		 		if(data == "No Pricelist found!"){
-		 			myApp.alert(data);
+		 			toast.show(data);
 		 		}
 		 		else{
 		 			
@@ -4153,8 +4176,8 @@ myApp.onPageInit("updatepricelist", function(page){
 		 	
 		 }, function(){
 
-		 		myApp.hidePreloader();
-		 		myApp.alert("Unable to connect to Cydene servers");
+		 		hideNylon();
+		 		toast.show("Unable to connect to Cydene servers");
 		 });
 
 
@@ -4168,15 +4191,15 @@ myApp.onPageInit("updatepricelist", function(page){
 
 
 				$$('#price-list-update').on('form:beforesend', function (e) {
-					  myApp.showPreloader('Updating Price List...');
+					  showNylon();
 				});
 				
 
 				$$('#price-list-update').on('form:error', function (e) {
 					  
-						myApp.hidePreloader();
+						hideNylon();
 						var xcode = e.detail.data;
-						myApp.alert("Unable to connect to Cydene Servers. Try again later");
+						toast.show("Unable to connect to Cydene Servers. Try again later");
 
 					});
 							
@@ -4185,7 +4208,7 @@ myApp.onPageInit("updatepricelist", function(page){
 					  var xhr = e.detail.xhr; // actual XHR object
 					 
 					  var data = e.detail.data; // Ajax response from action file
-					  myApp.hidePreloader();
+					  hideNylon();
 					  
 					  if(data == "Update Successful"){
 					  
@@ -4195,7 +4218,7 @@ myApp.onPageInit("updatepricelist", function(page){
 
 					  else{
 
-					  	myApp.alert(data);
+					  	toast.show(data);
 					  }
 					});
 	
@@ -4230,7 +4253,7 @@ myApp.onPageInit("selleraddbankaccount", function(page){
 
         $$("#submit-add-bank-account").on("click", function(){
 
-        	myApp.showPreloader("Loading...");
+        	showNylon();
 
         	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_add_bank_account.php",
 				{
@@ -4245,18 +4268,18 @@ myApp.onPageInit("selleraddbankaccount", function(page){
 
 				 	if(data == "Successful"){
 
-				 		myApp.hidePreloader();
+				 		hideNylon();
 				 		mainView.router.loadPage("sellerdashboard.html");
 				 	}
 				 	else{
 
-				 		myApp.hidePreloader();
-				 		myApp.alert("An error occured, try again later.");
+				 		hideNylon();
+				 		toast.show("An error occured, try again later.");
 				 	}
 
 				 }, function(){
 
-				 		myApp.alert("Unable to connect to Cydene servers");
+				 		toast.show("Unable to connect to Cydene servers");
 				 });
         });
   
@@ -4284,12 +4307,12 @@ myApp.onPageInit('paymentmethods', function(page){ //Payment Methods Page
 
 	 }, function(){
 
-	 		myApp.alert("Unable to connect to Cydene servers");
+	 		toast.show("Unable to connect to Cydene servers");
 	 });
 
 
 	deleteCardForever = function(cardSN){
-		myApp.showPreloader("Deleting Card...");
+		showNylon();
 		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/delete_card.php",
 			{
 				"user_phone_data" : users_phone_data,
@@ -4299,21 +4322,21 @@ myApp.onPageInit('paymentmethods', function(page){ //Payment Methods Page
 
 			 	if(data == "delete success"){
 
-			 		myApp.hidePreloader();
+			 		hideNylon();
 			 		mainView.router.reloadPage("paymentmethods.html");
 
 			 	}
 			 	else{
 
-			 		myApp.hidePreloader();
-			 		myApp.alert(data);
+			 		hideNylon();
+			 		toast.show(data);
 			 	}
 			 	
 
 			 }, function(){
 			 	
-			 		myApp.hidePreloader();
-			 		myApp.alert("Unable to connect to Cydene servers");
+			 		hideNylon();
+			 		toast.show("Unable to connect to Cydene servers");
 			 });
 
 	}
@@ -4364,7 +4387,7 @@ myApp.onPageInit('cardpayment', function(page){ //Card Payment Page
 
 		$$("#continue-2-paystack-btn").on("click", function(){
 
-			myApp.showPreloader("Procesing...");
+			showNylon();
 
 					 		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/card_transaction_recorder.php", 
 
@@ -4399,7 +4422,7 @@ myApp.onPageInit('cardpayment', function(page){ //Card Payment Page
 										},
 										 function(data){
 
-										 	myApp.hidePreloader();
+										 	hideNylon();
 										 	console.log(data);
 										 	var parsedData = JSON.parse(data);
 										 	var authUrl = parsedData.data.authorization_url;
@@ -4410,22 +4433,22 @@ myApp.onPageInit('cardpayment', function(page){ //Card Payment Page
 
 										 }, function(){
 
-										 		myApp.alert("Unable to connect to Cydene servers");
+										 		toast.show("Unable to connect to Cydene servers");
 										 });
 
 								}
 								else{
 
-									myApp.hidePreloader();
-									myApp.alert("Error creating a transaction. Try again later.");
+									hideNylon();
+									toast.show("Error creating a transaction. Try again later.");
 
 								}
 
 							},
 							function(){
 
-								myApp.hidePreloader();
-								myApp.alert("Unable to connect to Cydene Servers. Try again later");
+								hideNylon();
+								toast.show("Unable to connect to Cydene Servers. Try again later");
 							});
 
 
@@ -4518,7 +4541,7 @@ $$("#the-rate").val("1");
 
 	$$("#send-rating").click(() => {
 
-		myApp.showPreloader("Sending...");
+		showNylon();
 		
 		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/rate_seller.php",
 				{
@@ -4528,7 +4551,7 @@ $$("#the-rate").val("1");
 				},
 				 function(data){
 
-				 	myApp.hidePreloader();
+				 	hideNylon();
 				 	mainView.router.loadPage("dashboard.html");
 
 				 }, function(){
