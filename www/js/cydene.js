@@ -40,7 +40,7 @@ function hideNylon(){
 
 
 
-var exitMyApp, getImg4rmGallery, loginWithFB, driveCard, fireUpPayments, fireUpPayments2, clearStatusBar;
+var exitMyApp, getImg4rmGallery, fireUpPayments, fireUpPayments2, checkForLocation;
 
 document.addEventListener("deviceready", deviceIsReady, false);
 
@@ -48,28 +48,56 @@ document.addEventListener("deviceready", deviceIsReady, false);
 function deviceIsReady(){
 
 
-var thispage = mainView.activePage;
-var ourPage = thispage.name;
 
-
-
-	StatusBar.backgroundColorByHexString("#069");
-	
-
-
-
-
+StatusBar.backgroundColorByHexString("#069");
 window.plugins.PushbotsPlugin.initialize("5b0526d91db2dc33d672ae6d", {"android":{"sender_id":"118378131628"}});
-
 window.open = cordova.InAppBrowser.open;
 
 
 
 
-var cpage = mainView.activePage;
-var cpageName = cpage.name;
-
 	
+
+
+function reqLocationAuth(){
+
+	cordova.plugins.diagnostic.isLocationAuthorized(function (authorized) {
+            if(!authorized){
+                cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
+                    
+                    //Nothing is done, Location is expected to be switched on - Android
+
+                }, onReqError, cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
+            }else{
+                onError("App is already authorized to use location");
+            }
+        }, onError);
+}
+
+
+
+function evaluateMode(mode){
+        
+        if(mode.toUpperCase() == "LOCATION_OFF"){
+
+        	reqLocationAuth();
+        }
+    }
+
+
+checkForLocation = function(){
+	cordova.plugins.diagnostic.getLocationMode(evaluateMode, onError);
+}
+
+function onError(){
+	toast.show("Unable to check for Location status");
+}
+
+
+function onReqError(){
+
+	toast.show("No access to device GPS location");
+}
 
 
 
@@ -619,15 +647,52 @@ myApp.onPageInit('getStarted', function(page){
 		//calling api
 		facebookConnectPlugin.api("/me?fields=email,name,picture", ["public_profile","email"], function(userData){
 
-			
-				window.localStorage.setItem("facebook_return", JSON.stringify(userData));
-				setTimeout(function(){
-					registerFBUser();
-				}, 3000);
+			console.log(JSON.stringify(userData));
+			theUserData = JSON.stringify(userData);
 
+			showNylon();
+					
+					var signupEmail = theUserData.email;
+					var signUpName = theUserData.name;
+					var splitName = signUpName.split(" ");
+
+
+					signupFirstName = splitName[0];
+					signupLastName = splitName[1];
+
+					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/buyer_registration.php",{
+
+						new_user_first_name : signupFirstName,
+						new_user_last_name : signupLastName,
+						new_user_mail : signupEmail,
+						new_user_phone : window.localStorage.getItem("_cydene_user_phone_no")
+					},
+					function(data){
+
+						hideNylon();
+						if(data == "Registration Successful"){
+
+							window.localStorage.setItem("buyerFN", signupFirstName);
+							window.localStorage.setItem("buyerLN", signupLastName);
+							window.localStorage.setItem("buyerMail", signupEmail);
+							mainView.router.loadPage("setexecpin.html");
+						}
+						else{
+
+							hideNylon();
+							toast.show(data);
+						}
+
+					},
+					function(error){
+
+						hideNylon();
+						toast.show("Unable to connect to Cydene Servers. Try again later.");
+					});
+				
 		}, function(error){
 
-			//error callback
+			hideNylon();
 			toast.show(JSON.stringify(error));
 		});
 
@@ -636,6 +701,7 @@ myApp.onPageInit('getStarted', function(page){
 
 	function(error){
 
+		hideNylon();
 		toast.show(JSON.stringify(userData));
 
 	});
@@ -648,62 +714,15 @@ myApp.onPageInit('getStarted', function(page){
 
 
 
-	function registerFBUser(){
 
-		showNylon();
-		var userData = window.localStorage.getItem("facebook_return");
-		userData = JSON.parse(userData);
-
-		//success callback
-			var stringifyData = JSON.stringify(userData);
-			var signupEmail = stringifyData.email;
-			var signUpName = stringifyData.name;
-			var splitName = signUpName.split(" ");
-
-
-			signupFirstName = splitName[0];
-			signupLastName = splitName[1];
-
-
-
-
-			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/buyer_registration.php",{
-
-				new_user_first_name : signupFirstName,
-				new_user_last_name : signupLastName,
-				new_user_mail : signupEmail,
-				new_user_phone : window.localStorage.getItem("_cydene_user_phone_no")
-			},
-			function(data){
-
-				hideNylon();
-				if(data == "Registration Successful"){
-
-					window.localStorage.setItem("buyerFN", signupFirstName);
-					window.localStorage.setItem("buyerLN", signupLastName);
-					window.localStorage.setItem("buyerMail", signupEmail);
-					mainView.router.loadPage("setexecpin.html");
-				}
-				else{
-
-					toast.show(data);
-				}
-
-			},
-			function(error){
-
-				toast.show("Unable to connect to Cydene Servers. Try again later.");
-			});
-
-	}
-
-
-
-
-	$$("#fb-signup").on("click", function(){
+	$$(".fb-signup").on("click", function(){
 
 		fbLogin();
-	})
+		
+		
+		});
+
+
 
 			var newUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
 			$$("#new_user_phone").val(newUserPhone);
@@ -750,7 +769,8 @@ myApp.onPageInit('getStarted', function(page){
 					}
 
 					else{
-
+						
+						hideNylon();
 						toast.show(data);
 					}
 
@@ -867,7 +887,9 @@ myApp.onPageInit('dashboard', function(page){
 
 
 
-	$$('.hide-me').hide();
+	checkForLocation();
+
+
 
 var cydeneUsersPhone = window.localStorage.getItem("_cydene_user_phone_no");
 $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
@@ -932,55 +954,6 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 
 	
 
-	
-
-
-
-				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/verify_delivery_address.php",
-						 {
-
-							cydene_users_phone : cydeneUsersPhone
-						},
-						function(data, status, xhr){
-							
-							if(data === "No delivery address"){
-
-								myApp.modal({
-									
-									title : "Cydene Express",
-									text : "No delivery address found. Would you like to set one now?",
-									buttons : [
-
-										{
-											text : "<span class='color-orange'>Not Now</span>",
-											bold : true,
-											onClick : function(){
-
-												exitMyApp();
-											}
-										},
-										{
-											text : "<span class='color-indigo'>Let's Go</span>",
-											bold : true,
-											onClick : function(){
-												mainView.router.loadPage("mapexp.html");
-											}
-
-										}
-									]
-								});
-							}
-
-
-						}
-						, function(xhr, status){
-						
-							hideNylon();
-							toast.show("Cannot connect to Cydene Servers");
-
-						});
-
-		
 
 
 
@@ -989,49 +962,64 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 		$$("#fivekggas").on("click", function(){
 
 			showNylon();
-			loadMyAddresses("5kg");
+			storeBuyDetails("5kg");
 
 		});
 
 		$$("#threekggas").on("click", function(){
 
 			showNylon();
-			loadMyAddresses("3kg");
+			storeBuyDetails("3kg");
 
 		});
 		$$("#sixkggas").on("click", function(){
 
 			showNylon();
-			loadMyAddresses("6kg");
+			storeBuyDetails("6kg");
 
 		});
 
 		$$("#twelvepointfivekggas").on("click", function(){
 
 			showNylon();
-			loadMyAddresses("12.5kg");
+			storeBuyDetails("12.5kg");
 
 		});
 
 		$$("#twentyfivekggas").on("click", function(){
 
 			showNylon();
-			loadMyAddresses("25kg");
+			storeBuyDetails("25kg");
 
 		});
 
 		$$("#fiftykggas").on("click", function(){
 
 			showNylon();
-			loadMyAddresses("50kg");
+			storeBuyDetails("50kg");
 
 		});
 
 
 
+		function storeBuyDetails(cylinderSize){
+
+			var uniqPurchase = {
+
+						"gasSize" : cylinderSize,
+						"gasQty" : 5
+			}
 
 
-		function loadMyAddresses(cylinderSize){
+			window.localStorage.setItem("uniqPurchase", JSON.stringify(uniqPurchase));
+			hideNylon();
+			mainView.router.loadPage("sellers.html");
+
+		}
+
+
+
+/*		function loadMyAddresses(cylinderSize){
 		
 		//populate buyers addresses
 		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/address_fetcher_2.php", 
@@ -1067,12 +1055,14 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 
 		});
 
-	}
+	}*/
 
 
 
 
-		function addressPicker(gasCylinderSize){
+		
+
+		/*function addressPicker(gasCylinderSize){
 			showNylon();
 
 		
@@ -1099,7 +1089,7 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 
 		}
 
-
+*/
 
 
 
@@ -1325,127 +1315,243 @@ var buyFromThisSeller, getBuyQty;
 
 	var selectedPurchases = JSON.parse(window.localStorage.getItem("uniqPurchase"));
 	var postedCylinderSize = selectedPurchases.gasSize;
-	var theBuyerDeliveryAddress = selectedPurchases.delivery_address;
-	showNylon();
+	
+	
 
 
-	var arrangeMyLat = [];
+
+
+
+
+								var Latitude = undefined;
+								var Longitude = undefined;
+								var marker, map;
+								var service = new google.maps.DistanceMatrixService();
+								var myPosition = [];
+								var distanceLists = [];
+								
+
+								// Get geo coordinates
+
+								function getMapLocation() {
+
+								    navigator.geolocation.getCurrentPosition
+								    (onMapSuccess, onMapError, { enableHighAccuracy: true });
+								}
+
+								// Success callback for get geo coordinates
+
+								var onMapSuccess = function (position) {
+
+								    Latitude = position.coords.latitude;
+								    Longitude = position.coords.longitude;
+
+								    myPosition.push(Latitude, Longitude);
+
+								    getMap(Latitude, Longitude);
+									watchMapPosition();
+									pushMap();
+
+								}
+
+								// Get map by using coordinates
+
+								function getMap(latitude, longitude) {
+
+								    var mapOptions = {
+								        center: new google.maps.LatLng(0, 0),
+								        zoom: 15,
+								        mapTypeId: google.maps.MapTypeId.ROADMAP
+								    };
+
+								    map = new google.maps.Map
+								    (document.getElementById("sellers-map"), mapOptions);
+								    var latLong = new google.maps.LatLng(latitude, longitude);
+								    marker = new google.maps.Marker({
+								        position: latLong,
+								        animation: google.maps.Animation.DROP,
+								        map: map
+								        
+								    });
+								    map.setCenter(marker.getPosition());
+
+								    
+								}
+
+								// Success callback for watching your changing position
+
+								var onMapWatchSuccess = function (position) {
+
+								    var updatedLatitude = position.coords.latitude;
+								    var updatedLongitude = position.coords.longitude;
+
+								    if (updatedLatitude != Latitude && updatedLongitude != Longitude) {
+
+								        Latitude = updatedLatitude;
+								        Longitude = updatedLongitude;
+
+								        var newLatLng = new google.maps.LatLng(updatedLatitude, updatedLongitude);
+								        marker.setPosition(newLatLng);
+								    }
+								}
+
+								// Error callback
+
+								function onMapError(error) {
+								   /* alert('code: ' + error.code + '\n' +
+								        'message: ' + error.message + '\n');*/
+
+
+								        toast.show("Unable to get GPS coordinates");
+
+								}
+
+								// Watch your changing position
+
+								function watchMapPosition(){
+
+								    return navigator.geolocation.watchPosition
+								    (onMapWatchSuccess, onMapError, { enableHighAccuracy: true, timeout: 3000 });
+								}
+
+								
+
+
+
+
+
+
+
+
+
+	
 						
 					function pushMap(){
 
-					hideNylon();
-					toast.show("Pick a supplier from the map");
-					var locations = JSON.parse(window.localStorage.getItem("returnJson"));
+							
+							toast.show("Pick a supplier from the map");
+							var locations = JSON.parse(window.localStorage.getItem("returnJson"));
 
-					  var themArray = [];
-					  for(var x in locations){
-							themArray.push(locations[x]);
+							  var themArray = [];
+							  for(var x in locations){
+									themArray.push(locations[x]);
+							}
 
-					  }
+							  console.log(themArray);
 
-					  console.log(themArray);
+							  var infowindow = new google.maps.InfoWindow();				    	
+						      var image = {
+						    	url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png",
+						    	scaledSize: new google.maps.Size(15, 30)
+						    }
+						    
+						   
+						     var marker, i;
 
-					  var infowindow = new google.maps.InfoWindow();
+						    for (i = 0; i < themArray.length; i++){  
 
-					var mapOptions = {
-				        center: new google.maps.LatLng(6.5244, 3.3792),
-				        zoom: 10,
-				        mapTypeId: google.maps.MapTypeId.ROADMAP
-				    	};
+								    marker = new google.maps.Marker({
+								        position : new google.maps.LatLng(themArray[i][1], themArray[i][2]),
+								        map: map,
+								        icon : image
+								    });
 
-				    map = new google.maps.Map(document.getElementById("sellers-map"), mapOptions);
-
-
-
-					
-				    	
-				    var image = {
-				    	url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png",
-				    	scaledSize: new google.maps.Size(15, 50)
-				    }
+								   google.maps.event.addListener(marker, 'click', (function(marker, i) {
+								        return function() {
+								          infowindow.setContent(themArray[i][0]);
+								          infowindow.open(map, marker);
+								        }
+								      })(marker, i));
 
 
-				    var homeImage = {
-				    	url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/home_4.png",
-				    	scaledSize: new google.maps.Size(30, 50)
-				    }
+								   var sellersAddress = new google.maps.LatLng(themArray[i][1], themArray[i][2]);
+								   var myAddress = new google.maps.LatLng(myPosition[0], myPosition[1]);
 
-				    
-				   
+								   service.getDistanceMatrix(
+									  {
+									    origins: [sellersAddress],
+									    destinations: [myAddress],
+									    travelMode: 'DRIVING',
+									    avoidHighways: false,
+									    avoidTolls: false,
+									  }, callback);
 
-				   var jason = new google.maps.Marker({
-						        position : new google.maps.LatLng(arrangeMyLat[0], arrangeMyLat[1]),
-						        map: map,
-						        icon : homeImage
-						        
-					      });
 
-				   jason.addListener('click', function(){
+								   function callback(response, status) {
+										if (status == 'OK') {
+									    var origins = response.originAddresses;
+									    var destinations = response.destinationAddresses;
 
-			   			infowindow.setContent("<div class='text-center'>My Delivery Address<br>" + arrangeMyLat[2] + "</div>");
-					    infowindow.open(map, jason);
+									    for (var i = 0; i < origins.length; i++) {
 
-				   })
+									      var results = response.rows[i].elements;
+									      for (var j = 0; j < results.length; j++) {
+									        var element = results[j];
+									        var distance = element.distance.text;
 
-				   
-				     
-				     var marker, i;
+									        var splitDistance = distance.split(" ");
+									        var clearDistance = splitDistance[0];
+									        
+									        /*var duration = element.duration.text;*/
+									        var from = origins[i];
+									        var to = destinations[j];
 
-				    for (i = 0; i < themArray.length; i++) {  
+												distanceLists.push(clearDistance);
+									    	}
+									    }
 
-						    marker = new google.maps.Marker({
-						        position : new google.maps.LatLng(themArray[i][1], themArray[i][2]),
-						        map: map,
-						        icon : image
-						        
-					      });
 
-						   google.maps.event.addListener(marker, 'click', (function(marker, i) {
-						        return function() {
-						          infowindow.setContent(themArray[i][0]);
-						          infowindow.open(map, marker);
-						        }
-						      })(marker, i));
+									  }
+									  else{
+									  		
+									  		toast.show("Sorry, i'm having issues talking to Google Maps. Network Error");
+									  }
+									}
+
+
+								} //End of for
+
+
+
+
+								window.setTimeout(function(){findMySupplier();}, 1000);
+
+
+						} //End of function
+
+
+
+
+
+						findMySupplier = function(){
+								var sortDistanceList = distanceLists.sort();
+
+								console.log(sortDistanceList);
+
+								var firstDistance = sortDistanceList[0];
+								firstDistance = parseInt(firstDistance);
+								if(firstDistance < 2000){
+
+										myApp.pickerModal('.picker-info')
+								}
 
 						}
 
 
-
-
-					}
-
-
-
-
-		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php", {"posted_cylinder_size" : postedCylinderSize}, function(data){
-
-			window.localStorage.setItem("returnJson", JSON.stringify(data));
-			//Get address details from addressname
-				$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/get_address_details_from_name.php", 
-				{
-					"the_address_name" : theBuyerDeliveryAddress,
-					"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
-				},
-					function(data){
 						
-						
-						for(vv in data){
-
-							arrangeMyLat.push(data[vv]);
-						}
-						console.log(arrangeMyLat);
-						window.setTimeout(function(){ pushMap(); }, 2000);
-						
-
-					}, function(){
-						toast.show("Unable to fetch your address geocode");
-				});
-
-
+		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php", 
+			{
+				"posted_cylinder_size" : postedCylinderSize
+			},
+		 function(data){
+				
+				window.localStorage.setItem("returnJson", JSON.stringify(data));
+				getMapLocation();
+				
 
 		}, function(){
-
-				toast.show("Error occured, try again later");
+				hideNylon();
+				toast.show("Unable to get suppliers near you");
 		});
 						
 					
@@ -1514,7 +1620,7 @@ window.localStorage.removeItem("coupon_details");
 	});
 
 
-/**********************Sellers*****************/
+/**********************Sellers****************
 
 
 
