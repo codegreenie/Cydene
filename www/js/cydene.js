@@ -40,7 +40,7 @@ function hideNylon(){
 
 
 
-var exitMyApp, getImg4rmGallery, fireUpPayments, fireUpPayments2, checkForLocation;
+var exitMyApp, getImg4rmGallery, fireUpPayments, fireUpPayments2;
 
 document.addEventListener("deviceready", deviceIsReady, false);
 
@@ -49,8 +49,9 @@ function deviceIsReady(){
 
 
 
+
 StatusBar.backgroundColorByHexString("#069");
-window.plugins.PushbotsPlugin.initialize("5b0526d91db2dc33d672ae6d", {"android":{"sender_id":"118378131628"}});
+//window.plugins.PushbotsPlugin.initialize("5b0526d91db2dc33d672ae6d", {"android":{"sender_id":"118378131628"}});
 window.open = cordova.InAppBrowser.open;
 
 
@@ -82,11 +83,13 @@ function evaluateMode(mode){
 
         	reqLocationAuth();
         }
-    }
+ }
 
 
-checkForLocation = function(){
+function checkForLocation(){
+
 	cordova.plugins.diagnostic.getLocationMode(evaluateMode, onError);
+	
 }
 
 function onError(){
@@ -100,6 +103,7 @@ function onReqError(){
 }
 
 
+window.setTimeout(function(){checkForLocation();}, 2000);
 
 
 	
@@ -873,7 +877,11 @@ myApp.onPageInit('setexecpin', function(page){
 
 
 
+/*myApp.onPageAfterAnimation('dashboard', function(page){
 
+	checkForLocation();
+
+});*/
 
 
 
@@ -887,7 +895,7 @@ myApp.onPageInit('dashboard', function(page){
 
 
 
-	checkForLocation();
+
 
 
 
