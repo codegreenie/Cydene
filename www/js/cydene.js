@@ -51,7 +51,7 @@ function deviceIsReady(){
 
 
 StatusBar.backgroundColorByHexString("#069");
-//window.plugins.PushbotsPlugin.initialize("5b0526d91db2dc33d672ae6d", {"android":{"sender_id":"118378131628"}});
+window.plugins.PushbotsPlugin.initialize("5b0526d91db2dc33d672ae6d", {"android":{"sender_id":"118378131628"}});
 window.open = cordova.InAppBrowser.open;
 
 
@@ -79,10 +79,11 @@ function reqLocationAuth(){
 
 function evaluateMode(mode){
         
-        if(mode.toUpperCase() == "LOCATION_OFF"){
+        //if(mode.toUpperCase() == "LOCATION_OFF"){
+
 
         	reqLocationAuth();
-        }
+        //}
  }
 
 
@@ -104,6 +105,7 @@ function onReqError(){
 
 
 window.setTimeout(function(){checkForLocation();}, 2000);
+
 
 
 	
