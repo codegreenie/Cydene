@@ -14,6 +14,11 @@
     <preference name="android-build-tool" value="gradle" />
     <preference name="phonegap-version" value="cli-7.1.0" />
     <preference name="StatusBarBackgroundColor" value="#069" />
+    <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="SplashScreenDelay" value="10000" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
+    <preference name="FadeSplashScreen" value="true" />
+    <preference name="FadeSplashScreenDuration" value="1.0" />
     <platform name="android">
         <icon src="icon.png" />
         <resource-file src="locales/android/drawable-mdpi/ic_pushbots_licon.png" target="res/drawable-mdpi/ic_pushbots_licon.png" />
