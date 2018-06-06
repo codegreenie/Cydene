@@ -21,7 +21,7 @@
         <resource-file src="locales/android/drawable-xhdpi/ic_pushbots_licon.png" target="res/drawable-xhdpi/ic_pushbots_licon.png" />
         <resource-file src="locales/android/drawable-xxhdpi/ic_pushbots_licon.png" target="res/drawable-xxhdpi/ic_pushbots_licon.png" />
         <resource-file src="locales/android/drawable-xxxhdpi/ic_pushbots_licon.png" target="res/drawable-xxxhdpi/ic_pushbots_licon.png" />
-        <splash density="land-ldpi" src="www/res/screen/android/drawable-land-ldpi-screen.png" />
+        <splash density="land-ldpi" src="www/res/screen/android/drawable-land-ldpi-screen.jpg" />
         <splash density="land-mdpi" src="www/res/screen/android/drawable-land-mdpi-screen.png" />
         <splash density="land-hdpi" src="www/res/screen/android/drawable-land-hdpi-screen.png" />
         <splash density="land-xhdpi" src="www/res/screen/android/drawable-land-xhdpi-screen.png" />
