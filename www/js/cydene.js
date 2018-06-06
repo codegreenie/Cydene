@@ -1952,6 +1952,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 				
 				$$("#modify-delivery-date").val(data);
 
+
 			},function(){
 
 				toast.show("Unable to connect to Cydene servers");
@@ -1999,7 +2000,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 
 					function(data){
 						hideNylon();
-					/*if(data == "Successful"){
+					if(data == "Successful"){
 							
 							hideNylon();
 							mainView.router.loadPage("orderhistory.html");
@@ -2010,9 +2011,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 
 							hideNylon();
 							toast.show("Could not place order try again later.");
-						}*/
-
-						myApp.alert(data);
+						}
 
 					}, function(){
 						hideNylon();
@@ -2023,6 +2022,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 
 				else if(paymentMethod == "Wallet"){
 
+						window.localStorage.setItem("date_of_delivery", $$("#modify-delivery-date").val());
 						hideNylon();
 						mainView.router.loadPage("pinexec.html");
 					
@@ -2031,6 +2031,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 				else{
 					
 					hideNylon();
+					window.localStorage.setItem("date_of_delivery", $$("#modify-delivery-date").val());
 					window.localStorage.setItem("tnx_delivery_address", deliver2Address);
 					mainView.router.loadPage("cardpayment.html");
 				}
@@ -2088,6 +2089,7 @@ myApp.onPageInit('pinexec', function(page){
 		var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
 		var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
 		var parsedCouponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
+		var deliveryDate = window.localStorage.getItem("delivery_date");
 		
 				
 		if(window.localStorage.getItem("discounted_price")){
@@ -2144,8 +2146,9 @@ myApp.onPageInit('pinexec', function(page){
 								"tnx_buyer" : window.localStorage.getItem("_cydene_user_phone_no"),
 								"tnx_seller" : splitSellerDetails.seller_details_id,
 								"tnx_payment_method" : "Wallet",
-								"tnx_delivery_address" : window.localStorage.getItem("tnx_delivery_address"),
-								"tnx_coupon_sn" : parsedCouponSN
+								"tnx_delivery_address" : splitBuyDetails.delivery_address,
+								"tnx_coupon_sn" : parsedCouponSN,
+								"tnx_delivery_date" : deliveryDate
 								
 							}, 
 
