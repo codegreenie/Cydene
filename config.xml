@@ -27,7 +27,7 @@
         <splash density="land-xhdpi" src="www/res/screen/android/drawable-land-xhdpi-screen.png" />
         <splash density="land-xxhdpi" src="www/res/screen/android/drawable-land-xxhdpi-screen.png" />
         <splash density="land-xxxhdpi" src="www/res/screen/android/drawable-land-xxxhdpi-screen.png" />
-        <splash density="port-ldpi" src="www/res/screen/android/drawable-port-ldpi-screen.png" />
+        <splash density="port-ldpi" src="www/res/screen/android/drawable-port-ldpi-screen.jpeg" />
         <splash density="port-mdpi" src="www/res/screen/android/drawable-port-mdpi-screen.png" />
         <splash density="port-hdpi" src="www/res/screen/android/drawable-port-hdpi-screen.png" />
         <splash density="port-xhdpi" src="www/res/screen/android/drawable-port-xhdpi-screen.png" />
