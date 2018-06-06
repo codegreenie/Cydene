@@ -44,6 +44,7 @@ body{
 	z-index: 15000;
 }
 
+
 .popover{
 	width:200px;
 }
@@ -136,4 +137,5 @@ body{
 .color-orange {
     color: #EF7F1A;
 }
+
 /******Override theme colors to Cydene's****/
