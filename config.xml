@@ -21,13 +21,13 @@
         <resource-file src="locales/android/drawable-xhdpi/ic_pushbots_licon.png" target="res/drawable-xhdpi/ic_pushbots_licon.png" />
         <resource-file src="locales/android/drawable-xxhdpi/ic_pushbots_licon.png" target="res/drawable-xxhdpi/ic_pushbots_licon.png" />
         <resource-file src="locales/android/drawable-xxxhdpi/ic_pushbots_licon.png" target="res/drawable-xxxhdpi/ic_pushbots_licon.png" />
-        <splash density="land-ldpi" src="www/res/screen/android/drawable-land-ldpi-screen.jpeg" />
+        <splash density="land-ldpi" src="www/res/screen/android/drawable-land-ldpi-screen.png" />
         <splash density="land-mdpi" src="www/res/screen/android/drawable-land-mdpi-screen.png" />
         <splash density="land-hdpi" src="www/res/screen/android/drawable-land-hdpi-screen.png" />
         <splash density="land-xhdpi" src="www/res/screen/android/drawable-land-xhdpi-screen.png" />
         <splash density="land-xxhdpi" src="www/res/screen/android/drawable-land-xxhdpi-screen.png" />
         <splash density="land-xxxhdpi" src="www/res/screen/android/drawable-land-xxxhdpi-screen.png" />
-        <splash density="port-ldpi" src="www/res/screen/android/drawable-port-ldpi-screen.jpg" />
+        <splash density="port-ldpi" src="www/res/screen/android/drawable-port-ldpi-screen.png" />
         <splash density="port-mdpi" src="www/res/screen/android/drawable-port-mdpi-screen.png" />
         <splash density="port-hdpi" src="www/res/screen/android/drawable-port-hdpi-screen.png" />
         <splash density="port-xhdpi" src="www/res/screen/android/drawable-port-xhdpi-screen.png" />
