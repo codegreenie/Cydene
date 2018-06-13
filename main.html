@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' tmlng.com"> -->
+      <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <meta name="theme-color" content="#3f51b5">
+        <meta name="charset" content="utf-8">
+    <title>Cydene</title>
+    <link rel="stylesheet" href="css/framework7.material.css">
+    <link rel="stylesheet" href="css/framework7.material.colors.css">
+    <link rel="stylesheet" href="css/material-icons.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/lion.css">
+    <link rel="shortcut icon" href="../icon.png">
+
+
+
+
+
+
+
+
+
+   
+   
+  </head>
+
+  <body>
+
+
+   
+
+
+
+
+
+    <div class="panel-overlay"></div>
+
+
+     <div class="views ironic">
+
+   
+      <div class="view view-main">
+
+        <div class="pages navbar-fixed">
+
+          <div data-page="begin" class="page bg-indigo">
+
+            <img src="docs/imgs/temp_splash.png" style="height: 100%; width: 100%; z-index: 3000;">
+
+            <div class="page-content">
+
+              
+                
+           
+ 
+
+            </div><!--Page Content-->
+
+         
+           
+
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+
+ 
+
+
+
+
+
+<script src="js/framework7.min.js"></script>
+<script src="cordova.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxndGy_f_DYdV6BI6s_Eo4y6Vnt4eWQpM&libraries=places" async></script>
+<script src="js/toast.js"></script>
+<script src="js/cydene.js"></script>
+<script>
+ 
+  //check for reg or login status via window localStorage
+        if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("buyerFN") && window.localStorage.getItem("buyerLN") && window.localStorage.getItem("buyerMail")){
+
+            mainView.router.loadPage("dashboard.html");
+            console.log("Buyers Dashboard");
+        }
+
+      else if(window.localStorage.getItem("_cydene_user_phone_no") && window.localStorage.getItem("sellerName") && window.localStorage.getItem("sellerMail") && window.localStorage.getItem("sellerAddress")){
+
+            mainView.router.loadPage("sellerdashboard.html");
+            console.log("Sellers Dashboard");
+        }
+
+        else{
+
+          mainView.router.loadPage("theswipe.html");
+          console.log("No Registration");
+        }
+      
+</script>
+</body>
+</html>

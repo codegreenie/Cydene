@@ -1,0 +1,261 @@
+<div data-page="sellerdetails" class="page">
+
+
+ <div style="width: 100%; height: 100%; opacity: 0.7; position: absolute; background-color:#2f2f2f; z-index: 3000;" class="nylon"></div>
+            <div style="width: 100%; height: 100%; position: absolute; z-index: 4000; color: #fff;" class="nylon">
+                    <img src="docs/imgs/eli.gif" style="max-width: 70px; margin:60% auto 0; display: block;">
+            </div>
+
+
+
+ <div class="navbar theme-indigo">
+    <div class="navbar-inner">
+      <div class="left"><a href="#" class="back link icon-only"><i class="icon icon-back"></i></a></div>
+      <div class="center populate-sellers-name"></div>
+      <div class="right">&nbsp;</div>
+      
+</div></div>
+	
+
+
+
+
+  
+
+
+	<div class="page-content">
+
+
+
+   
+      <form action="http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/xxx.php" class="ajax-submit" method="post">
+
+      <div class='card'>
+        <div class='card-content'>
+                <div class='card-content-inner text-center'>
+                  <img class="populate-sellers-logo" style='max-width:100px;'>
+                  <h3 class="ratings-container"></h3>
+                  <h3 class="populate-sellers-address"></h3>
+                  
+                </div>
+            </div>
+            
+            
+          </div> 
+
+
+
+
+
+          <div class="content-block-title color-orange"><span>Order Details:</span></div>
+          
+            <div class="list-block">
+            <ul>
+              <li class="item-content">
+              
+                <div class="item-media"><i style="color:#b4a7a7;" class="fa fa-th-large"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Cylinder Size</div>
+                  <div class="item-after quote-size"></div>
+                </div>
+             
+              </li>
+
+
+              <li class="item-content" id="update-qty">
+              
+                <div class="item-media"><i style="color:#b4a7a7;" class="material-icons">layers</i></div>
+                <div class="item-inner">
+                  <input type="hidden" name="" id="seller-qty-update">
+                  <div class="item-title">Quantity</div>
+                  <div class="item-after quote-qty" id="quote-qty"></div>
+                </div>
+             
+              </li>
+
+
+
+
+
+              <li class="item-content">
+              
+                <div class="item-media"><i style="color:#b4a7a7;" class="material-icons">shopping_basket</i></div>
+                <div class="item-inner">
+                  <div class="item-title">Total Price</div>
+                  <div class="item-after quote-total-price"></div>
+                </div>
+             <input type="hidden" name="total_price_quote" value="" class="quote-total-price">
+              </li>
+
+
+
+
+              
+
+
+              
+              
+              
+            </ul>
+
+
+
+
+
+
+            <div class="list-block">
+  <ul>
+    <!-- Text inputs -->
+    <li>
+      <div class="item-content">
+        <div class="item-inner">
+          <div class="item-title label">Delivery Date</div>
+          <div class="item-input">
+            <input type="text" placeholder="Modify Delivery Date" id="modify-delivery-date">
+          </div>
+        </div>
+      </div>
+    </li>
+
+  </ul>
+
+
+          </div>
+
+
+          
+          
+            <div class="list-block">
+            <ul>
+              <li class="item-content">
+              
+                <div class="item-media"><i style="color:#b4a7a7;" class="material-icons color-black">local_shipping</i></div>
+                <div class="item-inner">
+                  <div class="item-title">Service Charge:</div>
+                  <div class="item-after color-black"><em>NGN150</em></div>
+                </div>
+             
+              </li>
+
+
+            </ul>
+
+
+            
+          </div>
+
+
+
+
+
+
+          
+          
+            <div class="list-block">
+            <ul>
+
+            <li class="item-content" id="apply-coupon">
+              
+                <div class="item-media"><i style="color:#b4a7a7;" class="material-icons">room_service</i></div>
+                <div class="item-inner">
+                  <div class="item-title">Apply Coupon</div>
+                  <div class="item-after">></div>
+
+                </div>
+
+
+
+
+            
+              </li>
+
+            </ul>
+
+          </div>
+
+
+          <div class=" content-block-title bg-green text-white text-center" id="coupon-highlight" style="padding-top: 15px; padding-bottom: 15px; display: none;"></div>
+
+
+
+<div class="content-block-title color-orange"><span>Payment Method:</span></div>
+
+          <div class="list-block theme-indigo">
+            <ul>
+
+              <li>
+                <label class="label-radio item-content">
+                  <!-- Checked by default -->
+                  <input type="radio" name="payment_method" value="Card" checked="checked">
+                  <div class="item-media">
+                    <i class="icon icon-form-radio"></i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Card</div>
+                  </div>
+                </label>
+              </li>
+
+              
+              <li>
+                <label class="label-radio item-content">
+                  <!-- Checked by default -->
+                  <input type="radio" name="payment_method" value="Wallet">
+                  <div class="item-media">
+                    <i class="icon icon-form-radio"></i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">From Wallet</div>
+                  </div>
+                </label>
+              </li>
+
+              
+              <li>
+                <label class="label-radio item-content">
+                  <input type="radio" name="payment_method" value="COD">
+                  <div class="item-media">
+                    <i class="icon icon-form-radio"></i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Cash on Delivery</div>
+                  </div>
+                </label>
+              </li>
+            </ul>
+          </div>    
+
+
+
+
+        </form>
+
+        <div class="content-block-title">&nbsp;</div>
+
+
+
+
+
+
+    </div>
+  
+
+
+
+
+
+
+           <div style="position: fixed; bottom: 3%; width: 90%; left: 5%; z-index: 30; border-radius:0px; padding-top: 15px; padding-bottom: 15px; background-color:#069; color:#fff; text-align: center;" id="payment-btn">
+         
+            </div>
+
+
+
+
+
+
+
+
+  
+</div>
+

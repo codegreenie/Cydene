@@ -1,0 +1,68 @@
+<div data-page="pinexec" class="page">
+
+
+ <div style="width: 100%; height: 100%; opacity: 0.7; position: absolute; background-color:#2f2f2f; z-index: 3000;" class="nylon"></div>
+            <div style="width: 100%; height: 100%; position: absolute; z-index: 4000; color: #fff;" class="nylon">
+                    <img src="docs/imgs/eli.gif" style="max-width: 70px; margin:60% auto 0; display: block;">
+            </div>
+
+
+
+  <div class="navbar theme-indigo">
+    <div class="navbar-inner">
+      <div class="left"><a href="sellers.html" class="link icon-only"><i class="icon icon-back"></i></a></div>
+      <div class="center">&nbsp;</div>
+      </div>
+  </div>
+
+	
+	<div class="page-content">
+    <a href="#" class="floating-button color-indigo" style="display:none;" id="exec-arrow"><i class="icon material-icons" style="color:#fff !important;">arrow_forward</i></a>
+		
+
+
+    <div class="content-block">
+        
+        <img src="docs/imgs/orange_lock.png" style="display:block;margin:0 auto; max-width: 120px;">
+
+    </div>
+
+
+
+		<div class="content-block">
+
+    <p class="text-center">Enter your Cydene Express PIN to confirm your transaction.</p>
+    <p id="discount-highlighter" class="color-green text-center" style="display:none;">&nbsp;</p>
+      
+			
+			<form class="list-block inputs-list theme-orange ajax-submit" action="http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/set_exec_pin.php" id="set_pin_form" method="POST">
+      <ul>
+        <li>
+          <div class="item-content">
+            <!-- <div class="item-media"><i class="icon material-icons">call</i>&nbsp;+234</div> -->
+            <div class="item-inner"> 
+              <div class="item-title floating-label">PIN</div>
+              <div class="item-input">
+                <input type="password" placeholder="" maxlength="4" id="exec-pin" name="exec-pin" required autocomplete="off" />
+              </div>
+            </div>
+          </div>
+        </li>
+        
+        
+       
+        <input type="hidden" name="user_pin_phone" id="user_pin_phone" value="">
+
+      </ul>
+
+    </form>
+
+
+
+		</div>
+
+	</div>
+
+
+
+</div>
