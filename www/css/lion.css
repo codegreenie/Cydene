@@ -1,3 +1,11 @@
+@font-face {
+        font-family: "Exo";
+        src: url("../fonts/Exo-Regular.otf");
+    }
+
+*{
+    font-family: "Exo";
+}
 body{
 	font-size: 16px;
     background-color: #efefef;
