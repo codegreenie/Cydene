@@ -143,7 +143,7 @@ window.open = cordova.InAppBrowser.open;
 
 
 
-				    $$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/finish_seller_logo_upload.php",
+				    $$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/finish_seller_logo_upload.php",
 						{
 
 							"the_uploaded_image" : r.response,
@@ -191,7 +191,7 @@ window.open = cordova.InAppBrowser.open;
 				options.params = params;
 
 				var ft = new FileTransfer();
-				ft.upload(theImage, encodeURI("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/upload_seller_logo.php"), win, fail, options);
+				ft.upload(theImage, encodeURI("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/upload_seller_logo.php"), win, fail, options);
 
 
 		}
@@ -385,7 +385,7 @@ myApp.onPageInit('getStarted', function(page){
 
 						var improved_phone = "+234" + $$("#user_tel").val();
 
-						$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/verify_user.php",
+						$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/verify_user.php",
 						{
 
 							users_phone : $$("#user_tel").val()
@@ -474,7 +474,7 @@ myApp.onPageInit('getStarted', function(page){
 
 						
 
-						$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/verify_otp.php",
+						$$.getJSON("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/verify_otp.php",
 						{
 							users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
 							supplied_otp : $$("#user_otp").val()
@@ -563,7 +563,7 @@ myApp.onPageInit('getStarted', function(page){
 				showNylon();
 
 				var theUserPhone = window.localStorage.getItem("_cydene_user_phone_no");
-				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
+				$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/resend_otp.php",
 						{
 
 							users_phone : theUserPhone
@@ -640,7 +640,7 @@ myApp.onPageInit('getStarted', function(page){
 					signupFirstName = splitName[0];
 					signupLastName = splitName[1];
 
-					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/buyer_registration.php",{
+					$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/buyer_registration.php",{
 
 						new_user_first_name : signupFirstName,
 						new_user_last_name : signupLastName,
@@ -874,7 +874,7 @@ var cydeneUsersPhone = window.localStorage.getItem("_cydene_user_phone_no");
 $$("#buyers-namesake").text(window.localStorage.getItem("buyerFN"));
 
 
-$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
+$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
 	{
 		"user_phone_data" : cydeneUsersPhone
 	},
@@ -891,7 +891,7 @@ $$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_
 
 
 
-$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homepage_order_history.php",
+$$.getJSON("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/pull_homepage_order_history.php",
 	{
 		"the_buyer" : cydeneUsersPhone
 	},
@@ -911,7 +911,7 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 		 		var cylinder_qty = data[p].cylinder_qty;
 
 
-		 		$$("#" + data[p].myDiv + "-junior").html("<img src=http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png style='max-width: 20px;'><br>" + cylinder_size + "Gas<br><br>Quantity: " + cylinder_qty);
+		 		$$("#" + data[p].myDiv + "-junior").html("<img src=https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png style='max-width: 20px;'><br>" + cylinder_size + "Gas<br><br>Quantity: " + cylinder_qty);
 		 		$$("#" + data[p].myDiv).show();
 
 		 	}
@@ -1028,7 +1028,7 @@ $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_homep
 		var mycurrentVersion = window.localStorage.getItem("version_control");
 
 		//code to check for update version of the app
-		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/version_control.php", function(datax){
+		$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/version_control.php", function(datax){
 
 				if(datax !== mycurrentVersion){
 
@@ -1192,7 +1192,7 @@ var buyFromThisSeller, getBuyQty, pushMyAddrToBox;
 
 	function runAddressSuggestions(){
 
-		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/my_address_suggestions.php",
+		$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/my_address_suggestions.php",
 		{"account_owner" : window.localStorage.getItem("_cydene_user_phone_no")},
 		function(data){
 
@@ -1313,7 +1313,7 @@ pushMyAddrToBox = function(fullAddr){
 
 								    var myAddrImage = {
 								    	
-						    	url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/location_arrow.png",
+						    	url : "https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/imgs/location_arrow.png",
 						    	scaledSize: new google.maps.Size(40, 40)
 						    }
 
@@ -1396,7 +1396,7 @@ pushMyAddrToBox = function(fullAddr){
 
 							  var infowindow = new google.maps.InfoWindow();				    	
 						      var image = {
-						    	url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png",
+						    	url : "https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png",
 						    	scaledSize: new google.maps.Size(15, 30)
 						    }
 						    
@@ -1496,7 +1496,7 @@ pushMyAddrToBox = function(fullAddr){
 
 							  var infowindow = new google.maps.InfoWindow();				    	
 						      var image = {
-						    	url : "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png",
+						    	url : "https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/imgs/cylinder_yellow.png",
 						    	scaledSize: new google.maps.Size(15, 30)
 						    }
 						    
@@ -1625,7 +1625,7 @@ pushMyAddrToBox = function(fullAddr){
 
 	function getAllSellers(){
 
-		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php", 
+		$$.getJSON("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/find_sellers.php", 
 			{
 				"posted_cylinder_size" : postedCylinderSize
 			},
@@ -1721,7 +1721,7 @@ $$("#find-this-address").on("click", function(){
 		buyFromThisSeller = function(theSellerID, theCylinderSize){
 			showNylon();
 
-			$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_seller_details.php", {"seller_id" : theSellerID, "cylinder_size" : theCylinderSize}, function(data){
+			$$.getJSON("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_seller_details.php", {"seller_id" : theSellerID, "cylinder_size" : theCylinderSize}, function(data){
 
 					console.log(data);
 					var stringData = JSON.stringify(data);
@@ -1775,7 +1775,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 
 
 		$$(".populate-sellers-name").html(splitSellerDetails.seller_details_name);
-		$$(".populate-sellers-logo").attr("src", "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + splitSellerDetails.seller_details_logo);
+		$$(".populate-sellers-logo").attr("src", "https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + splitSellerDetails.seller_details_logo);
 		$$(".populate-sellers-address").html(splitSellerDetails.seller_details_address);
 		$$(".quote-size").html(splitBuyDetails.gasSize + " (<strike>N</strike>" + splitSellerDetails.cylinder_size_price + ")" );
 		$$(".quote-qty").html(splitBuyDetails.gasQty);
@@ -1820,7 +1820,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 					myApp.prompt('Enter Coupon Code', 'Cydene Coupons!', function (value) {
        					 
        					 showNylon();
-       					 $$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
+       					 $$.getJSON("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/coupon_code_validator.php",
 								 {
 								 	coupon_user : window.localStorage.getItem('_cydene_user_phone_no'),
 								 	coupon_code : value
@@ -1881,7 +1881,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 
 
 
-		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/relay_date.php", 
+		$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/relay_date.php", 
 			function(data){
 
 				
@@ -1918,7 +1918,7 @@ var couponDetails = JSON.parse(window.localStorage.getItem("coupon_details"));
 			
 				if(paymentMethod == "COD"){
 
-					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
+					$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
 
 					{
 
@@ -2058,7 +2058,7 @@ myApp.onPageInit('pinexec', function(page){
 		$$("#exec-arrow").click(function(){
 			
 			showNylon();
-			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/validate_exec_pin.php", 
+			$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/validate_exec_pin.php", 
 				{
 					"exec_pin" : $$("#exec-pin").val(),
 					"user_phone" :  window.localStorage.getItem("_cydene_user_phone_no")
@@ -2071,7 +2071,7 @@ myApp.onPageInit('pinexec', function(page){
 							var splitBuyDetails = JSON.parse(window.localStorage.getItem("uniqPurchase"));
 				 			var splitSellerDetails = JSON.parse(window.localStorage.getItem("full_seller_details"));
 				 			var tranxFields = window.localStorage.getItem("tnx_fields");
-					 		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
+					 		$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/transaction_recorder.php", 
 
 							{
 
@@ -2213,7 +2213,7 @@ myApp.onPageInit('mapexp', function(page){
 		       
 		       
 
-		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/save_delivery_address.php",
+		$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/save_delivery_address.php",
 						{
 							the_users_phone : window.localStorage.getItem("_cydene_user_phone_no"),
 							the_address_name : $$("#the-address-name").val(),
@@ -2276,7 +2276,7 @@ myApp.onPageInit('orderhistory', function(page){
     
     
 
-	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_order_history.php", 
+	$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/pull_order_history.php", 
 	{
 		"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -2294,7 +2294,7 @@ myApp.onPageInit('orderhistory', function(page){
 
 
 
-	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_scheduled_order_history.php", 
+	$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/pull_scheduled_order_history.php", 
 	{
 		"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -2312,7 +2312,7 @@ myApp.onPageInit('orderhistory', function(page){
 
 
 
-	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_active_orders.php", 
+	$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/pull_active_orders.php", 
 	{
 		"the_buyer" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -2337,7 +2337,7 @@ myApp.onPageInit('orderhistory', function(page){
 	window.localStorage.setItem("seller_2_rate", theSellerSN);
 	showNylon();	
 
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
 	{
 		"tranx_id" : tranxID
 	},
@@ -2372,7 +2372,7 @@ myApp.onPageInit('orderhistory', function(page){
 	cancelScheduleOrder = function(tranxSN){
 
 	showNylon();	
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/cancel_scheduled_order.php", 
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/cancel_scheduled_order.php", 
 	{
 		"order_sn" : tranxSN
 	},
@@ -2468,7 +2468,7 @@ else{
 
 
 			showNylon();
-			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/cancel_order.php", 
+			$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/cancel_order.php", 
 			{
 				"order_sn" : tranxSN,
 				"tnx_owner" : window.localStorage.getItem("_cydene_user_phone_no"),
@@ -2536,7 +2536,7 @@ myApp.onPageInit('settings', function(page){
 	var user_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
 	$$("#phonespace").html(user_phone_data);
 
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
 	{
 		"user_phone_data" : user_phone_data
 	},
@@ -2770,7 +2770,7 @@ myApp.onPageInit('addresseslist', function(page){ // Address List
 	var users_phone = window.localStorage.getItem("_cydene_user_phone_no");
 	
 
-		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/list_addresses.php", 
+		$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/list_addresses.php", 
 		{
 
 			"users_phone" : users_phone
@@ -2794,7 +2794,7 @@ myApp.onPageInit('addresseslist', function(page){ // Address List
 	deleteAddr = function(addrSN){
 
 	showNylon();	
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/delete_address.php", 
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/delete_address.php", 
 	{
 		"address_sn" : addrSN
 	},
@@ -2925,7 +2925,7 @@ $$("#edit-address-id").val(patchAddrSN);
 		        var theAddressLng = theAddressLatLng.lng();
 		      
 
-				 $$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/update_delivery_address.php",
+				 $$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/update_delivery_address.php",
 				{
 							the_address_sn : $$("#edit-address-id").val(),
 							the_address_name : $$("#the-address-name-edit").val(),
@@ -2990,7 +2990,7 @@ myApp.onPageInit('wallet', function(page){ // Wallet page
 
 	var user_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
 
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_balance.php",
 	{
 		"user_phone_data" : user_phone_data
 	},
@@ -3009,7 +3009,7 @@ myApp.onPageInit('wallet', function(page){ // Wallet page
 		showNylon();
 		var amount2Add = $$("#the-amount-2-add").val();
 
-		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/add_money_2_wallet_transaction.php",
+		$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/add_money_2_wallet_transaction.php",
 		{
 			"amount_2_add" : amount2Add,
 			"user_phone_data" : user_phone_data
@@ -3023,7 +3023,7 @@ myApp.onPageInit('wallet', function(page){ // Wallet page
 
 			if(splitData[1] == "Successful"){
 
-				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/paystack_init.php",
+				$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/paystack_init.php",
 					{
 						"buyer_email" : window.localStorage.getItem("buyerMail"),
 						"amount_2_pay" : amount2Add * 100,
@@ -3074,7 +3074,7 @@ myApp.onPageInit('sellerwallet', function(page){ // Wallet page
 
 	var user_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
 
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_seller_wallet_balance.php",
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_seller_wallet_balance.php",
 	{
 		"user_phone_data" : user_phone_data
 	},
@@ -3097,7 +3097,7 @@ myApp.onPageInit('sellerwallet', function(page){ // Wallet page
 
 			showNylon();
 
-			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/request_seller_payout.php",
+			$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/request_seller_payout.php",
 					{
 						"user_phone_data" : user_phone_data,
 						"payout_amount" : thePayoutAmount
@@ -3160,7 +3160,7 @@ myApp.onPageInit('editprofile', function(page){ // Edit Profile page
 
 			x.preventDefault();
 			showNylon();
-			$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/user_profile_update.php", 
+			$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/user_profile_update.php", 
 			{
 
 				"user_phone_number" : users_phone,
@@ -3227,7 +3227,7 @@ myApp.onPageInit('about', function(page){ //About page
 myApp.onPageInit('offers', function(page){ //Offers page
 
 
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_offers.php",
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_offers.php",
 	 function(data){
 
 	 	$$(".populate-offers").html(data).removeClass('text-center');
@@ -3254,7 +3254,7 @@ myApp.onPageInit('walletstatement', function(page){ //Offers page
 
 	var users_phone = window.localStorage.getItem("_cydene_user_phone_no");
 
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_statement.php",
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_wallet_statement.php",
 	{
 		"the_buyer" : users_phone
 	}
@@ -3301,7 +3301,7 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 
 	$$("#seller-name-space").html(window.localStorage.getItem("sellerName"));
 	var sellerLogo = window.localStorage.getItem("sellerLogo");
-	$$("#seller-logo-space").attr("src", "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + sellerLogo);
+	$$("#seller-logo-space").attr("src", "https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + sellerLogo);
 
 	if(!window.localStorage.getItem("version_control")){
 
@@ -3313,7 +3313,7 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 	var mycurrentVersion = window.localStorage.getItem("version_control");
 
 		//code to check for update version of the app
-		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/version_control.php", function(datax){
+		$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/version_control.php", function(datax){
 
 				if(datax !== mycurrentVersion){
 
@@ -3348,7 +3348,7 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 
 
 
-		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_get_verification_status.php", 
+		$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/seller_get_verification_status.php", 
 		{
 			"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
 		},
@@ -3382,7 +3382,7 @@ myApp.onPageInit('sellerdashboard', function(page){ //Offers page
 
 
 		//Pull seller ratings
-		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_seller_ratings.php", 
+		$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/pull_seller_ratings.php", 
 		{
 			"user_phone_data" : window.localStorage.getItem("_cydene_user_phone_no")
 		},
@@ -3431,7 +3431,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 	
 
 
-	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_pull_pending_orders.php", 
+	$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/seller_pull_pending_orders.php", 
 	{
 		"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -3449,7 +3449,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 
 
 
-	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_pull_active_orders.php", 
+	$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/seller_pull_active_orders.php", 
 	{
 		"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -3469,7 +3469,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 	acceptOrder = function(tranxSN){
 
 	showNylon();	
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_order.php", 
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_order.php", 
 	{
 		"order_sn" : tranxSN
 	},
@@ -3538,7 +3538,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 			function letsDeclinOrder(theTranxSN, theDeclineReason){
 
 				showNylon();	
-				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_decline_order.php", 
+				$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/seller_decline_order.php", 
 				{
 					"order_sn" : tranxSN,
 					"decline_reason" : theDeclineReason
@@ -3612,7 +3612,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 			function letsDeclinSchOrder(theTranxSN, theDeclineReason){
 
 				showNylon();	
-				$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_decline_schedule_order.php", 
+				$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/seller_decline_schedule_order.php", 
 				{
 					"order_sn" : tranxSN,
 					"decline_reason" : theDeclineReason
@@ -3657,7 +3657,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 	pushSaleDetails = function(theBuyer, tranxID, tranxSN){
 		showNylon();
 
-		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_sale_details.php", 
+		$$.getJSON("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/pull_sale_details.php", 
 		{
 			"the_buyer" :  theBuyer,
 			"tranx_ID" :  tranxID,
@@ -3704,7 +3704,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 	pushScheduleSaleDetails = function(theBuyer, tranxSN){
 		showNylon();
 
-		$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_schedule_sale_details.php", 
+		$$.getJSON("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/pull_schedule_sale_details.php", 
 		{
 			"the_buyer" :  theBuyer,
 			"tranx_SN" : tranxSN
@@ -3748,7 +3748,7 @@ myApp.onPageInit('sellerbookings', function(page){ //Offers page
 	acceptSchOrder = function(tranxSN){
 
 	showNylon();	
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_schedule_order.php", 
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/seller_accept_schedule_order.php", 
 	{
 		"order_sn" : tranxSN
 	},
@@ -3787,7 +3787,7 @@ orderComplete = function(tranxID){
 
 	showNylon();	
 
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/transaction_complete.php", 
 	{
 		"tranx_id" : tranxID
 	},
@@ -3820,7 +3820,7 @@ schOrderComplete = (tranxID) => {
 
 	showNylon();	
 
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/sellers_schedule_transaction_complete.php", 
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/sellers_schedule_transaction_complete.php", 
 	{
 		"tranx_id" : tranxID
 	},
@@ -4007,7 +4007,7 @@ myApp.onPageInit('customerdeliveryrouteschedule', function(page){ //Offers page
 myApp.onPageInit('sellerorderhistory', function(page){ //Sellers Order History
 
 
-	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_sellers_order_history.php", 
+	$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/pull_sellers_order_history.php", 
 	{
 		"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -4025,7 +4025,7 @@ myApp.onPageInit('sellerorderhistory', function(page){ //Sellers Order History
 
 
 
-	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_sellers_scheduled_order_history.php", 
+	$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/pull_sellers_scheduled_order_history.php", 
 	{
 		"the_seller" : window.localStorage.getItem("_cydene_user_phone_no")
 	},
@@ -4059,13 +4059,13 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 
 	$$("#the-seller-name-space").html(window.localStorage.getItem("sellerName"));
 	var theSellerLogo = window.localStorage.getItem("sellerLogo");
-	$$("#the-seller-logo-space").attr("src", "http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + theSellerLogo);
+	$$("#the-seller-logo-space").attr("src", "https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/imgs/" + theSellerLogo);
 
 
 
 
 	var users_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_wallet_balance.php",
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_wallet_balance.php",
 	{
 		"user_phone_data" : users_phone_data
 	},
@@ -4081,7 +4081,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 
 
 
-	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_availability.php",
+	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_availability.php",
 	{
 		"user_phone_data" : users_phone_data
 	},
@@ -4115,7 +4115,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 				color : "indigo",
 				onClick : function(){
 					$$(".sellers-availability-check").html("<span class='preloader preloader-indigo'></span>");
-					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/sellers_set_availability.php",
+					$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/sellers_set_availability.php",
 						{
 							"user_phone_data" : users_phone_data,
 							"availability" : "available"
@@ -4138,7 +4138,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 				onClick : function(){
 
 					$$(".sellers-availability-check").html("<span class='preloader preloader-indigo'></span>");
-					$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/sellers_set_availability.php",
+					$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/sellers_set_availability.php",
 						{
 							"user_phone_data" : users_phone_data,
 							"availability" : "not-available"
@@ -4200,7 +4200,7 @@ myApp.onPageInit('sellersettings', function(page){ //Sellers Settings
 
 
 		//Pull seller ratings
-		$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/pull_seller_ratings.php", 
+		$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/pull_seller_ratings.php", 
 		{
 			"user_phone_data" : window.localStorage.getItem("_cydene_user_phone_no")
 		},
@@ -4276,7 +4276,7 @@ myApp.onPageInit('sellersignup', function(page){ //Sellers Signup
 		        $$("#new_company_lng").val(theAddressLng);
 
 		        
-		       $$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_registration.php",
+		       $$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/seller_registration.php",
 				{
 					"new_company_name" : $$("#new_company_name").val(),
 					"new_company_address" : $$("#searchTextFieldAddr").val(),
@@ -4405,7 +4405,7 @@ myApp.onPageInit("updatepricelist", function(page){
 
 
 	//First Fetch pricelist
-	$$.getJSON("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_current_pricelist.php",
+	$$.getJSON("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_sellers_current_pricelist.php",
 		{
 			"user_phone_data" : userPhone
 		},
@@ -4513,7 +4513,7 @@ myApp.onPageInit("selleraddbankaccount", function(page){
 
         	showNylon();
 
-        	$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/seller_add_bank_account.php",
+        	$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/seller_add_bank_account.php",
 				{
 					"seller_phone" : userPhone,
 					"seller_bank_name" : $$("#seller-add-bank-name-container").val(),
@@ -4554,7 +4554,7 @@ myApp.onPageInit('paymentmethods', function(page){ //Payment Methods Page
 
 	var users_phone_data = window.localStorage.getItem("_cydene_user_phone_no");
 
-	$$.get("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/fetch_buyer_cards.php",
+	$$.get("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/fetch_buyer_cards.php",
 	{
 		"user_phone_data" : users_phone_data
 	},
@@ -4571,7 +4571,7 @@ myApp.onPageInit('paymentmethods', function(page){ //Payment Methods Page
 
 	deleteCardForever = function(cardSN){
 		showNylon();
-		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/delete_card.php",
+		$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/delete_card.php",
 			{
 				"user_phone_data" : users_phone_data,
 				"card_serial" : cardSN
@@ -4647,7 +4647,7 @@ myApp.onPageInit('cardpayment', function(page){ //Card Payment Page
 
 			showNylon();
 
-					 		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/card_transaction_recorder.php", 
+					 		$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/card_transaction_recorder.php", 
 
 							{
 
@@ -4672,7 +4672,7 @@ myApp.onPageInit('cardpayment', function(page){ //Card Payment Page
 
 								if(splitData[1] == "Successful"){
 
-									$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/paystack_init.php",
+									$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/paystack_init.php",
 										{
 											"buyer_email" : window.localStorage.getItem("buyerMail"),
 											"amount_2_pay" : totalPrice * 100,
@@ -4801,7 +4801,7 @@ $$("#the-rate").val("1");
 
 		showNylon();
 		
-		$$.post("http://express.cydene.com/Mobile_app_repo/php_hub/_Cydene/rate_seller.php",
+		$$.post("https://greatsuccesslimited.com/Mobile_app_repo/php_hub/_Cydene/rate_seller.php",
 				{
 					"the_seller" : window.localStorage.getItem("seller_2_rate"),
 					"the_rate" : $$("#the-rate").val()
